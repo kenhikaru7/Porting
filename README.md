@@ -1,3 +1,5 @@
+copy lib folders to here
+
 vaadin-archetype-application
 ==============
 
