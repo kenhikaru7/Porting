@@ -1,5 +1,6 @@
 package test;
 
+import java.util.*;
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
@@ -9,9 +10,11 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.UI;
 
+import menu.gui.MainMenu;
 /**
  * This UI is the application entry point. A UI may either represent a browser window 
  * (or tab) or some part of an HTML page where a Vaadin application is embedded.
@@ -24,6 +27,9 @@ public class MyUI extends UI {
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
+
+        MainMenu menu = new MainMenu();
+
         final VerticalLayout layout = new VerticalLayout();
         
         final TextField name = new TextField();
@@ -35,6 +41,16 @@ public class MyUI extends UI {
                     + ", it works!"));
         });
         
+        //menu.MainPanel qpanel = new MainPanel(menu);
+
+        // List<Component> q = new ArrayList<Component>();
+        // q.add(name);
+        // q.add(button);
+
+        // for(Component w:q){
+        //     layout.addComponent(w);
+        // }
+
         layout.addComponents(name, button);
         
         setContent(layout);

@@ -44,6 +44,11 @@
 	</dependencyManagement>
 
 	<dependencies>
+			<dependency>
+			    <groupId>org.slf4j</groupId>
+			    <artifactId>jul-to-slf4j</artifactId>
+			    <version>1.7.25</version>
+			</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -70,6 +75,11 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
     		<version>1.6.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.6.4</version>
 		</dependency>
 		<dependency>
 			<groupId>com.toedter</groupId>
@@ -140,36 +150,11 @@
 			<groupId></groupId>
 			<artifactId></artifactId>
 			<version></version>
-		</dependency>
-		<dependency>
-			<groupId></groupId>
-			<artifactId></artifactId>
-			<version></version>
 		</dependency> -->
 	</dependencies>
 
 	<build>
 		<plugins>
-			<!-- <plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-install-plugin</artifactId>
-			    <version>2.5</version>
-			    <executions>
-			        <execution>
-			            <phase>initialize</phase>
-			            <goals>
-			                <goal>install-file</goal>
-			            </goals>
-			            <configuration>
-			                <groupId>org.slf4j</groupId>
-			                <artifactId>slf4j</artifactId>
-			                <version>1.6.4</version>
-			                <packaging>jar</packaging>
-			                <file>${basedir}/lib/slf4j-api-1.6.4.jar</file>
-			            </configuration>
-			        </execution>
-			    </executions>
-			</plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
@@ -225,6 +210,11 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<resources>
+	        <resource>
+	            <directory>rsc</directory>
+	        </resource>
+	    </resources>
 	</build>
 
 	<profiles>

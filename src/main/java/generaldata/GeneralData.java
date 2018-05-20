@@ -1,4 +1,4 @@
-package org.isf.generaldata;
+package generaldata;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -129,6 +129,7 @@ public class GeneralData {
 			DICOMMODULEENABLED = myGetProperty("DICOMMODULEENABLED", DEFAULT_DICOMMODULEENABLED);
 			
 		} catch (Exception e) { //no file
+			e.printStackTrace();
 			logger.error(">> " + FILE_PROPERTIES + " file not found.");
 			System.exit(1);
 		}

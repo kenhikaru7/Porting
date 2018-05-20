@@ -1,4 +1,4 @@
-package org.isf.menu.gui;
+package menu.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -21,24 +21,28 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.isf.generaldata.GeneralData;
-import org.isf.menu.manager.UserBrowsingManager;
-import org.isf.menu.model.User;
-import org.isf.menu.model.UserMenuItem;
-//import org.isf.sms.service.SmsSender;
-import org.isf.utils.jobjects.ModalJFrame;
-//import org.isf.xmpp.gui.CommunicationFrame;
-//import org.isf.xmpp.service.Server;
+import generaldata.GeneralData;
+import menu.manager.UserBrowsingManager;
+import menu.model.User;
+import menu.model.UserMenuItem;
+//import sms.service.SmsSender;
+import utils.jobjects.ModalJFrame;
+//import xmpp.gui.CommunicationFrame;
+//import xmpp.service.Server;
 import org.jivesoftware.smack.XMPPException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.slf4j.MDC;
 
 public class MainMenu extends JFrame implements ActionListener, Login.LoginListener, SubMenu.CommandListener {
 	private static final long serialVersionUID = 7620582079916035164L;
 	private boolean flag_Xmpp = false;
 	private boolean flag_Sms = false;
-
+	static {
+	        // SLF4JBridgeHandler.removeHandlersForRootLogger();
+	        SLF4JBridgeHandler.install();
+	    }
 	private final Logger logger = LoggerFactory.getLogger(MainMenu.class);
 
 	public void loginInserted(AWTEvent e) {
@@ -100,6 +104,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		myFrame = this;
 
 		GeneralData.getGeneralData();
+//asd
 		try {
 			singleUser = GeneralData.SINGLEUSER;
 			internalPharmacies = GeneralData.INTERNALPHARMACIES;
@@ -139,7 +144,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		// get menu items
 		UserBrowsingManager manager = new UserBrowsingManager();
 		myMenu = manager.getMenu(myUser);
-
+//asd
 		// start connection with xmpp server if is enabled
 //		if (flag_Xmpp) {
 //			try {
@@ -171,7 +176,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 //			}
 //
 //		}
-
+//qwe
 		// if in singleUser mode remove "users" and "communication" menu
 		if (singleUser) {
 			ArrayList<UserMenuItem> junkMenu = new ArrayList<UserMenuItem>();
@@ -243,7 +248,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			if (myMenu.contains(umi))
 				myMenu.remove(umi);
 		}
-
+		//RMF: start here
 		setTitle(myUser.getUserName());
 		ImageIcon img = new ImageIcon("./rsc/icons/oh.png");
 		setIconImage(img.getImage());
@@ -272,6 +277,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 		setResizable(false);
 		setVisible(true);
+		////qwe
 	}
 
 	private void actionExit(int status) {

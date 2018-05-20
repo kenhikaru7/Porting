@@ -1,4 +1,4 @@
-package org.isf.menu.model;
+package menu.model;
 
 public class User {
 
