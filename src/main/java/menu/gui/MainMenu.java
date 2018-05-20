@@ -13,6 +13,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.*;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -35,7 +36,14 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.slf4j.MDC;
 
-public class MainMenu extends JFrame implements ActionListener, Login.LoginListener, SubMenu.CommandListener {
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.UI;
+
+public class MainMenu{
 	private static final long serialVersionUID = 7620582079916035164L;
 	private boolean flag_Xmpp = false;
 	private boolean flag_Sms = false;
@@ -54,11 +62,11 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		}
 	}
 
-	public void commandInserted(AWTEvent e) {
-		if (e.getSource() instanceof String) {
-			launchApp((String) e.getSource());
-		}
-	}
+	// public void commandInserted(AWTEvent e) {
+	// 	if (e.getSource() instanceof String) {
+	// 		launchApp((String) e.getSource());
+	// 	}
+	// }
 
 	public static boolean checkUserGrants(String code) {
 
@@ -99,6 +107,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	// debug mode
 	private boolean debug = false;
 	private MainMenu myFrame;
+	private VerticalLayout layout;
 
 	public MainMenu() {
 		myFrame = this;
@@ -249,35 +258,47 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				myMenu.remove(umi);
 		}
 		//RMF: start here
-		setTitle(myUser.getUserName());
-		ImageIcon img = new ImageIcon("./rsc/icons/oh.png");
-		setIconImage(img.getImage());
+		this.layout = new VerticalLayout();
+
+		// setTitle(myUser.getUserName());
+		// ImageIcon img = new ImageIcon("./rsc/icons/oh.png");
+		// setIconImage(img.getImage());
 		// add panel with buttons to frame
 		MainPanel panel = new MainPanel(this);
-		add(panel);
-		pack();
+		List<Component> qc = panel.getComponent();
+		for(Component w:qc){
+            this.layout.addComponent(w);
+        }
+		// layout.addComponents(name, button);
+
+		// add(panel);
+		// pack();
 
 		// compute menu position
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screenSize = kit.getScreenSize();
 		int screenHeight = screenSize.height;
 
-		int frameHeight = getSize().height;
+		// int frameHeight = getSize().height;
 
-		setLocation(menuXPosition, screenHeight - frameHeight - menuYDisplacement);
+		// setLocation(menuXPosition, screenHeight - frameHeight - menuYDisplacement);
 
-		myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		myFrame.setAlwaysOnTop(GeneralData.MAINMENUALWAYSONTOP);
-		myFrame.addWindowListener(new WindowAdapter() {
+		// myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// myFrame.setAlwaysOnTop(GeneralData.MAINMENUALWAYSONTOP);
+		// myFrame.addWindowListener(new WindowAdapter() {
 
-			public void windowClosing(WindowEvent e) {
-				actionExit(0);
-			}
-		});
+		// 	public void windowClosing(WindowEvent e) {
+		// 		actionExit(0);
+		// 	}
+		// });
 
-		setResizable(false);
-		setVisible(true);
+		// setResizable(false);
+		// setVisible(true);
 		////qwe
+	}
+
+	public VerticalLayout getLayout(){
+		return this.layout;
 	}
 
 	private void actionExit(int status) {
@@ -290,60 +311,72 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	/*
 	 * 
 	 */
-	public void actionPerformed(ActionEvent e) {
-		String command = e.getActionCommand();
-		launchApp(command);
-	}
+	// public void actionPerformed(ActionEvent e) {
+	// 	String command = e.getActionCommand();
+	// 	launchApp(command);
+	// }
 
 	/**
 	 * 
 	 * @param itemMenuCode
 	 */
-	private void launchApp(String itemMenuCode) {
+	// private void launchApp(String itemMenuCode) {
 
-		for (UserMenuItem u : myMenu) {
-			if (u.getCode().equals(itemMenuCode)) {
-				if (u.getCode().equalsIgnoreCase("EXIT")) {
-					actionExit(0);
-				} else if (u.isASubMenu()) {
-					new SubMenu(this, u.getCode(), myMenu);
-					break;
-				} else {
-					String app = u.getMyClass();
-					// an empty menu item
-					if (app.equalsIgnoreCase("none"))
-						return;
-					try {
-						Object target = Class.forName(app).newInstance();
-						try {
-							((ModalJFrame) target).showAsModal(this);
-						} catch (ClassCastException noModalJFrame) {
-							try {
-								((JFrame) target).setEnabled(true);
-							} catch (ClassCastException noJFrame) {
-								((JDialog) target).setEnabled(true);
-							}
-						}
-					} catch (InstantiationException ie) {
-						ie.printStackTrace();
-					} catch (IllegalAccessException iae) {
-						iae.printStackTrace();
-					} catch (ClassNotFoundException cnfe) {
-						cnfe.printStackTrace();
-					}
-					break;
-				}
-			}
-		}
-	}
+	// 	for (UserMenuItem u : myMenu) {
+	// 		if (u.getCode().equals(itemMenuCode)) {
+	// 			if (u.getCode().equalsIgnoreCase("EXIT")) {
+	// 				actionExit(0);
+	// 			} else if (u.isASubMenu()) {
+	// 				new SubMenu(this, u.getCode(), myMenu);
+	// 				break;
+	// 			} else {
+	// 				String app = u.getMyClass();
+	// 				// an empty menu item
+	// 				if (app.equalsIgnoreCase("none"))
+	// 					return;
+	// 				try {
+	// 					Object target = Class.forName(app).newInstance();
+	// 					try {
+	// 						((ModalJFrame) target).showAsModal(this);
+	// 					} catch (ClassCastException noModalJFrame) {
+	// 						try {
+	// 							((JFrame) target).setEnabled(true);
+	// 						} catch (ClassCastException noJFrame) {
+	// 							((JDialog) target).setEnabled(true);
+	// 						}
+	// 					}
+	// 				} catch (InstantiationException ie) {
+	// 					ie.printStackTrace();
+	// 				} catch (IllegalAccessException iae) {
+	// 					iae.printStackTrace();
+	// 				} catch (ClassNotFoundException cnfe) {
+	// 					cnfe.printStackTrace();
+	// 				}
+	// 				break;
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 	private class MainPanel extends JPanel {
 		private static final long serialVersionUID = 4338749100837551874L;
 
 		private JButton button[];
 		private MainMenu parentFrame = null;
+		private List<Component> q = new ArrayList<Component>();
 
-		public MainPanel(MainMenu parentFrame) {
+		public MainPanel(MainMenu parentQ) {
+			final TextField name = new TextField();
+	        name.setCaption("Type your name there:");
+
+	        Button button = new Button("Click Me");
+	        button.addClickListener(e -> {
+	            parentQ.layout.addComponent(new Label("Thanks " + name.getValue() 
+	                    + ", it works!"));
+	        });
+	        this.q.add(name);
+	        this.q.add(button);
+
 			this.parentFrame = parentFrame;
 			int numItems = 0;
 
@@ -353,38 +386,42 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 			// System.out.println(numItems);
 
-			button = new JButton[numItems];
+			// button = new JButton[numItems];
 
 			int k = 1;
 
-			for (UserMenuItem u : myMenu)
-				if (u.getMySubmenu().equals("main")) {
-					button[k - 1] = new JButton(u.getButtonLabel());
+			// for (UserMenuItem u : myMenu)
+			// 	if (u.getMySubmenu().equals("main")) {
+			// 		button[k - 1] = new JButton(u.getButtonLabel());
 
-					button[k - 1].setMnemonic(KeyEvent.VK_A + (int) (u.getShortcut() - 'A'));
+			// 		button[k - 1].setMnemonic(KeyEvent.VK_A + (int) (u.getShortcut() - 'A'));
 
-					button[k - 1].addActionListener(parentFrame);
-					button[k - 1].setActionCommand(u.getCode());
-					k++;
-				}
+			// 		button[k - 1].addActionListener(parentFrame);
+			// 		button[k - 1].setActionCommand(u.getCode());
+			// 		k++;
+			// 	}
 
-			setButtonsSize(button);
+			// setButtonsSize(button);
 
 			// setBackground(java.awt.Color.WHITE);
 			JLabel fig = new JLabel(new ImageIcon("rsc" + File.separator + "images" + File.separator + "LogoMenu.jpg"));
 			add(fig, BorderLayout.WEST);
 
 			JPanel buttons = new JPanel();
-			GridBagLayout layout = new GridBagLayout();
-			buttons.setLayout(layout);
+			// GridBagLayout layout = new GridBagLayout();//problem
+			// buttons.setLayout(layout);
 
-			final int insetsValue = 6;
+			// final int insetsValue = 6;
 
-			for (int i = 0; i < button.length; i++) {
-				buttons.add(button[i], new GBC(0, i).setInsets(insetsValue));
-			}
+			// for (int i = 0; i < button.length; i++) {
+			// 	buttons.add(button[i], new GBC(0, i).setInsets(insetsValue));
+			// }
 
-			add(buttons, BorderLayout.CENTER);
+			// add(buttons, BorderLayout.CENTER);
+		}
+
+		private List<Component> getComponent(){
+			return this.q;
 		}
 
 		private void setButtonsSize(JButton button[]) {

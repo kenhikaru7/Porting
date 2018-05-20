@@ -1,17 +1,17 @@
 package test;
 
-import java.util.*;
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
+
+// import com.vaadin.ui.Button;
+// import com.vaadin.ui.Label;
+// import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Component;
+// import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
 
 import menu.gui.MainMenu;
@@ -29,30 +29,7 @@ public class MyUI extends UI {
     protected void init(VaadinRequest vaadinRequest) {
 
         MainMenu menu = new MainMenu();
-
-        final VerticalLayout layout = new VerticalLayout();
-        
-        final TextField name = new TextField();
-        name.setCaption("Type your name there:");
-
-        Button button = new Button("Click Me");
-        button.addClickListener(e -> {
-            layout.addComponent(new Label("Thanks " + name.getValue() 
-                    + ", it works!"));
-        });
-        
-        //menu.MainPanel qpanel = new MainPanel(menu);
-
-        // List<Component> q = new ArrayList<Component>();
-        // q.add(name);
-        // q.add(button);
-
-        // for(Component w:q){
-        //     layout.addComponent(w);
-        // }
-
-        layout.addComponents(name, button);
-        
+        VerticalLayout layout = menu.getLayout();
         setContent(layout);
     }
 

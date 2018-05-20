@@ -80,11 +80,11 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 	private User returnUser;
 
 	public Login(MainMenu parent) {
-		super(parent, "login", true);
+		// super(parent, "login", true);
 
 		this.parent = parent;
 
-		addLoginListener(parent);
+		// addLoginListener(parent);
 
 		// add panel to frame
 		LoginPanel panel = new LoginPanel(this);
@@ -131,7 +131,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 			pwd.setText("");
 		} else {
 			fireLoginInserted(returnUser);
-			removeLoginListener(parent);
+			// removeLoginListener(parent);
 			this.dispose();
 		}
 	}

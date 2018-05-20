@@ -63,9 +63,9 @@ public class SubMenu extends JDialog implements ActionListener{
 	
 	
 	public SubMenu(MainMenu parent, String code, ArrayList<UserMenuItem> menu) {
-		super(parent, "     ", true);
+		// super(parent, "     ", true);
 		this.prfButtonSize=parent.getMinButtonSize();
-		initialize(parent, code, menu, parent.getBounds());
+		// initialize(parent, code, menu, parent.getBounds());
 	}
 	
 	
@@ -75,7 +75,7 @@ public class SubMenu extends JDialog implements ActionListener{
 		
 		this.mainMenu = mainMenu;
 		
-		addCommandListener(mainMenu);
+		// addCommandListener(mainMenu);
 		
 		myMenu = menu;
 		
