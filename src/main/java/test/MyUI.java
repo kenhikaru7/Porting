@@ -22,7 +22,7 @@ import menu.gui.MainMenu;
  * The UI is initialized using {@link #init(VaadinRequest)}. This method is intended to be 
  * overridden to add component to the user interface and initialize non-component functionality.
  */
-@Theme("mytheme")
+@Theme("ctheme")
 public class MyUI extends UI {
 
     @Override
