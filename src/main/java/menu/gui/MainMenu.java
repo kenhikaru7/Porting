@@ -260,9 +260,6 @@ public class MainMenu{
 		//RMF: start here
 		this.layout = new VerticalLayout();
 
-		// setTitle(myUser.getUserName());
-		// ImageIcon img = new ImageIcon("./rsc/icons/oh.png");
-		// setIconImage(img.getImage());
 		// add panel with buttons to frame
 		MainPanel panel = new MainPanel(this);
 		List<Component> qc = panel.getComponent();

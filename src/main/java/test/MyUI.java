@@ -27,7 +27,7 @@ public class MyUI extends UI {
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-        setCaption("Title: MainMenu");
+        getPage().setTitle("Title: MainMenu");
         MainMenu menu = new MainMenu();
         VerticalLayout layout = menu.getLayout();
         setContent(layout);
