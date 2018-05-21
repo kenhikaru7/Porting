@@ -43,6 +43,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.Image;
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.server.ThemeResource;
@@ -266,7 +267,7 @@ public class MainMenu{
 		this.layout0 = new HorizontalLayout();
 		this.layout = new VerticalLayout();
 		ThemeResource resource = new ThemeResource("img/LogoMenu.jpg");
-		Image image = new Image("",resource);
+		Image image = new Image(null,resource);
 		image.setHeight(100,Unit.PERCENTAGE);
 		this.layout0.addComponent(image);
 		this.layout0.addComponent(this.layout);
@@ -276,32 +277,13 @@ public class MainMenu{
 		List<Component> qc = panel.getComponent();
 		for(Component w:qc){
             this.layout.addComponent(w);
+            this.layout.setExpandRatio(w, 1.0f);
         }
-
-		// add(panel);
-		// pack();
 
 		// compute menu position
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screenSize = kit.getScreenSize();
 		int screenHeight = screenSize.height;
-
-		// int frameHeight = getSize().height;
-
-		// setLocation(menuXPosition, screenHeight - frameHeight - menuYDisplacement);
-
-		// myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		// myFrame.setAlwaysOnTop(GeneralData.MAINMENUALWAYSONTOP);
-		// myFrame.addWindowListener(new WindowAdapter() {
-
-		// 	public void windowClosing(WindowEvent e) {
-		// 		actionExit(0);
-		// 	}
-		// });
-
-		// setResizable(false);
-		// setVisible(true);
-		////qwe
 	}
 
 	public HorizontalLayout getLayout(){
@@ -403,23 +385,7 @@ public class MainMenu{
 					k++;
 				}
 
-			setButtonsSize(button);
-
-			// setBackground(java.awt.Color.WHITE);
-			// JLabel fig = new JLabel(new ImageIcon("rsc" + File.separator + "images" + File.separator + "LogoMenu.jpg"));
-			// add(fig, BorderLayout.WEST);
-
-			// JPanel buttons = new JPanel();
-			// GridBagLayout layout = new GridBagLayout();//problem
-			// buttons.setLayout(layout);
-
-			// final int insetsValue = 6;
-
-			// for (int i = 0; i < button.length; i++) {
-			// 	buttons.add(button[i], new GBC(0, i).setInsets(insetsValue));
-			// }
-
-			// add(buttons, BorderLayout.CENTER);
+			// setButtonsSize(button);
 		}
 
 		private List<Component> getComponent(){
@@ -434,7 +400,8 @@ public class MainMenu{
 			// 	logger.info(""+i+":"+max+button[i].getWidthUnits());
 			// }
 			for (int i = 0; i < button.length; i++) {
-				button[i].setWidth(100,Unit.PERCENTAGE);
+				// button[i].setWidth("100%");
+				parentFrame.layout.setExpandRatio(button[i], 1.0f);
 			}
 		}
 	}// :~MainPanel
