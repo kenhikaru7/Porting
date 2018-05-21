@@ -22,12 +22,13 @@ import menu.gui.MainMenu;
  * The UI is initialized using {@link #init(VaadinRequest)}. This method is intended to be 
  * overridden to add component to the user interface and initialize non-component functionality.
  */
-@Theme("ctheme")
+@Theme("mytheme")
 public class MyUI extends UI {
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         getPage().setTitle("Title: MainMenu");
+
         MainMenu menu = new MainMenu();
         VerticalLayout layout = menu.getLayout();
         setContent(layout);

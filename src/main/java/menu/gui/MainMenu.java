@@ -308,10 +308,15 @@ public class MainMenu{
 	/*
 	 * 
 	 */
-	// public void actionPerformed(ActionEvent e) {
-	// 	String command = e.getActionCommand();
-	// 	launchApp(command);
-	// }
+	public void actionPerformed(Button.ClickEvent event) {
+		// String command = e.getActionCommand();
+		// launchApp(command);
+		// button.addClickListener(e -> {
+        //     parentFrame.layout.addComponent(new Label("Thanks " + name.getValue() 
+        //             + ", it works!"));
+        // });
+        this.layout.addComponent(new Label("Thanks , it works!"));
+	}
 
 	/**
 	 * 
@@ -358,22 +363,23 @@ public class MainMenu{
 	private class MainPanel extends JPanel {
 		private static final long serialVersionUID = 4338749100837551874L;
 
-		private JButton button[];
+		private Button button[];
 		private MainMenu parentFrame = null;
-		private List<Component> q = new ArrayList<Component>();
+		private List<Component> listComponent = new ArrayList<Component>();
 
-		public MainPanel(MainMenu parentQ) {
-			final TextField name = new TextField();
-	        name.setCaption("Type your name there:");
+		public MainPanel(MainMenu parentFrame) {
+			//final TextField name = new TextField();
+	        //name.setCaption("Type your name there:");
 
-	        Button button = new Button("Click Me");
-	        button.addClickListener(e -> {
-	            parentQ.layout.addComponent(new Label("Thanks " + name.getValue() 
-	                    + ", it works!"));
-	        });
-	        this.q.add(name);
-	        this.q.add(button);
-
+	        // Button button = new Button("Click Me");
+	        // button.addClickListener(e -> {
+	        //     parentFrame.layout.addComponent(new Label("Thanks " + name.getValue() 
+	        //             + ", it works!"));
+	        // });
+	        // button.addClickListener(parentFrame::actionPerformed);
+	        // this.listComponent.add(name);
+	        // this.listComponent.add(button);
+	        //RMF: start here
 			this.parentFrame = parentFrame;
 			int numItems = 0;
 
@@ -381,22 +387,23 @@ public class MainMenu{
 				if (u.getMySubmenu().equals("main"))
 					numItems++;
 
-			// System.out.println(numItems);
+			logger.info(""+numItems);
 
-			// button = new JButton[numItems];
+			button = new Button[numItems];
 
 			int k = 1;
 
-			// for (UserMenuItem u : myMenu)
-			// 	if (u.getMySubmenu().equals("main")) {
-			// 		button[k - 1] = new JButton(u.getButtonLabel());
+			for (UserMenuItem u : myMenu)
+				if (u.getMySubmenu().equals("main")) {
+					button[k - 1] = new Button(u.getButtonLabel());
 
-			// 		button[k - 1].setMnemonic(KeyEvent.VK_A + (int) (u.getShortcut() - 'A'));
+					button[k - 1].setClickShortcut(KeyEvent.VK_A + (int) (u.getShortcut() - 'A'));
 
-			// 		button[k - 1].addActionListener(parentFrame);
-			// 		button[k - 1].setActionCommand(u.getCode());
-			// 		k++;
-			// 	}
+					button[k - 1].addClickListener(parentFrame::actionPerformed);
+					button[k - 1].setIconAlternateText(u.getCode());
+					this.listComponent.add(button[k-1]);
+					k++;
+				}
 
 			// setButtonsSize(button);
 
@@ -404,7 +411,7 @@ public class MainMenu{
 			JLabel fig = new JLabel(new ImageIcon("rsc" + File.separator + "images" + File.separator + "LogoMenu.jpg"));
 			add(fig, BorderLayout.WEST);
 
-			JPanel buttons = new JPanel();
+			// JPanel buttons = new JPanel();
 			// GridBagLayout layout = new GridBagLayout();//problem
 			// buttons.setLayout(layout);
 
@@ -418,7 +425,7 @@ public class MainMenu{
 		}
 
 		private List<Component> getComponent(){
-			return this.q;
+			return this.listComponent;
 		}
 
 		private void setButtonsSize(JButton button[]) {
