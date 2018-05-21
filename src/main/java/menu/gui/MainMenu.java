@@ -40,8 +40,12 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Image;
+import com.vaadin.server.Sizeable.Unit;
+import com.vaadin.server.ThemeResource;
 
 public class MainMenu{
 	private static final long serialVersionUID = 7620582079916035164L;
@@ -107,6 +111,7 @@ public class MainMenu{
 	// debug mode
 	private boolean debug = false;
 	private MainMenu myFrame;
+	private HorizontalLayout layout0;
 	private VerticalLayout layout;
 
 	public MainMenu() {
@@ -258,7 +263,13 @@ public class MainMenu{
 				myMenu.remove(umi);
 		}
 		//RMF: start here
+		this.layout0 = new HorizontalLayout();
 		this.layout = new VerticalLayout();
+		ThemeResource resource = new ThemeResource("img/LogoMenu.jpg");
+		Image image = new Image("",resource);
+		image.setHeight(100,Unit.PERCENTAGE);
+		this.layout0.addComponent(image);
+		this.layout0.addComponent(this.layout);
 
 		// add panel with buttons to frame
 		MainPanel panel = new MainPanel(this);
@@ -266,7 +277,6 @@ public class MainMenu{
 		for(Component w:qc){
             this.layout.addComponent(w);
         }
-		// layout.addComponents(name, button);
 
 		// add(panel);
 		// pack();
@@ -294,8 +304,8 @@ public class MainMenu{
 		////qwe
 	}
 
-	public VerticalLayout getLayout(){
-		return this.layout;
+	public HorizontalLayout getLayout(){
+		return this.layout0;
 	}
 
 	private void actionExit(int status) {
@@ -368,18 +378,6 @@ public class MainMenu{
 		private List<Component> listComponent = new ArrayList<Component>();
 
 		public MainPanel(MainMenu parentFrame) {
-			//final TextField name = new TextField();
-	        //name.setCaption("Type your name there:");
-
-	        // Button button = new Button("Click Me");
-	        // button.addClickListener(e -> {
-	        //     parentFrame.layout.addComponent(new Label("Thanks " + name.getValue() 
-	        //             + ", it works!"));
-	        // });
-	        // button.addClickListener(parentFrame::actionPerformed);
-	        // this.listComponent.add(name);
-	        // this.listComponent.add(button);
-	        //RMF: start here
 			this.parentFrame = parentFrame;
 			int numItems = 0;
 
@@ -405,11 +403,11 @@ public class MainMenu{
 					k++;
 				}
 
-			// setButtonsSize(button);
+			setButtonsSize(button);
 
 			// setBackground(java.awt.Color.WHITE);
-			JLabel fig = new JLabel(new ImageIcon("rsc" + File.separator + "images" + File.separator + "LogoMenu.jpg"));
-			add(fig, BorderLayout.WEST);
+			// JLabel fig = new JLabel(new ImageIcon("rsc" + File.separator + "images" + File.separator + "LogoMenu.jpg"));
+			// add(fig, BorderLayout.WEST);
 
 			// JPanel buttons = new JPanel();
 			// GridBagLayout layout = new GridBagLayout();//problem
@@ -428,24 +426,16 @@ public class MainMenu{
 			return this.listComponent;
 		}
 
-		private void setButtonsSize(JButton button[]) {
-			int maxH = 0;
-			int maxMax = 0;
-			int maxMin = 0;
-			int maxPrf = 0;
+		private void setButtonsSize(Button button[]) {
+			float max = 0;
 
+			// for (int i = 0; i < button.length; i++) {
+			// 	max = Math.max(max, button[i].getWidth());
+			// 	logger.info(""+i+":"+max+button[i].getWidthUnits());
+			// }
 			for (int i = 0; i < button.length; i++) {
-				maxH = Math.max(maxH, button[i].getMaximumSize().height);
-				maxMax = Math.max(maxMax, button[i].getMaximumSize().width);
-				maxMin = Math.max(maxMin, button[i].getMinimumSize().width);
-				maxPrf = Math.max(maxPrf, button[i].getPreferredSize().width);
+				button[i].setWidth(100,Unit.PERCENTAGE);
 			}
-			for (int i = 0; i < button.length; i++) {
-				button[i].setMaximumSize(new Dimension(maxMax, maxH));
-				button[i].setMinimumSize(new Dimension(maxMin, maxH));
-				button[i].setPreferredSize(new Dimension(maxPrf, maxH));
-			}
-			parentFrame.setMinButtonSize(maxPrf);
 		}
 	}// :~MainPanel
 }// :~MainMenu

@@ -11,6 +11,7 @@ import com.vaadin.server.VaadinServlet;
 // import com.vaadin.ui.Label;
 // import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.HorizontalLayout;
 // import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
 
@@ -30,7 +31,7 @@ public class MyUI extends UI {
         getPage().setTitle("Title: MainMenu");
 
         MainMenu menu = new MainMenu();
-        VerticalLayout layout = menu.getLayout();
+        HorizontalLayout layout = menu.getLayout();
         setContent(layout);
     }
 
