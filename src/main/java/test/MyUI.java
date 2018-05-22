@@ -14,6 +14,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.HorizontalLayout;
 // import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Window;
 
 import menu.gui.MainMenu;
 /**
@@ -30,7 +31,7 @@ public class MyUI extends UI {
     protected void init(VaadinRequest vaadinRequest) {
         getPage().setTitle("Title: MainMenu");
 
-        MainMenu menu = new MainMenu();
+        MainMenu menu = new MainMenu(this);
         HorizontalLayout layout = menu.getLayout();
         setContent(layout);
     }

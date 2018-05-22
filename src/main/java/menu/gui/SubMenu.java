@@ -6,16 +6,21 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import menu.model.*;
+import test.MyUI;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 
 import java.util.*;
 
+import com.vaadin.ui.Window;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.Button;
 
-
-public class SubMenu extends JDialog implements ActionListener{
+public class SubMenu{
 	private static final long serialVersionUID = 7620582079916035164L;
+	private UI main;
 	
 	
 	private EventListenerList commandListeners = new EventListenerList();
@@ -48,6 +53,7 @@ public class SubMenu extends JDialog implements ActionListener{
 	
 	private ArrayList<UserMenuItem> myMenu;
 	private MainMenu mainMenu;
+	private VerticalLayout subContent;
 	
 	private int prfButtonSize=0;
 	public int getMinButtonSize(){
@@ -56,59 +62,63 @@ public class SubMenu extends JDialog implements ActionListener{
 	
 	
 	public SubMenu(SubMenu parent, String code, ArrayList<UserMenuItem> menu, MainMenu mainMenu) {
-		super(parent, "     ", true);
-		this.prfButtonSize=parent.getMinButtonSize();
-		initialize(mainMenu, code, menu, parent.getBounds());
-	}
-	
-	
-	public SubMenu(MainMenu parent, String code, ArrayList<UserMenuItem> menu) {
 		// super(parent, "     ", true);
 		this.prfButtonSize=parent.getMinButtonSize();
-		// initialize(parent, code, menu, parent.getBounds());
+		// initialize(mainMenu, code, menu, parent.getBounds());
+	}
+	
+	public SubMenu(MainMenu parent, String code, ArrayList<UserMenuItem> menu, UI main) {
+		// super(parent, "     ", true);
+		Window subWindow = new Window(code);
+		subWindow.setModal(true);
+		this.subContent = new VerticalLayout();
+        subWindow.setContent(this.subContent);
+        main.addWindow(subWindow);
+		this.prfButtonSize=parent.getMinButtonSize();
+		initialize(parent, code, menu, null);
 	}
 	
 	
-	private void initialize(MainMenu mainMenu, String code, ArrayList<UserMenuItem> menu, Rectangle parentBounds){
+	private void initialize(MainMenu mainMenu, String code, ArrayList<UserMenuItem> menu, String RectangleparentBounds){
 
 		final int displacement = 50;
 		
 		this.mainMenu = mainMenu;
 		
 		// addCommandListener(mainMenu);
-		
+		// q
 		myMenu = menu;
 		
 		// add panel to frame
-		SubPanel panel = new SubPanel(this, code);
-		add(panel);
+		SubPanel panel = new SubPanel(this,code);
+		// add(panel);
 
-		// submenu leggermente spostato rispetto a menu
-		Rectangle r = parentBounds;
-		r.width = getBounds().width;
-		r.height = getBounds().height;
-		r.x += displacement;
-		r.y -= displacement;
+		// // submenu leggermente spostato rispetto a menu
+		// Rectangle r = parentBounds;
+		// r.width = getBounds().width;
+		// r.height = getBounds().height;
+		// r.x += displacement;
+		// r.y -= displacement;
 
-		setBounds(r);
+		// setBounds(r);
 
-		setResizable(false);
-		pack();
-		setVisible(true);
+		// setResizable(false);
+		// pack();
+		// setVisible(true);
 	}
 	
-	public void actionPerformed(ActionEvent event) {
+	public void actionPerformed(Button.ClickEvent e) {
 
-		String command = event.getActionCommand();
+		String command = e.getButton().getIconAlternateText();
 		for(UserMenuItem u : myMenu){
 			if (u.getCode().equals(command)){
 				if (u.isASubMenu()){
-					dispose();
+					// dispose();
 					new SubMenu(this, u.getCode(), myMenu, mainMenu );					
 					break;
 				}
 				else {
-					dispose();
+					// dispose();
 					fireCommandInserted(u.getCode());					
 					break;
 				}
@@ -117,11 +127,11 @@ public class SubMenu extends JDialog implements ActionListener{
 		
 	}
 	
-	private class SubPanel extends JPanel {
+	private class SubPanel{
 
 		private static final long serialVersionUID = 4338749100837551874L;
 
-		private JButton button[];
+		private Button button[];
 		private String title;
 		
 		public SubPanel(SubMenu dialogFrame, String subName) {
@@ -135,64 +145,64 @@ public class SubMenu extends JDialog implements ActionListener{
 				
 			//System.out.println(numItems);
 			
-			button = new JButton[numItems];
+			button = new Button[numItems];
 
 			int k=1;
 			
 			for(UserMenuItem u : myMenu)
 				if (u.getMySubmenu().equals(subName)){
-					button[k-1]= new JButton(u.getButtonLabel());
-					button[k-1].setMnemonic(KeyEvent.VK_A	+ (int)(u.getShortcut() - 'A'));
-					button[k-1].setActionCommand(u.getCode());
+					button[k-1]= new Button(u.getButtonLabel());
+					button[k-1].setClickShortcut(KeyEvent.VK_A	+ (int)(u.getShortcut() - 'A'));
+					button[k-1].setIconAlternateText(u.getCode());
 					if (!u.isActive())
 						button[k-1].setEnabled(false);
 					else 
-						button[k-1].addActionListener(dialogFrame); 
+						button[k-1].addClickListener(dialogFrame::actionPerformed); 
 					k++;
-				} 
+				}
 
 			setButtonsSize(button);
 
 			//setBackground(Color.WHITE);
-			GridBagLayout layout = new GridBagLayout();
-			setLayout(layout);
-			JPanel p = new JPanel();
-			JLabel l = new JLabel(title);
-			l.setFont(new Font("SansSerif",Font.BOLD,12));
-			p.add(l);
-			p.setPreferredSize(new Dimension(prfButtonSize,p.getPreferredSize().height));
+			// GridBagLayout layout = new GridBagLayout();
+			// setLayout(layout);
+			// JPanel p = new JPanel();
+			// JLabel l = new JLabel(title);
+			// l.setFont(new Font("SansSerif",Font.BOLD,12));
+			// p.add(l);
+			// p.setPreferredSize(new Dimension(prfButtonSize,p.getPreferredSize().height));
 			//p.setBackground(Color.WHITE);
-			p.setBorder(new javax.swing.border.LineBorder(Color.lightGray));
+			// p.setBorder(new javax.swing.border.LineBorder(Color.lightGray));
 			
 			final int insetsValue = 5;
 
-			add(p,new GBC(0, 0).setInsets(insetsValue));
+			// add(p,new GBC(0, 0).setInsets(insetsValue));
 						
 			for (int i = 0; i < button.length; i++) {
-				add(button[i], new GBC(0, i+1).setInsets(insetsValue));
+				dialogFrame.subContent.addComponent(button[i]);
 			}
 			
 		}
 		
-		private void setButtonsSize(JButton button[]) {
+		private void setButtonsSize(Button button[]) {
 			int maxH = 0;
 			int maxMax = 0;
 			int maxMin = 0;
 			int maxPrf = 0;
 
-			for (int i = 0; i < button.length; i++) {
-				maxH = Math.max(maxH, button[i].getMaximumSize().height);
-				maxMax = Math.max(maxMax, button[i].getMaximumSize().width);
-				maxMin = Math.max(maxMin, button[i].getMinimumSize().width);
-				maxPrf = Math.max(maxPrf, button[i].getPreferredSize().width);
-			}
-			maxPrf = Math.max(maxPrf, prfButtonSize);
+			// for (int i = 0; i < button.length; i++) {
+			// 	maxH = Math.max(maxH, button[i].getMaximumSize().height);
+			// 	maxMax = Math.max(maxMax, button[i].getMaximumSize().width);
+			// 	maxMin = Math.max(maxMin, button[i].getMinimumSize().width);
+			// 	maxPrf = Math.max(maxPrf, button[i].getPreferredSize().width);
+			// }
+			// maxPrf = Math.max(maxPrf, prfButtonSize);
 			
-			for (int i = 0; i < button.length; i++) {
-				button[i].setMaximumSize(new Dimension(maxMax, maxH));
-				button[i].setMinimumSize(new Dimension(maxMin, maxH));
-				button[i].setPreferredSize(new Dimension(maxPrf, maxH));
-			}
+			// for (int i = 0; i < button.length; i++) {
+			// 	button[i].setMaximumSize(new Dimension(maxMax, maxH));
+			// 	button[i].setMinimumSize(new Dimension(maxMin, maxH));
+			// 	button[i].setPreferredSize(new Dimension(maxPrf, maxH));
+			// }
 		}
 	}
 }

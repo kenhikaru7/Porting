@@ -51,7 +51,7 @@ class SplashWindow3 extends JWindow {
                 {
                 	setVisible(false);
                     dispose();
-                    new MainMenu();
+                    // new MainMenu();
                 }
             };
         Runnable waitRunner = new Runnable()

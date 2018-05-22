@@ -114,8 +114,10 @@ public class MainMenu{
 	private MainMenu myFrame;
 	private HorizontalLayout layout0;
 	private VerticalLayout layout;
+	private UI main;
 
-	public MainMenu() {
+	public MainMenu(UI main) {
+		this.main = main;
 		myFrame = this;
 
 		GeneralData.getGeneralData();
@@ -300,57 +302,55 @@ public class MainMenu{
 	/*
 	 * 
 	 */
-	public void actionPerformed(Button.ClickEvent event) {
-		// String command = e.getActionCommand();
-		// launchApp(command);
-		// button.addClickListener(e -> {
-        //     parentFrame.layout.addComponent(new Label("Thanks " + name.getValue() 
-        //             + ", it works!"));
-        // });
-        this.layout.addComponent(new Label("Thanks , it works!"));
+	public void actionPerformed(Button.ClickEvent e) {
+		String command = e.getButton().getIconAlternateText();
+		// logger.info(command);
+		launchApp(command);
+        this.layout.addComponent(new Label("Thanks " + e.getButton().getCaption() + ", it works!"));
 	}
 
 	/**
 	 * 
 	 * @param itemMenuCode
 	 */
-	// private void launchApp(String itemMenuCode) {
+	private void launchApp(String itemMenuCode) {
 
-	// 	for (UserMenuItem u : myMenu) {
-	// 		if (u.getCode().equals(itemMenuCode)) {
-	// 			if (u.getCode().equalsIgnoreCase("EXIT")) {
-	// 				actionExit(0);
-	// 			} else if (u.isASubMenu()) {
-	// 				new SubMenu(this, u.getCode(), myMenu);
-	// 				break;
-	// 			} else {
-	// 				String app = u.getMyClass();
-	// 				// an empty menu item
-	// 				if (app.equalsIgnoreCase("none"))
-	// 					return;
-	// 				try {
-	// 					Object target = Class.forName(app).newInstance();
-	// 					try {
-	// 						((ModalJFrame) target).showAsModal(this);
-	// 					} catch (ClassCastException noModalJFrame) {
-	// 						try {
-	// 							((JFrame) target).setEnabled(true);
-	// 						} catch (ClassCastException noJFrame) {
-	// 							((JDialog) target).setEnabled(true);
-	// 						}
-	// 					}
-	// 				} catch (InstantiationException ie) {
-	// 					ie.printStackTrace();
-	// 				} catch (IllegalAccessException iae) {
-	// 					iae.printStackTrace();
-	// 				} catch (ClassNotFoundException cnfe) {
-	// 					cnfe.printStackTrace();
-	// 				}
-	// 				break;
-	// 			}
-	// 		}
-	// 	}
-	// }
+		for (UserMenuItem u : myMenu) {
+			if (u.getCode().equals(itemMenuCode)) {
+				if (u.getCode().equalsIgnoreCase("EXIT")) {
+					actionExit(0);
+				} else if (u.isASubMenu()) {
+					// logger.info(u.getCode());
+					new SubMenu(this, u.getCode(), myMenu, this.main);
+					break;
+				}// else {
+				// 	String app = u.getMyClass();
+				// 	// an empty menu item
+				// 	if (app.equalsIgnoreCase("none"))
+				// 		return;
+				// 	try {
+				// 		Object target = Class.forName(app).newInstance();
+				// 		try {
+				// 			((ModalJFrame) target).showAsModal(this);
+				// 		} catch (ClassCastException noModalJFrame) {
+				// 			try {
+				// 				((JFrame) target).setEnabled(true);
+				// 			} catch (ClassCastException noJFrame) {
+				// 				((JDialog) target).setEnabled(true);
+				// 			}
+				// 		}
+				// 	} catch (InstantiationException ie) {
+				// 		ie.printStackTrace();
+				// 	} catch (IllegalAccessException iae) {
+				// 		iae.printStackTrace();
+				// 	} catch (ClassNotFoundException cnfe) {
+				// 		cnfe.printStackTrace();
+				// 	}
+				// 	break;
+				// }
+			}
+		}
+	}
 
 	private class MainPanel extends JPanel {
 		private static final long serialVersionUID = 4338749100837551874L;
@@ -396,8 +396,7 @@ public class MainMenu{
 			float max = 0;
 
 			// for (int i = 0; i < button.length; i++) {
-			// 	max = Math.max(max, button[i].getWidth());
-			// 	logger.info(""+i+":"+max+button[i].getWidthUnits());
+			// 	max = Math.max(max, button[i].getWidth());\
 			// }
 			for (int i = 0; i < button.length; i++) {
 				// button[i].setWidth("100%");
