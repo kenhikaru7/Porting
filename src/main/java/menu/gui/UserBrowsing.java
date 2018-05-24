@@ -1,4 +1,4 @@
-package menu.gui;
+package org.isf.menu.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -19,11 +19,11 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.table.DefaultTableModel;
 
-import menu.manager.*;
-import menu.model.*;
-import utils.db.BCrypt;
-import utils.jobjects.ModalJFrame;
-import generaldata.MessageBundle;
+import org.isf.menu.manager.*;
+import org.isf.menu.model.*;
+import org.isf.utils.db.BCrypt;
+import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.generaldata.MessageBundle;
 
 
 

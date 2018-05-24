@@ -1,4 +1,4 @@
-package utils.db;
+package org.isf.utils.db;
 
 // Copyright (c) 2006 Damien Miller <djm@mindrot.org>
 //

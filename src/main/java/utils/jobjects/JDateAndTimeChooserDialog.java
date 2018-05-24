@@ -1,7 +1,7 @@
 /**
  * 
  */
-package utils.jobjects;
+package org.isf.utils.jobjects;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -16,9 +16,9 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-import generaldata.GeneralData;
-import generaldata.MessageBundle;
-import utils.jobjects.JDateAndTimeChooser;
+import org.isf.generaldata.GeneralData;
+import org.isf.generaldata.MessageBundle;
+import org.isf.utils.jobjects.JDateAndTimeChooser;
 
 /**
  * @author Mwithi

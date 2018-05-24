@@ -1,7 +1,7 @@
 /**
  * 
  */
-package utils.jobjects;
+package org.isf.utils.jobjects;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -16,7 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import generaldata.MessageBundle;
+import org.isf.generaldata.MessageBundle;
 
 /**
  * @author Mwithi

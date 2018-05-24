@@ -1,4 +1,4 @@
-package utils.jobjects;
+package org.isf.utils.jobjects;
 
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
@@ -11,7 +11,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import generaldata.GeneralData;
+import org.isf.generaldata.GeneralData;
 
 public class JDateAndTimeChooser extends JPanel {
 

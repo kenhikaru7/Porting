@@ -1,4 +1,4 @@
-package menu.gui;
+package org.isf.menu.gui;
 
 
 /*

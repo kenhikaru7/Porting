@@ -1,5 +1,5 @@
-package menu.model;
-import generaldata.MessageBundle;
+package org.isf.menu.model;
+import org.isf.generaldata.MessageBundle;
 
 /**
  * not pure model class

@@ -1,7 +1,7 @@
 /**
  * MonthYearChooser.java - 14/dic/2012
  */
-package utils.jobjects;
+package org.isf.utils.jobjects;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -11,7 +11,7 @@ import java.util.Locale;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import generaldata.GeneralData;
+import org.isf.generaldata.GeneralData;
 
 import com.toedter.calendar.JMonthChooser;
 import com.toedter.calendar.JYearChooser;

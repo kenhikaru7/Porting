@@ -1,4 +1,4 @@
-package utils.treetable;
+package org.isf.utils.treetable;
 
 /*
  * %W% %E%

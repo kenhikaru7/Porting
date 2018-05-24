@@ -1,4 +1,4 @@
-package utils.jobjects;
+package org.isf.utils.jobjects;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;

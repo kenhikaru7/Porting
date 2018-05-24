@@ -1,4 +1,4 @@
-package utils.jobjects;
+package org.isf.utils.jobjects;
 import javax.swing.*;
 import javax.swing.event.*;
 

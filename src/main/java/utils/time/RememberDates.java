@@ -1,4 +1,4 @@
-package utils.time;
+package org.isf.utils.time;
 /*-------------------------------------------------------------------
  * static class RememberDates: useful class in order to remember the last date inserted when 
  * are performed recursive inserting of past datas. The aim of the class is to avoid the user

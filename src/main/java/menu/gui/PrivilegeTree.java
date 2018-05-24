@@ -1,4 +1,4 @@
-package menu.gui;
+package org.isf.menu.gui;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -7,10 +7,10 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.tree.*;
 
-import menu.manager.UserBrowsingManager;
-import menu.model.*;
+import org.isf.menu.manager.UserBrowsingManager;
+import org.isf.menu.model.*;
 
-import generaldata.MessageBundle;
+import org.isf.generaldata.MessageBundle;
 
 /*----------------------------------------------------------
  * modification history

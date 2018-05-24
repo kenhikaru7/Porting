@@ -1,4 +1,4 @@
-package menu.gui;
+package org.isf.menu.gui;
 
 import java.awt.Toolkit;
 import java.io.File;
@@ -6,8 +6,8 @@ import java.io.File;
 import javax.swing.JFrame;
 
 import org.apache.log4j.PropertyConfigurator;
-import generaldata.Version;
-import utils.jobjects.WaitCursorEventQueue;
+import org.isf.generaldata.Version;
+import org.isf.utils.jobjects.WaitCursorEventQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

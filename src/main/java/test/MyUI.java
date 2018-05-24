@@ -1,4 +1,4 @@
-package test;
+package org.isf.test;
 
 import javax.servlet.annotation.WebServlet;
 
@@ -16,7 +16,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 
-import menu.gui.MainMenu;
+import org.isf.menu.gui.MainMenu;
 /**
  * This UI is the application entry point. A UI may either represent a browser window 
  * (or tab) or some part of an HTML page where a Vaadin application is embedded.

@@ -1,4 +1,4 @@
-package utils.db;
+package org.isf.utils.db;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -20,8 +20,8 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.Random;
 
-import utils.exception.OHException;
-import utils.time.TimeTools;
+import org.isf.utils.exception.OHException;
+import org.isf.utils.time.TimeTools;
 
 /**
  * 

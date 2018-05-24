@@ -1,7 +1,7 @@
 /**
  * just a subclass to set transparency and some stuff.
  */
-package utils.jobjects;
+package org.isf.utils.jobjects;
 
 import javax.swing.Icon;
 import javax.swing.JButton;

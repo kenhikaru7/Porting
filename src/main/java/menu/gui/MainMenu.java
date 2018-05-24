@@ -1,4 +1,4 @@
-package menu.gui;
+package org.isf.menu.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -22,12 +22,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import generaldata.GeneralData;
-import menu.manager.UserBrowsingManager;
-import menu.model.User;
-import menu.model.UserMenuItem;
+import org.isf.generaldata.GeneralData;
+import org.isf.menu.manager.UserBrowsingManager;
+import org.isf.menu.model.User;
+import org.isf.menu.model.UserMenuItem;
 //import sms.service.SmsSender;
-import utils.jobjects.ModalJFrame;
+import org.isf.utils.jobjects.ModalJFrame;
 //import xmpp.gui.CommunicationFrame;
 //import xmpp.service.Server;
 import org.jivesoftware.smack.XMPPException;
@@ -306,7 +306,7 @@ public class MainMenu{
 		String command = e.getButton().getIconAlternateText();
 		// logger.info(command);
 		launchApp(command);
-        this.layout.addComponent(new Label("Thanks " + e.getButton().getCaption() + ", it works!"));
+        // this.layout.addComponent(new Label("Thanks " + e.getButton().getCaption() + ", it works!"));
 	}
 
 	/**
@@ -323,13 +323,14 @@ public class MainMenu{
 					// logger.info(u.getCode());
 					new SubMenu(this, u.getCode(), myMenu, this.main);
 					break;
-				}// else {
-				// 	String app = u.getMyClass();
-				// 	// an empty menu item
-				// 	if (app.equalsIgnoreCase("none"))
-				// 		return;
-				// 	try {
-				// 		Object target = Class.forName(app).newInstance();
+				} else {
+					String app = u.getMyClass();
+					// an empty menu item
+					if (app.equalsIgnoreCase("none"))
+						return;
+					try {
+						logger.info(app);
+						Object target = Class.forName(app).newInstance();
 				// 		try {
 				// 			((ModalJFrame) target).showAsModal(this);
 				// 		} catch (ClassCastException noModalJFrame) {
@@ -338,16 +339,16 @@ public class MainMenu{
 				// 			} catch (ClassCastException noJFrame) {
 				// 				((JDialog) target).setEnabled(true);
 				// 			}
-				// 		}
-				// 	} catch (InstantiationException ie) {
-				// 		ie.printStackTrace();
-				// 	} catch (IllegalAccessException iae) {
-				// 		iae.printStackTrace();
-				// 	} catch (ClassNotFoundException cnfe) {
-				// 		cnfe.printStackTrace();
-				// 	}
-				// 	break;
-				// }
+						// }
+					} catch (InstantiationException ie) {
+						ie.printStackTrace();
+					} catch (IllegalAccessException iae) {
+						iae.printStackTrace();
+					} catch (ClassNotFoundException cnfe) {
+						cnfe.printStackTrace();
+					}
+					break;
+				}
 			}
 		}
 	}

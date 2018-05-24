@@ -4,7 +4,7 @@
  *
  * $Id: BusyState.java,v 1.1 2014/11/16 11:32:09 eppesuig Exp $ $Date: 2014/11/16 11:32:09 $ $Revision: 1.1 $
  */
-package utils.jobjects;
+package org.isf.utils.jobjects;
 
 import java.awt.Component;
 import java.awt.Container;

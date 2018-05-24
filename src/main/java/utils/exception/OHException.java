@@ -1,4 +1,4 @@
-package utils.exception;
+package org.isf.utils.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package utils.jobjects;
+package org.isf.utils.jobjects;
 /**
  * Cropping.java - 27/gen/2014
  */

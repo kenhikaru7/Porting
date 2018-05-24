@@ -1,4 +1,4 @@
-package menu.gui;
+package org.isf.menu.gui;
 
 import java.awt.*;
 import java.util.*;
@@ -12,9 +12,9 @@ import javax.swing.BoxLayout;
 import javax.swing.JTextField;
 import javax.swing.event.*;
 
-import menu.manager.*;
-import menu.model.*;
-import generaldata.MessageBundle;
+import org.isf.menu.manager.*;
+import org.isf.menu.model.*;
+import org.isf.generaldata.MessageBundle;
 
 public class GroupEdit extends JDialog {
 

@@ -1,4 +1,4 @@
-package menu.service;
+package org.isf.menu.service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import generaldata.MessageBundle;
-import menu.model.User;
-import menu.model.UserGroup;
-import menu.model.UserMenuItem;
-import utils.db.DbQueryLogger;
-import utils.exception.OHException;
+import org.isf.generaldata.MessageBundle;
+import org.isf.menu.model.User;
+import org.isf.menu.model.UserGroup;
+import org.isf.menu.model.UserMenuItem;
+import org.isf.utils.db.DbQueryLogger;
+import org.isf.utils.exception.OHException;
 
 public class IoOperations {
 

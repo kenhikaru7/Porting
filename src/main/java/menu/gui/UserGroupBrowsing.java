@@ -1,4 +1,4 @@
-package menu.gui;
+package org.isf.menu.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -16,10 +16,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import generaldata.MessageBundle;
-import menu.manager.UserBrowsingManager;
-import menu.model.UserGroup;
-import utils.jobjects.ModalJFrame;
+import org.isf.generaldata.MessageBundle;
+import org.isf.menu.manager.UserBrowsingManager;
+import org.isf.menu.model.UserGroup;
+import org.isf.utils.jobjects.ModalJFrame;
 
 
 

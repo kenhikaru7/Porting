@@ -1,4 +1,4 @@
-package menu.gui;
+package org.isf.menu.gui;
 
 import java.awt.*;
 import java.util.*;
@@ -6,10 +6,10 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
-import menu.manager.*;
-import menu.model.*;
-import utils.db.BCrypt;
-import generaldata.MessageBundle;
+import org.isf.menu.manager.*;
+import org.isf.menu.model.*;
+import org.isf.utils.db.BCrypt;
+import org.isf.generaldata.MessageBundle;
 
 public class UserEdit extends JDialog {
 

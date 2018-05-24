@@ -1,4 +1,4 @@
-package utils.table;
+package org.isf.utils.table;
 
 import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;

@@ -1,4 +1,4 @@
-package utils.treetable;
+package org.isf.utils.treetable;
 
 import java.awt.Component;
 import java.awt.Graphics;

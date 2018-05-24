@@ -4,13 +4,13 @@
  * To change the template for this generated file go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-package generaldata;
+package org.isf.generaldata;
 
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import utils.db.UTF8Control;
+import org.isf.utils.db.UTF8Control;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

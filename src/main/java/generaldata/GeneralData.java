@@ -1,4 +1,4 @@
-package generaldata;
+package org.isf.generaldata;
 
 import java.io.File;
 import java.io.FileInputStream;

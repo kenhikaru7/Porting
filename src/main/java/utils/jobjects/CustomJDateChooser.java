@@ -1,7 +1,7 @@
 /**
  * 
  */
-package utils.jobjects;
+package org.isf.utils.jobjects;
 
 import java.awt.Font;
 import java.util.Date;

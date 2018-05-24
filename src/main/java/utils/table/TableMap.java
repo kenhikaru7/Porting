@@ -1,4 +1,4 @@
-package utils.table;
+package org.isf.utils.table;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;

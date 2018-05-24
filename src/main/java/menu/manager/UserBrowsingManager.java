@@ -1,13 +1,13 @@
-package menu.manager;
+package org.isf.menu.manager;
 
 import java.util.*;
 
 import javax.swing.JOptionPane;
 
-import menu.model.*;
-import menu.service.*;
-import utils.exception.OHException;
-import generaldata.MessageBundle;
+import org.isf.menu.model.*;
+import org.isf.menu.service.*;
+import org.isf.utils.exception.OHException;
+import org.isf.generaldata.MessageBundle;
 
 public class UserBrowsingManager {
 	

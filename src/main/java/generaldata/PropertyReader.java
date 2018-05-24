@@ -1,4 +1,4 @@
-package generaldata;
+package org.isf.generaldata;
 
 import java.util.HashMap;
 import java.util.Hashtable;

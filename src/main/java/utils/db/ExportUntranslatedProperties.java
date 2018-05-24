@@ -1,7 +1,7 @@
 /**
  * ExportUntraslatedProperties.java - 04/set/2013
  */
-package utils.db;
+package org.isf.utils.db;
 
 import java.io.File;
 import java.io.FileNotFoundException;

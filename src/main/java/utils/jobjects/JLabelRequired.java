@@ -1,7 +1,7 @@
 /**
  * JLabelRequired.java - 28/gen/2014
  */
-package utils.jobjects;
+package org.isf.utils.jobjects;
 
 import javax.swing.Icon;
 import javax.swing.JLabel;

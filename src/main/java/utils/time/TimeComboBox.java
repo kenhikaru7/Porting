@@ -1,4 +1,4 @@
-package utils.time;
+package org.isf.utils.time;
 
 import java.awt.AWTEvent;
 import java.awt.event.ActionEvent;

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package utils.db;
+package org.isf.utils.db;
 
 import java.text.Normalizer;
 

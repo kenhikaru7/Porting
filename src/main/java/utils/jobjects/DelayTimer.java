@@ -1,4 +1,4 @@
-package utils.jobjects;
+package org.isf.utils.jobjects;
 
 public class DelayTimer extends Thread {
 	private final DelayTimerCallback callback;

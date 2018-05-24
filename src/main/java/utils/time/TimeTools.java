@@ -1,4 +1,4 @@
-package utils.time;
+package org.isf.utils.time;
 
 import java.text.MessageFormat;
 import java.text.ParseException;
@@ -6,8 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import generaldata.GeneralData;
-import generaldata.MessageBundle;
+import org.isf.generaldata.GeneralData;
+import org.isf.generaldata.MessageBundle;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;

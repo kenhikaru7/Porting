@@ -1,4 +1,4 @@
-package menu.gui;
+package org.isf.menu.gui;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -6,13 +6,13 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 
-import menu.manager.UserBrowsingManager;
-import menu.model.*;
-import utils.db.BCrypt;
+import org.isf.menu.manager.UserBrowsingManager;
+import org.isf.menu.model.*;
+import org.isf.utils.db.BCrypt;
 
 import java.util.*;
 
-import generaldata.MessageBundle;
+import org.isf.generaldata.MessageBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

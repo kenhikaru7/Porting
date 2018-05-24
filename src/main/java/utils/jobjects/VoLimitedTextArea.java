@@ -1,4 +1,4 @@
-package utils.jobjects;
+package org.isf.utils.jobjects;
 
 import javax.swing.JTextArea;
 import javax.swing.text.AttributeSet;

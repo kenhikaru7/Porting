@@ -2,7 +2,7 @@
  * 02-mar-2006
  * @author Theo
  */
-package utils.time;
+package org.isf.utils.time;
 
 import java.awt.FlowLayout;
 import java.awt.event.FocusEvent;

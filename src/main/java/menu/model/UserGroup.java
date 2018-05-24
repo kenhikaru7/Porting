@@ -1,4 +1,4 @@
-package menu.model;
+package org.isf.menu.model;
 
 public class UserGroup {
 	private String code;

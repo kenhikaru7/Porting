@@ -1,4 +1,4 @@
-package utils.db;
+package org.isf.utils.db;
 
 import java.io.IOException;
 import java.sql.Connection;

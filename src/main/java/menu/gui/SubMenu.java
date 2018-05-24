@@ -1,12 +1,11 @@
-package menu.gui;
+package org.isf.menu.gui;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import menu.model.*;
-import test.MyUI;
+import org.isf.menu.model.*;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
