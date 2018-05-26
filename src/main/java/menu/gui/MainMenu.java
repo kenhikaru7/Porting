@@ -11,9 +11,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.*;
+import java.lang.*;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -28,8 +27,10 @@ import org.isf.menu.model.User;
 import org.isf.menu.model.UserMenuItem;
 //import sms.service.SmsSender;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.admission.gui.AdmittedPatientBrowser;
 //import xmpp.gui.CommunicationFrame;
 //import xmpp.service.Server;
+
 import org.jivesoftware.smack.XMPPException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -268,6 +269,8 @@ public class MainMenu{
 		//RMF: start here
 		this.layout0 = new HorizontalLayout();
 		this.layout = new VerticalLayout();
+		// this.layout.setWidth(Sizeable.SIZE_UNDEFINED)
+		this.layout.setSizeUndefined();
 		ThemeResource resource = new ThemeResource("img/LogoMenu.jpg");
 		Image image = new Image(null,resource);
 		image.setHeight(100,Unit.PERCENTAGE);
@@ -279,7 +282,6 @@ public class MainMenu{
 		List<Component> qc = panel.getComponent();
 		for(Component w:qc){
             this.layout.addComponent(w);
-            this.layout.setExpandRatio(w, 1.0f);
         }
 
 		// compute menu position
@@ -328,25 +330,8 @@ public class MainMenu{
 					// an empty menu item
 					if (app.equalsIgnoreCase("none"))
 						return;
-					try {
 						logger.info(app);
-						Object target = Class.forName(app).newInstance();
-				// 		try {
-				// 			((ModalJFrame) target).showAsModal(this);
-				// 		} catch (ClassCastException noModalJFrame) {
-				// 			try {
-				// 				((JFrame) target).setEnabled(true);
-				// 			} catch (ClassCastException noJFrame) {
-				// 				((JDialog) target).setEnabled(true);
-				// 			}
-						// }
-					} catch (InstantiationException ie) {
-						ie.printStackTrace();
-					} catch (IllegalAccessException iae) {
-						iae.printStackTrace();
-					} catch (ClassNotFoundException cnfe) {
-						cnfe.printStackTrace();
-					}
+						Object target = new AdmittedPatientBrowser(this.main);
 					break;
 				}
 			}
@@ -386,7 +371,7 @@ public class MainMenu{
 					k++;
 				}
 
-			// setButtonsSize(button);
+			setButtonsSize(button);
 		}
 
 		private List<Component> getComponent(){
@@ -394,15 +379,20 @@ public class MainMenu{
 		}
 
 		private void setButtonsSize(Button button[]) {
-			float max = 0;
-
+			int max = 0;
+			int ii=0;
 			// for (int i = 0; i < button.length; i++) {
 			// 	max = Math.max(max, button[i].getWidth());\
 			// }
 			for (int i = 0; i < button.length; i++) {
-				// button[i].setWidth("100%");
-				parentFrame.layout.setExpandRatio(button[i], 1.0f);
+				if(button[i].getCaption().length()>max){
+					max = button[i].getCaption().length();
+					ii = i;
+				}
+				button[i].setWidth("100%");
+				// parentFrame.layout.setExpandRatio(button[i], 1.0f);
 			}
+			button[ii].setWidthUndefined();
 		}
 	}// :~MainPanel
 }// :~MainMenu
