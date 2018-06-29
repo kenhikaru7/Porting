@@ -11,6 +11,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.patient.model.Patient;
 import org.isf.patient.service.IoOperations;
 import org.isf.utils.exception.OHException;
+import de.steinwedel.messagebox.MessageBox;
 
 public class PatientBrowserManager {
 
@@ -26,7 +27,7 @@ public class PatientBrowserManager {
 		try {
 			return ioOperations.newPatient(patient);
 		} catch (OHException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
+			MessageBox.createInfo().withCaption("Message").withMessage(e.getMessage()).withOkButton().open();
 			return false;
 		}
 	}

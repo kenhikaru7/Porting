@@ -44,11 +44,11 @@
 	</dependencyManagement>
 
 	<dependencies>
-			<dependency>
-			    <groupId>org.slf4j</groupId>
-			    <artifactId>jul-to-slf4j</artifactId>
-			    <version>1.7.25</version>
-			</dependency>
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>jul-to-slf4j</artifactId>
+		    <version>1.7.25</version>
+		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -75,6 +75,11 @@
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-themes</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.steinwedel.vaadin.addon</groupId>
+			<artifactId>messagebox</artifactId>
+			<version>4.0.21</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -244,6 +249,10 @@
 					<snapshots>
 						<enabled>true</enabled>
 					</snapshots>
+				</repository>
+				<repository>
+					<id>vaadin-addons</id>
+   					<url>http://maven.vaadin.com/vaadin-addons</url>
 				</repository>
 			</repositories>
 			<pluginRepositories>

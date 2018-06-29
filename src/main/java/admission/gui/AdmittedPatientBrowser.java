@@ -15,23 +15,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Date;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
+import java.util.List;
 
 // import accounting.gui.PatientBillEdit;
 // import accounting.manager.BillBrowserManager;
@@ -49,7 +33,7 @@ import org.isf.menu.gui.MainMenu;
 // import opd.gui.OpdEditExtended;
 // import opd.model.Opd;
 import org.isf.patient.gui.PatientInsert;
-// import org.isf.patient.gui.PatientInsertExtended;
+import org.isf.patient.gui.PatientInsertExtended;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 // import therapy.gui.TherapyEdit;qqd
@@ -57,14 +41,19 @@ import org.isf.utils.db.NormalizeString;
 import org.isf.utils.jobjects.BusyState;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.time.TimeTools;
+import org.isf.utils.Logging;
 // import ward.manager.WardBrowserManager;qqd
 // import ward.model.Ward;qqd
 
 import com.vaadin.ui.Window;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.Grid;
 
 /**
  * This class shows a list of all known patients and for each if (and where) they are actually admitted, 
@@ -114,17 +103,16 @@ public class AdmittedPatientBrowser implements
 	private static final long serialVersionUID = 1L;
 
 	private UI main;
-	private VerticalLayout subContent;
+	private VerticalLayout windowContent;
 
 	private String[] patientClassItems = { MessageBundle.getMessage("angal.admission.all"), MessageBundle.getMessage("angal.admission.admitted"), MessageBundle.getMessage("angal.admission.notadmitted") };
-	private JComboBox patientClassBox = new JComboBox(patientClassItems);
-	private JCheckBox wardCheck[] = null;
-	private JTextField searchString = null;
-	private JButton jSearchButton = null;
-	private JButton jButtonExamination;
+	// private JComboBox patientClassBox = new JComboBox(patientClassItems);
+	private TextField searchString = null;
+	private Button jSearchButton = null;
+	private Button jButtonExamination;
 	private String lastKey = "";
 	// private ArrayList<Ward> wardList = null;qqd
-	private JLabel rowCounter = null;
+	private Label rowCounter = null;
 	private String rowCounterText = MessageBundle.getMessage("angal.admission.count");
 	private ArrayList<AdmittedPatient> pPatient = new ArrayList<AdmittedPatient>();
 	private String informations = MessageBundle.getMessage("angal.admission.city") + " / " + MessageBundle.getMessage("angal.admission.addressm") + " / " + MessageBundle.getMessage("angal.admission.telephone") + " / " + MessageBundle.getMessage("angal.patient.note");
@@ -132,11 +120,14 @@ public class AdmittedPatientBrowser implements
 	private int[] pColumwidth = { 100, 200, 80, 50, 150, 100 };
 	private boolean[] pColumResizable = {false, false, false, false, true, false};
 	private AdmittedPatient patient;
-	private JTable table;
-	private JScrollPane scrollPane;
+	private Grid<Patient> table;
+	// private JScrollPane scrollPane;
 	private AdmittedPatientBrowser myFrame;
 	private AdmissionBrowserManager manager = new AdmissionBrowserManager();
 	protected boolean altKeyReleased = true;
+	Logging logger;
+	AdmittedPatientBrowserModel data;
+	List<Patient> patients;
 	
 	public void fireMyDeletedPatient(Patient p){
 				
@@ -152,7 +143,7 @@ public class AdmittedPatientBrowser implements
 		if (found){
 			pPatient.remove(cc);
 			lastKey = "";
-			filterPatient(searchString.getText());
+			// filterPatient(searchString.getText());
 		}
 	}
 	
@@ -163,7 +154,7 @@ public class AdmittedPatientBrowser implements
 		Admission adm = (Admission) e.getSource();
 		
 		//remember selected row
-		int row = table.getSelectedRow();
+		// int row = table.getSelectedRow();
 		
 		for (AdmittedPatient elem : pPatient) {
 			if (elem.getPatient().getCode() == adm.getPatId()) {
@@ -179,12 +170,12 @@ public class AdmittedPatientBrowser implements
 			}
 		}
 		lastKey = "";
-		filterPatient(searchString.getText());
-		try {
-			if (table.getRowCount() > 0)
-				table.setRowSelectionInterval(row, row);
-		} catch (Exception e1) {
-		}
+		// filterPatient(searchString.getText());
+		// try {
+		// 	if (table.getRowCount() > 0)
+		// 		table.setRowSelectionInterval(row, row);
+		// } catch (Exception e1) {
+		// }
 		
 	}
 
@@ -192,26 +183,26 @@ public class AdmittedPatientBrowser implements
 	 * manage AdmissionBrowser messages
 	 */
 	public void admissionInserted(AWTEvent e) {
-		Admission adm = (Admission) e.getSource();
+		// Admission adm = (Admission) e.getSource();
 		
-		//remember selected row
-		int row = table.getSelectedRow();
-		int patId = adm.getPatId();
+		// //remember selected row
+		// int row = table.getSelectedRow();
+		// int patId = adm.getPatId();
 		
-		for (AdmittedPatient elem : pPatient) {
-			if (elem.getPatient().getCode() == patId) {
-				//found same patient in the list
-				elem.setAdmission(adm);
-				break;
-			}
-		}
-		lastKey = "";
-		filterPatient(searchString.getText());
-		try {
-			if (table.getRowCount() > 0)
-				table.setRowSelectionInterval(row, row);
-		} catch (Exception e1) {
-		}
+		// for (AdmittedPatient elem : pPatient) {
+		// 	if (elem.getPatient().getCode() == patId) {
+		// 		//found same patient in the list
+		// 		elem.setAdmission(adm);
+		// 		break;
+		// 	}
+		// }
+		// lastKey = "";
+		// // filterPatient(searchString.getText());
+		// try {
+		// 	if (table.getRowCount() > 0)
+		// 		table.setRowSelectionInterval(row, row);
+		// } catch (Exception e1) {
+		// }
 	}
 
 	/*
@@ -220,40 +211,40 @@ public class AdmittedPatientBrowser implements
 	 * 
 	 */
 	public void admissionUpdated(AWTEvent e) {
-		Admission adm = (Admission) e.getSource();
+		// Admission adm = (Admission) e.getSource();
 		
-		//remember selected row
-		int row = table.getSelectedRow();
-		int admId = adm.getId();
-		int patId = adm.getPatId();
+		// //remember selected row
+		// int row = table.getSelectedRow();
+		// int admId = adm.getId();
+		// int patId = adm.getPatId();
 		
-		for (AdmittedPatient elem : pPatient) {
-			if (elem.getPatient().getCode() == patId) {
-				//found same patient in the list
-				Admission elemAdm = elem.getAdmission();
-				if (adm.getDisDate() != null) {
-					//is a discharge
-					if (elemAdm != null) {
-						//the patient is not discharged
-						if (elemAdm.getId() == admId)
-							//same admission --> discharge
-							elem.setAdmission(null);
-					}
-				} else {
-					//is not a discharge --> patient admitted
-					elem.setAdmission(adm);
-				}
-				break;
-			}
-		}
-		lastKey = "";
-		filterPatient(searchString.getText());
-		try {
-			if (table.getRowCount() > 0)
-				table.setRowSelectionInterval(row, row);
+		// for (AdmittedPatient elem : pPatient) {
+		// 	if (elem.getPatient().getCode() == patId) {
+		// 		//found same patient in the list
+		// 		Admission elemAdm = elem.getAdmission();
+		// 		if (adm.getDisDate() != null) {
+		// 			//is a discharge
+		// 			if (elemAdm != null) {
+		// 				//the patient is not discharged
+		// 				if (elemAdm.getId() == admId)
+		// 					//same admission --> discharge
+		// 					elem.setAdmission(null);
+		// 			}
+		// 		} else {
+		// 			//is not a discharge --> patient admitted
+		// 			elem.setAdmission(adm);
+		// 		}
+		// 		break;
+		// 	}
+		// }
+		// lastKey = "";
+		// // filterPatient(searchString.getText());
+		// try {
+		// 	if (table.getRowCount() > 0)
+		// 		table.setRowSelectionInterval(row, row);
 			
-		} catch (Exception e1) {
-		}
+		// } catch (Exception e1) {
+		// }
 	}
 
 	/*
@@ -263,66 +254,65 @@ public class AdmittedPatientBrowser implements
 	 * AdmittedPatient for table
 	 */
 	public void patientInserted(AWTEvent e) {
-		Patient u = (Patient) e.getSource();
-		pPatient.add(0, new AdmittedPatient(u, null));
-		lastKey = "";
-		filterPatient(searchString.getText());
-		try {
-			if (table.getRowCount() > 0)
-				table.setRowSelectionInterval(0, 0);
-		} catch (Exception e1) {
-		}
-		searchString.requestFocus();
-		rowCounter.setText(rowCounterText + ": " + pPatient.size());
+		// Patient u = (Patient) e.getSource();
+		// pPatient.add(0, new AdmittedPatient(u, null));
+		// lastKey = "";
+		// // filterPatient(searchString.getText());
+		// try {
+		// 	if (table.getRowCount() > 0)
+		// 		table.setRowSelectionInterval(0, 0);
+		// } catch (Exception e1) {
+		// }
+		// searchString.requestFocus();
+		// rowCounter.setText(rowCounterText + ": " + pPatient.size());
 	}
 
 	public void patientUpdated(AWTEvent e) {
 		
-		Patient u = (Patient) e.getSource();
+		// Patient u = (Patient) e.getSource();
 		
-		//remember selected row
-		int row = table.getSelectedRow();
+		// //remember selected row
+		// int row = table.getSelectedRow();
 		
-		for (int i = 0; i < pPatient.size(); i++) {
-			if ((pPatient.get(i).getPatient().getCode()).equals(u.getCode())) {
-				Admission admission = pPatient.get(i).getAdmission();
-				pPatient.remove(i);
-				pPatient.add(i, new AdmittedPatient(u, admission));
-				break;
-			}
-		}
-		lastKey = "";
-		filterPatient(searchString.getText());
-		try {
-			table.setRowSelectionInterval(row,row);
-		} catch (Exception e1) {
-		}
+		// for (int i = 0; i < pPatient.size(); i++) {
+		// 	if ((pPatient.get(i).getPatient().getCode()).equals(u.getCode())) {
+		// 		Admission admission = pPatient.get(i).getAdmission();
+		// 		pPatient.remove(i);
+		// 		pPatient.add(i, new AdmittedPatient(u, admission));
+		// 		break;
+		// 	}
+		// }
+		// lastKey = "";
+		// // filterPatient(searchString.getText());
+		// try {
+		// 	table.setRowSelectionInterval(row,row);
+		// } catch (Exception e1) {
+		// }
 		
-		searchString.requestFocus();
-		rowCounter.setText(rowCounterText + ": " + pPatient.size());
+		// searchString.requestFocus();
+		// rowCounter.setText(rowCounterText + ": " + pPatient.size());
 	}
 
 	public AdmittedPatientBrowser(UI main) {
+		logger = new Logging();
 		this.main = main;
 		Window subWindow = new Window(MessageBundle.getMessage("angal.admission.patientsbrowser"));
 		subWindow.setModal(true);
-		this.subContent = new VerticalLayout();
-        subWindow.setContent(this.subContent);
-        main.addWindow(subWindow);
+		this.windowContent = new VerticalLayout();
+        subWindow.setContent(this.windowContent);
+        this.main.addWindow(subWindow);
 		myFrame = this;
-
 		if (!GeneralData.ENHANCEDSEARCH) {
 			//Load the whole list of patients
 			pPatient = manager.getAdmittedPatients(null);
 		}
-		
 		initComponents();
 		// pack();
 		// setLocationRelativeTo(null);
 		// setVisible(true);
 		
 		// rowCounter.setText(rowCounterText + ": " + pPatient.size());
-		searchString.requestFocus();
+		// searchString.requestFocus();
 
 		// myFrame.addWindowListener(new WindowAdapter(){
 			
@@ -337,175 +327,105 @@ public class AdmittedPatientBrowser implements
 
 	private void initComponents() {
 		// add(getDataAndControlPanel(), BorderLayout.CENTER);
-		Panel dataAndControlPanel = getDataAndControlPanel();
-		// add(getButtonPanel(), BorderLayout.SOUTH);
+		getDataAndControlPanel();//topSubContent
+		getButtonPanel();//botSubContent
 	}
 
-	private Panel getDataAndControlPanel() {
-		Panel dataAndControlPanel = new Panel();
-		// dataAndControlPanel.addComponent(getControlPanel());
-		// dataAndControlPanel.add(getScrollPane(), BorderLayout.CENTER);
-		return dataAndControlPanel;
+	private void getDataAndControlPanel() {
+		HorizontalLayout topSubContent = new HorizontalLayout();
+		this.windowContent.addComponent(topSubContent);
+		getControlPanel(topSubContent);
+		getScrollPane(topSubContent);//data panel
 	}
 	
 	/*
 	 * panel with filtering controls
 	 */
-	private void getControlPanel() {
+	private void getControlPanel(HorizontalLayout layout) {
 
 		// JPanel mainPanel = new JPanel(new BorderLayout());
+		Panel panel = new Panel();
+		panel.setHeight("100%");
+		layout.addComponent(panel);
+		VerticalLayout subLayout = new VerticalLayout();
+		panel.setContent(subLayout);
 
-		patientClassBox = new JComboBox(patientClassItems);
-		if (!GeneralData.ENHANCEDSEARCH) {
-			patientClassBox.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					lastKey = "";
-					filterPatient(null);
-				}
-			});
-		}
-		JPanel northPanel = new JPanel(new FlowLayout());
-		northPanel.add(patientClassBox);
-		northPanel = setMyBorder(northPanel, MessageBundle.getMessage("angal.admission.admissionstatus"));
 
-		// mainPanel.add(northPanel, BorderLayout.NORTH);
+		// JPanel southPanel = new JPanel(new BorderLayout());
 
-		JPanel centerPanel = new JPanel();
-		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+		searchString = new TextField(MessageBundle.getMessage("angal.admission.searchkey")+":");
 
-		// if (wardList == null) {
-		// 	WardBrowserManager wbm = new WardBrowserManager();
-		// 	ArrayList<Ward> wardWithBeds = wbm.getWards();
-			
-		// 	wardList = new ArrayList<Ward>();
-		// 	for (Ward elem : wardWithBeds) {
-				
-		// 		if (elem.getBeds() > 0)
-		// 			wardList.add(elem);
-		// 	}
-		// } 
-		
-		// JPanel checkPanel[] = new JPanel[wardList.size()];
-		// wardCheck = new JCheckBox[wardList.size()];
-
-		// for (int i = 0; i < wardList.size(); i++) {
-		// 	checkPanel[i] = new JPanel(new BorderLayout());
-		// 	wardCheck[i] = new JCheckBox();
-		// 	wardCheck[i].setSelected(true);
-		// 	if (!GeneralData.ENHANCEDSEARCH) {
-		// 		wardCheck[i].addActionListener(new ActionListener() {
-		// 			public void actionPerformed(ActionEvent e) {
-		// 				lastKey = "";
-		// 				filterPatient(null);
-		// 			}
-		// 		});
-		// 	}
-		// 	checkPanel[i].add(wardCheck[i], BorderLayout.WEST);
-		// 	checkPanel[i].add(new JLabel(wardList.get(i).getDescription()),
-		// 			BorderLayout.CENTER);
-		// 	checkPanel[i].setPreferredSize(new Dimension(200,20));
-		// 	checkPanel[i].setMaximumSize(new Dimension(200,20));
-		// 	checkPanel[i].setMinimumSize(new Dimension(200,20));
-		// 	centerPanel.add(checkPanel[i], null);
-		// }
-
-		centerPanel = setMyBorder(centerPanel, MessageBundle.getMessage("angal.admission.wards"));
-		
-		rowCounter = new JLabel(rowCounterText + ": ");
-		centerPanel.add(rowCounter);
-		
-		// mainPanel.add(centerPanel, BorderLayout.CENTER);
-
-		JPanel southPanel = new JPanel(new BorderLayout());
-
-		searchString = new JTextField();
-		searchString.setColumns(15);
+		searchString.setMaxLength(15);
 		if (GeneralData.ENHANCEDSEARCH) {
-			searchString.addKeyListener(new KeyListener() {
-
-				public void keyPressed(KeyEvent e) {
-					int key = e.getKeyCode();
-				     if (key == KeyEvent.VK_ENTER) {
-				    	 jSearchButton.doClick();
-				     }
-				}
-	
-				public void keyReleased(KeyEvent e) {
-				}
-	
-				public void keyTyped(KeyEvent e) {
-				}
+			searchString.addValueChangeListener(event -> {
+				// int key = event.getValue();
+				// if (key == KeyEvent.VK_ENTER) {
+				// 	jSearchButton.click();
+				// }
 			});
 		} else {
-			searchString.addKeyListener(new KeyListener() {
-				public void keyTyped(KeyEvent e) {
-					if (altKeyReleased) {
-						lastKey = "";
-						String s = "" + e.getKeyChar();
-						if (Character.isLetterOrDigit(e.getKeyChar())) {
-							lastKey = s;
-						}
-						filterPatient(searchString.getText());
-					}
-				}
-	
-				public void keyPressed(KeyEvent e) {
-					int key = e.getKeyCode();
-					if (key == KeyEvent.VK_ALT)
-						altKeyReleased = false;
-				}
-	
-				public void keyReleased(KeyEvent e) {
-					altKeyReleased = true;
-				}
+			searchString.addValueChangeListener(event -> {
+				filterPatient(event.getValue());
 			});
 		}
-		southPanel.add(searchString, BorderLayout.CENTER);
-		if (GeneralData.ENHANCEDSEARCH) southPanel.add(getJSearchButton(), BorderLayout.EAST);
-		southPanel = setMyBorder(southPanel, MessageBundle.getMessage("angal.admission.searchkey"));
-		// mainPanel.add(southPanel, BorderLayout.SOUTH);
+		searchString.focus();
+		subLayout.addComponent(searchString);
+		// if (GeneralData.ENHANCEDSEARCH) subLayout.addComponent(getJSearchButton());
 
-		// return mainPanel;
+		rowCounter = new Label();
+		rowCounter.setCaption(rowCounterText + ": " + pPatient.size());
+		subLayout.addComponent(rowCounter);
 	}
 
-	private JScrollPane getScrollPane() {
-		table = new JTable(new AdmittedPatientBrowserModel(null));
-		table.setAutoCreateColumnsFromModel(false);
+	private void getScrollPane(HorizontalLayout layout) {
+		Panel panel = new Panel();
+		layout.addComponent(panel);
+		table = new Grid<>();//qqq
+		data = new AdmittedPatientBrowserModel(null);
+		patients = data.getPatientList();
+		table.setItems(patients);
+		table.addColumn(Patient::getCode).setCaption("Code");
+		table.addColumn(Patient::getName).setCaption("Name");
+		table.addColumn(Patient::getAge).setCaption("Age");
+		table.addColumn(Patient::getSex).setCaption("Sex");
+		table.addColumn(Patient::getCity).setCaption("City");
+		table.addColumn(Patient::getAddress).setCaption("Address");
+		table.addColumn(Patient::getNote).setCaption("Note");
 		
-		for (int i=0;i<pColums.length; i++){
-			table.getColumnModel().getColumn(i).setMinWidth(pColumwidth[i]);
-			if (!pColumResizable[i]) table.getColumnModel().getColumn(i).setMaxWidth(pColumwidth[i]);
-		}
+		// for (int i=0;i<pColums.length; i++){
+		// 	table.getColumnModel().getColumn(i).setMinWidth(pColumwidth[i]);
+		// 	if (!pColumResizable[i]) table.getColumnModel().getColumn(i).setMaxWidth(pColumwidth[i]);
+		// }
 		
-		table.getColumnModel().getColumn(0).setCellRenderer(new CenterTableCellRenderer());
-		table.getColumnModel().getColumn(2).setCellRenderer(new CenterTableCellRenderer());
-		table.getColumnModel().getColumn(3).setCellRenderer(new CenterTableCellRenderer());
+		// table.getColumnModel().getColumn(0).setCellRenderer(new CenterTableCellRenderer());
+		// table.getColumnModel().getColumn(2).setCellRenderer(new CenterTableCellRenderer());
+		// table.getColumnModel().getColumn(3).setCellRenderer(new CenterTableCellRenderer());
 
-		int tableWidth = 0;
-		for (int i = 0; i<pColumwidth.length; i++){
-			tableWidth += pColumwidth[i];
-		}
+		// int tableWidth = 0;
+		// for (int i = 0; i<pColumwidth.length; i++){
+		// 	tableWidth += pColumwidth[i];
+		// }
 		
-		scrollPane = new JScrollPane(table);
-		scrollPane.setPreferredSize(new Dimension(tableWidth+200, 200));
-		return scrollPane;
+		panel.setContent(table);
+		// scrollPane.setPreferredSize(new Dimension(tableWidth+200, 200));
+		// return scrollPane;
 	}
 
-	private JPanel getButtonPanel() {
-		JPanel buttonPanel = new JPanel();
-		if (MainMenu.checkUserGrants("btnadmnew")) buttonPanel.add(getButtonNew());
-		if (MainMenu.checkUserGrants("btnadmedit")) buttonPanel.add(getButtonEdit());
-		if (MainMenu.checkUserGrants("btnadmdel")) buttonPanel.add(getButtonDel());
-		if (MainMenu.checkUserGrants("btnadmadm")) buttonPanel.add(getButtonAdmission());
-		// if (MainMenu.checkUserGrants("btnadmexamination")) buttonPanel.add(getJButtonExamination());
-		if (GeneralData.OPDEXTENDED && MainMenu.checkUserGrants("btnadmopd")) buttonPanel.add(getButtonOpd());
-		if (MainMenu.checkUserGrants("btnadmbill")) buttonPanel.add(getButtonBill());
-		if (MainMenu.checkUserGrants("data")) buttonPanel.add(getButtonData());
-		if (MainMenu.checkUserGrants("btnadmpatientfolder")) buttonPanel.add(getButtonPatientFolderBrowser());
-		if (MainMenu.checkUserGrants("btnadmtherapy")) buttonPanel.add(getButtonTherapy());
-		if (GeneralData.MERGEFUNCTION && MainMenu.checkUserGrants("btnadmmer")) buttonPanel.add(getButtonMerge());
-		buttonPanel.add(getButtonClose());
-		return buttonPanel;
+	private void getButtonPanel() {
+		HorizontalLayout botSubContent = new HorizontalLayout();
+		this.windowContent.addComponent(botSubContent);
+		if (MainMenu.checkUserGrants("btnadmnew")) botSubContent.addComponent(getButtonNew());
+		// if (MainMenu.checkUserGrants("btnadmedit")) botSubContent.addComponent(getButtonEdit());
+		// if (MainMenu.checkUserGrants("btnadmdel")) botSubContent.addComponent(getButtonDel());
+		// if (MainMenu.checkUserGrants("btnadmadm")) botSubContent.addComponent(getButtonAdmission());
+		// if (MainMenu.checkUserGrants("btnadmexamination")) botSubContent.addComponent(getJButtonExamination());
+		// if (GeneralData.OPDEXTENDED && MainMenu.checkUserGrants("btnadmopd")) botSubContent.addComponent(getButtonOpd());
+		// if (MainMenu.checkUserGrants("btnadmbill")) botSubContent.addComponent(getButtonBill());
+		// if (MainMenu.checkUserGrants("data")) botSubContent.addComponent(getButtonData());
+		// if (MainMenu.checkUserGrants("btnadmpatientfolder")) botSubContent.addComponent(getButtonPatientFolderBrowser());
+		// if (MainMenu.checkUserGrants("btnadmtherapy")) botSubContent.addComponent(getButtonTherapy());
+		// if (GeneralData.MERGEFUNCTION && MainMenu.checkUserGrants("btnadmmer")) botSubContent.addComponent(getButtonMerge());
+		// botSubContent.addComponent(getButtonClose());
 	}
 	
 	// private JButton getJButtonExamination() {
@@ -546,436 +466,431 @@ public class AdmittedPatientBrowser implements
 	// 	return jButtonExamination;
 	// }
 
-	private JButton getButtonNew() {
-		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.admission.newpatient"));
-		buttonNew.setMnemonic(KeyEvent.VK_N);
-		buttonNew.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent event) {
-
-				// if (GeneralData.PATIENTEXTENDED) {
-				// 	PatientInsertExtended newrecord = new PatientInsertExtended(AdmittedPatientBrowser.this, new Patient(), true);
-				// 	newrecord.addPatientListener(AdmittedPatientBrowser.this);
-				// 	newrecord.setVisible(true);
-				// } else {
-				// 	PatientInsert newrecord = new PatientInsert(AdmittedPatientBrowser.this, new Patient(), true);
-				// 	newrecord.addPatientListener(AdmittedPatientBrowser.this);
-				// 	newrecord.setVisible(true);
-				// }
-				
+	private Button getButtonNew() {
+		Button buttonNew = new Button(MessageBundle.getMessage("angal.admission.newpatient"));
+		buttonNew.setClickShortcut(KeyEvent.VK_N);
+		buttonNew.addClickListener(e -> {//qqq
+			if (GeneralData.PATIENTEXTENDED) {
+				PatientInsertExtended newrecord = new PatientInsertExtended(main, new Patient(), true);
+			// 	newrecord.addPatientListener(AdmittedPatientBrowser.this);
+			// 	newrecord.setVisible(true);
+			// } else {
+			// 	PatientInsert newrecord = new PatientInsert(AdmittedPatientBrowser.this, new Patient(), true);
+			// 	newrecord.addPatientListener(AdmittedPatientBrowser.this);
+			// 	newrecord.setVisible(true);
 			}
 		});
 		return buttonNew;
 	}
 
-	private JButton getButtonEdit() {
-		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.admission.editpatient"));
-		buttonEdit.setMnemonic(KeyEvent.VK_E);
-		buttonEdit.addActionListener(new ActionListener() {
+	// private JButton getButtonEdit() {
+	// 	JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.admission.editpatient"));
+	// 	buttonEdit.setMnemonic(KeyEvent.VK_E);
+	// 	buttonEdit.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent event) {
-				// if (table.getSelectedRow() < 0) {
-				// 	JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectarow"),
-				// 			MessageBundle.getMessage("angal.admission.editpatient"), JOptionPane.PLAIN_MESSAGE);
-				// 	return;
-				// }
-				patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
+	// 		public void actionPerformed(ActionEvent event) {
+	// 			// if (table.getSelectedRow() < 0) {
+	// 			// 	JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectarow"),
+	// 			// 			MessageBundle.getMessage("angal.admission.editpatient"), JOptionPane.PLAIN_MESSAGE);
+	// 			// 	return;
+	// 			// }
+	// 			// patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
 				
-				// if (GeneralData.PATIENTEXTENDED) {
+	// 			// if (GeneralData.PATIENTEXTENDED) {
 					
-				// 	PatientInsertExtended editrecord = new PatientInsertExtended(AdmittedPatientBrowser.this, patient.getPatient(), false);
-				// 	editrecord.addPatientListener(AdmittedPatientBrowser.this);
-				// 	editrecord.setVisible(true);
-				// } else {
-				// 	PatientInsert editrecord = new PatientInsert(AdmittedPatientBrowser.this, patient.getPatient(), false);
-				// 	editrecord.addPatientListener(AdmittedPatientBrowser.this);
-				// 	editrecord.setVisible(true);
-				// }
-			}
-		});
-		return buttonEdit;
-	}
+	// 			// 	PatientInsertExtended editrecord = new PatientInsertExtended(AdmittedPatientBrowser.this, patient.getPatient(), false);
+	// 			// 	editrecord.addPatientListener(AdmittedPatientBrowser.this);
+	// 			// 	editrecord.setVisible(true);
+	// 			// } else {
+	// 			// 	PatientInsert editrecord = new PatientInsert(AdmittedPatientBrowser.this, patient.getPatient(), false);
+	// 			// 	editrecord.addPatientListener(AdmittedPatientBrowser.this);
+	// 			// 	editrecord.setVisible(true);
+	// 			// }
+	// 		}
+	// 	});
+	// 	return buttonEdit;
+	// }
 
-	private JButton getButtonDel() {
-		JButton buttonDel = new JButton(MessageBundle.getMessage("angal.admission.deletepatient"));
-		buttonDel.setMnemonic(KeyEvent.VK_T);
-		buttonDel.addActionListener(new ActionListener() {
+	// private JButton getButtonDel() {
+	// 	JButton buttonDel = new JButton(MessageBundle.getMessage("angal.admission.deletepatient"));
+	// 	buttonDel.setMnemonic(KeyEvent.VK_T);
+	// 	buttonDel.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent event) {
-				// if (table.getSelectedRow() < 0) {
-				// 	JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectarow"),
-				// 			MessageBundle.getMessage("angal.admission.deletepatient"), JOptionPane.PLAIN_MESSAGE);
-				// 	return;
-				// }
-				patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
-				Patient pat = patient.getPatient();
+	// 		public void actionPerformed(ActionEvent event) {
+	// 			// if (table.getSelectedRow() < 0) {
+	// 			// 	JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectarow"),
+	// 			// 			MessageBundle.getMessage("angal.admission.deletepatient"), JOptionPane.PLAIN_MESSAGE);
+	// 			// 	return;
+	// 			// }
+	// 			// patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
+	// 			Patient pat = patient.getPatient();
 				
-				int n = JOptionPane.showConfirmDialog(null,
-						MessageBundle.getMessage("angal.admission.deletepatient") + " " +pat.getName() + "?",
-						MessageBundle.getMessage("angal.admission.deletepatient"), JOptionPane.YES_NO_OPTION);
+	// 			int n = JOptionPane.showConfirmDialog(null,
+	// 					MessageBundle.getMessage("angal.admission.deletepatient") + " " +pat.getName() + "?",
+	// 					MessageBundle.getMessage("angal.admission.deletepatient"), JOptionPane.YES_NO_OPTION);
 				
-				if (n == JOptionPane.YES_OPTION){
-					PatientBrowserManager manager = new PatientBrowserManager();
-					boolean result = manager.deletePatient(pat);
-					if (result){
-						AdmissionBrowserManager abm = new AdmissionBrowserManager();
-						ArrayList<Admission> patientAdmissions = abm.getAdmissions(pat);
-						for (Admission elem : patientAdmissions){
-							abm.setDeleted(elem.getId());
-						}
-						fireMyDeletedPatient(pat);
-					}
-				}					
-			}
-		});
-		return buttonDel;
-	}
+	// 			if (n == JOptionPane.YES_OPTION){
+	// 				PatientBrowserManager manager = new PatientBrowserManager();
+	// 				boolean result = manager.deletePatient(pat);
+	// 				if (result){
+	// 					AdmissionBrowserManager abm = new AdmissionBrowserManager();
+	// 					ArrayList<Admission> patientAdmissions = abm.getAdmissions(pat);
+	// 					for (Admission elem : patientAdmissions){
+	// 						abm.setDeleted(elem.getId());
+	// 					}
+	// 					fireMyDeletedPatient(pat);
+	// 				}
+	// 			}					
+	// 		}
+	// 	});
+	// 	return buttonDel;
+	// }
 
-	private JButton getButtonAdmission() {
-		JButton buttonAdmission = new JButton(MessageBundle.getMessage("angal.admission.admission"));
-		buttonAdmission.setMnemonic(KeyEvent.VK_A);
-		buttonAdmission.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				// if (table.getSelectedRow() < 0) {
-				// 	JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectarow"),
-				// 			MessageBundle.getMessage("angal.admission.admission"), JOptionPane.PLAIN_MESSAGE);
-				// 	return;
-				// }
-				patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
+	// private JButton getButtonAdmission() {
+	// 	JButton buttonAdmission = new JButton(MessageBundle.getMessage("angal.admission.admission"));
+	// 	buttonAdmission.setMnemonic(KeyEvent.VK_A);
+	// 	buttonAdmission.addActionListener(new ActionListener() {
+	// 		public void actionPerformed(ActionEvent event) {
+	// 			// if (table.getSelectedRow() < 0) {
+	// 			// 	JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectarow"),
+	// 			// 			MessageBundle.getMessage("angal.admission.admission"), JOptionPane.PLAIN_MESSAGE);
+	// 			// 	return;
+	// 			// }
+	// 			// patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
 				
-				// if (patient.getAdmission() != null) {
-				// 	// edit previous admission or dismission
-				// 	new AdmissionBrowser(myFrame, patient, true);
-				// } else {
-				// 	// new admission
-				// 	new AdmissionBrowser(myFrame, patient, false);
-				// }
-			}
-		});
-		return buttonAdmission;
-	}
+	// 			// if (patient.getAdmission() != null) {
+	// 			// 	// edit previous admission or dismission
+	// 			// 	new AdmissionBrowser(myFrame, patient, true);
+	// 			// } else {
+	// 			// 	// new admission
+	// 			// 	new AdmissionBrowser(myFrame, patient, false);
+	// 			// }
+	// 		}
+	// 	});
+	// 	return buttonAdmission;
+	// }
 
-	private JButton getButtonOpd() {
-		JButton buttonOpd = new JButton(MessageBundle.getMessage("angal.admission.opd"));
-		buttonOpd.setMnemonic(KeyEvent.VK_O);
-		buttonOpd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				// if (table.getSelectedRow() < 0) {
-				// 	JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectarow"),
-				// 			MessageBundle.getMessage("angal.admission.opd"), JOptionPane.PLAIN_MESSAGE);
-				// 	return;
-				// }
-				patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
+	// private JButton getButtonOpd() {
+	// 	JButton buttonOpd = new JButton(MessageBundle.getMessage("angal.admission.opd"));
+	// 	buttonOpd.setMnemonic(KeyEvent.VK_O);
+	// 	buttonOpd.addActionListener(new ActionListener() {
+	// 		public void actionPerformed(ActionEvent event) {
+	// 			// if (table.getSelectedRow() < 0) {
+	// 			// 	JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectarow"),
+	// 			// 			MessageBundle.getMessage("angal.admission.opd"), JOptionPane.PLAIN_MESSAGE);
+	// 			// 	return;
+	// 			// }
+	// 			// patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
 				
-				// if (patient  != null) {
-				// 	Opd opd = new Opd(0,' ',-1,"0",0);
-				// 	OpdEditExtended newrecord = new OpdEditExtended(myFrame, opd, patient.getPatient(), true);
-				// 	newrecord.setVisible(true);
+	// 			// if (patient  != null) {
+	// 			// 	Opd opd = new Opd(0,' ',-1,"0",0);
+	// 			// 	OpdEditExtended newrecord = new OpdEditExtended(myFrame, opd, patient.getPatient(), true);
+	// 			// 	newrecord.setVisible(true);
 					
-				// } /*else {
-					//new OpdBrowser(true);
-				// }*/
-			}
-		});
-		return buttonOpd;
-	}
+	// 			// } /*else {
+	// 				//new OpdBrowser(true);
+	// 			// }*/
+	// 		}
+	// 	});
+	// 	return buttonOpd;
+	// }
 	
-	private JButton getButtonBill() {
-		JButton buttonBill = new JButton(MessageBundle.getMessage("angal.admission.bill"));
-		buttonBill.setMnemonic(KeyEvent.VK_B);
-		buttonBill.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				// if (table.getSelectedRow() < 0) {
-				// 	JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectarow"),
-				// 			MessageBundle.getMessage("angal.admission.bill"), JOptionPane.PLAIN_MESSAGE);
-				// 	return;
-				// }
-				patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
+	// private JButton getButtonBill() {
+	// 	JButton buttonBill = new JButton(MessageBundle.getMessage("angal.admission.bill"));
+	// 	buttonBill.setMnemonic(KeyEvent.VK_B);
+	// 	buttonBill.addActionListener(new ActionListener() {
+	// 		public void actionPerformed(ActionEvent event) {
+	// 			// if (table.getSelectedRow() < 0) {
+	// 			// 	JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectarow"),
+	// 			// 			MessageBundle.getMessage("angal.admission.bill"), JOptionPane.PLAIN_MESSAGE);
+	// 			// 	return;
+	// 			// }
+	// 			// patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
 				
-				if (patient  != null) {
-					Patient pat = patient.getPatient();
-					// BillBrowserManager billManager = new BillBrowserManager();
-					// ArrayList<Bill> patientPendingBills = billManager.getPendingBills(pat.getCode());
-					// if (patientPendingBills.isEmpty()) {
-					// 	new PatientBillEdit(AdmittedPatientBrowser.this, pat);
-					// 	//dispose();
-					// } else {
-					// 	if (patientPendingBills.size() == 1) {
-					// 		JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.admission.thispatienthasapendingbill"),
-					// 				MessageBundle.getMessage("angal.admission.bill"), JOptionPane.PLAIN_MESSAGE);
-					// 		PatientBillEdit pbe = new PatientBillEdit(AdmittedPatientBrowser.this, patientPendingBills.get(0), false);
-					// 		pbe.setVisible(true);
-					// 		//dispose();
-					// 	} else {
-					// 		int ok = JOptionPane.showConfirmDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.admission.thereismorethanonependingbillforthispatientcontinue"),
-					// 				MessageBundle.getMessage("angal.admission.bill"), JOptionPane.WARNING_MESSAGE);
-					// 		if (ok == JOptionPane.OK_OPTION) {
-					// 			new PatientBillEdit(AdmittedPatientBrowser.this, pat);
-					// 			//dispose();
-					// 		} else return;
-					// 	}
-					// } 
-				} /*else {
-					//new OpdBrowser(true);
-				}*/
-			}
-		});
-		return buttonBill;
-	}
+	// 			if (patient  != null) {
+	// 				Patient pat = patient.getPatient();
+	// 				// BillBrowserManager billManager = new BillBrowserManager();
+	// 				// ArrayList<Bill> patientPendingBills = billManager.getPendingBills(pat.getCode());
+	// 				// if (patientPendingBills.isEmpty()) {
+	// 				// 	new PatientBillEdit(AdmittedPatientBrowser.this, pat);
+	// 				// 	//dispose();
+	// 				// } else {
+	// 				// 	if (patientPendingBills.size() == 1) {
+	// 				// 		JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.admission.thispatienthasapendingbill"),
+	// 				// 				MessageBundle.getMessage("angal.admission.bill"), JOptionPane.PLAIN_MESSAGE);
+	// 				// 		PatientBillEdit pbe = new PatientBillEdit(AdmittedPatientBrowser.this, patientPendingBills.get(0), false);
+	// 				// 		pbe.setVisible(true);
+	// 				// 		//dispose();
+	// 				// 	} else {
+	// 				// 		int ok = JOptionPane.showConfirmDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.admission.thereismorethanonependingbillforthispatientcontinue"),
+	// 				// 				MessageBundle.getMessage("angal.admission.bill"), JOptionPane.WARNING_MESSAGE);
+	// 				// 		if (ok == JOptionPane.OK_OPTION) {
+	// 				// 			new PatientBillEdit(AdmittedPatientBrowser.this, pat);
+	// 				// 			//dispose();
+	// 				// 		} else return;
+	// 				// 	}
+	// 				// } 
+	// 			} /*else {
+	// 				//new OpdBrowser(true);
+	// 			}*/
+	// 		}
+	// 	});
+	// 	return buttonBill;
+	// }
 
-	private JButton getButtonData() {
-		JButton buttonData = new JButton(MessageBundle.getMessage("angal.admission.data"));
-		buttonData.setMnemonic(KeyEvent.VK_D);
-		buttonData.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				// if (table.getSelectedRow() < 0) {
-				// 	JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectarow"),
-				// 			MessageBundle.getMessage("angal.admission.data"), JOptionPane.PLAIN_MESSAGE);
-				// 	return;
-				// }
-				patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
+	// private JButton getButtonData() {
+	// 	JButton buttonData = new JButton(MessageBundle.getMessage("angal.admission.data"));
+	// 	buttonData.setMnemonic(KeyEvent.VK_D);
+	// 	buttonData.addActionListener(new ActionListener() {
+	// 		public void actionPerformed(ActionEvent event) {
+	// 			// if (table.getSelectedRow() < 0) {
+	// 			// 	JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectarow"),
+	// 			// 			MessageBundle.getMessage("angal.admission.data"), JOptionPane.PLAIN_MESSAGE);
+	// 			// 	return;
+	// 			// }
+	// 			// patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
 				
-				// PatientDataBrowser pdb = new PatientDataBrowser(myFrame, patient.getPatient());
-				// pdb.addDeleteAdmissionListener(myFrame);
-				// pdb.showAsModal(AdmittedPatientBrowser.this);
-			}
-		});
-		return buttonData;
-	}
+	// 			// PatientDataBrowser pdb = new PatientDataBrowser(myFrame, patient.getPatient());
+	// 			// pdb.addDeleteAdmissionListener(myFrame);
+	// 			// pdb.showAsModal(AdmittedPatientBrowser.this);
+	// 		}
+	// 	});
+	// 	return buttonData;
+	// }
 
-	private JButton getButtonPatientFolderBrowser() {
-		JButton buttonPatientFolderBrowser = new JButton(MessageBundle.getMessage("angal.admission.patientfolder"));
-		buttonPatientFolderBrowser.setMnemonic(KeyEvent.VK_S);
-		buttonPatientFolderBrowser.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				// if (table.getSelectedRow() < 0) {
-				// 	JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectarow"),
-				// 			MessageBundle.getMessage("angal.admission.patientfolder"), JOptionPane.PLAIN_MESSAGE);
-				// 	return;
-				// }
-				patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
-				// new PatientFolderBrowser(myFrame, patient.getPatient()).showAsModal(AdmittedPatientBrowser.this);
-			}
-		});
-		return buttonPatientFolderBrowser;
-	}
+	// private JButton getButtonPatientFolderBrowser() {
+	// 	JButton buttonPatientFolderBrowser = new JButton(MessageBundle.getMessage("angal.admission.patientfolder"));
+	// 	buttonPatientFolderBrowser.setMnemonic(KeyEvent.VK_S);
+	// 	buttonPatientFolderBrowser.addActionListener(new ActionListener() {
+	// 		public void actionPerformed(ActionEvent event) {
+	// 			// if (table.getSelectedRow() < 0) {
+	// 			// 	JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectarow"),
+	// 			// 			MessageBundle.getMessage("angal.admission.patientfolder"), JOptionPane.PLAIN_MESSAGE);
+	// 			// 	return;
+	// 			// }
+	// 			// patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
+	// 			// new PatientFolderBrowser(myFrame, patient.getPatient()).showAsModal(AdmittedPatientBrowser.this);
+	// 		}
+	// 	});
+	// 	return buttonPatientFolderBrowser;
+	// }
 
-	private JButton getButtonTherapy() {
-		JButton buttonTherapy = new JButton(MessageBundle.getMessage("angal.admission.therapy"));
-		buttonTherapy.setMnemonic(KeyEvent.VK_T);
-		buttonTherapy.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				// if (table.getSelectedRow() < 0) {
-				// 	JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectarow"),
-				// 			MessageBundle.getMessage("angal.admission.therapy"), JOptionPane.PLAIN_MESSAGE);
-				// 	return;
-				// }
-				patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
-				// TherapyEdit therapy = new TherapyEdit(AdmittedPatientBrowser.this, patient.getPatient(), patient.getAdmission() != null);
-				// therapy.setLocationRelativeTo(null);
-				// therapy.setVisible(true);
+	// private JButton getButtonTherapy() {
+	// 	JButton buttonTherapy = new JButton(MessageBundle.getMessage("angal.admission.therapy"));
+	// 	buttonTherapy.setMnemonic(KeyEvent.VK_T);
+	// 	buttonTherapy.addActionListener(new ActionListener() {
+	// 		public void actionPerformed(ActionEvent event) {
+	// 			// if (table.getSelectedRow() < 0) {
+	// 			// 	JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectarow"),
+	// 			// 			MessageBundle.getMessage("angal.admission.therapy"), JOptionPane.PLAIN_MESSAGE);
+	// 			// 	return;
+	// 			// }
+	// 			// patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
+	// 			// TherapyEdit therapy = new TherapyEdit(AdmittedPatientBrowser.this, patient.getPatient(), patient.getAdmission() != null);
+	// 			// therapy.setLocationRelativeTo(null);
+	// 			// therapy.setVisible(true);
 				
-			}
-		});
-		return buttonTherapy;
-	}
+	// 		}
+	// 	});
+	// 	return buttonTherapy;
+	// }
 
-	private JButton getButtonMerge() {
-		JButton buttonMerge = new JButton(MessageBundle.getMessage("angal.admission.merge"));
-		buttonMerge.setMnemonic(KeyEvent.VK_M);
-		buttonMerge.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				if (table.getSelectedRowCount() != 2) {
-					JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.admission.pleaseselecttwopatients"),
-							MessageBundle.getMessage("angal.admission.merge"), JOptionPane.PLAIN_MESSAGE);
-					return;
-				}
+	// private JButton getButtonMerge() {
+	// 	JButton buttonMerge = new JButton(MessageBundle.getMessage("angal.admission.merge"));
+	// 	buttonMerge.setMnemonic(KeyEvent.VK_M);
+	// 	buttonMerge.addActionListener(new ActionListener() {
+	// 		public void actionPerformed(ActionEvent event) {
+	// 			// if (table.getSelectedRowCount() != 2) {
+	// 			// 	JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.admission.pleaseselecttwopatients"),
+	// 			// 			MessageBundle.getMessage("angal.admission.merge"), JOptionPane.PLAIN_MESSAGE);
+	// 			// 	return;
+	// 			// }
 				
-				int[] indexes = table.getSelectedRows();
+	// 			// int[] indexes = table.getSelectedRows();
 				
-				Patient mergedPatient;
-				Patient patient1 = ((AdmittedPatient)table.getValueAt(indexes[0], -1)).getPatient();
-				Patient patient2 = ((AdmittedPatient)table.getValueAt(indexes[1], -1)).getPatient();
+	// 			// Patient mergedPatient;
+	// 			// Patient patient1 = ((AdmittedPatient)table.getValueAt(indexes[0], -1)).getPatient();
+	// 			// Patient patient2 = ((AdmittedPatient)table.getValueAt(indexes[1], -1)).getPatient();
 				
-				//MergePatient mergedPatient = new MergePatient(patient1, patient2);
+	// 			// //MergePatient mergedPatient = new MergePatient(patient1, patient2);
 				
-				if (patient1.getSex() != patient2.getSex()) {
-					JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.admission.selectedpatientshavedifferentsex"),
-							MessageBundle.getMessage("angal.admission.merge"), JOptionPane.WARNING_MESSAGE);
-					return;
-				}
+	// 			// if (patient1.getSex() != patient2.getSex()) {
+	// 			// 	JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.admission.selectedpatientshavedifferentsex"),
+	// 			// 			MessageBundle.getMessage("angal.admission.merge"), JOptionPane.WARNING_MESSAGE);
+	// 			// 	return;
+	// 			// }
 				
-				//Select most recent patient
-				if (patient1.getCode() > patient2.getCode()) { 
-					mergedPatient = patient1;
-				}
-				else { 
-					mergedPatient = patient2;
-					patient2 = patient1;
-				}
-				//System.out.println("mergedPatient: " + mergedPatient.getCode());
+	// 			// //Select most recent patient
+	// 			// if (patient1.getCode() > patient2.getCode()) { 
+	// 			// 	mergedPatient = patient1;
+	// 			// }
+	// 			// else { 
+	// 			// 	mergedPatient = patient2;
+	// 			// 	patient2 = patient1;
+	// 			// }
+	// 			//System.out.println("mergedPatient: " + mergedPatient.getCode());
 
-				//ASK CONFIRMATION
-				int ok = JOptionPane.showConfirmDialog(null, 
-						MessageBundle.getMessage("angal.admission.withthisoperationthepatient")+"\n"+MessageBundle.getMessage("angal.common.code")+": "+
-						patient2.getCode() + " " + patient2.getName() + " " + patient2.getAge() + " " + patient2.getAddress() +"\n"+
-						MessageBundle.getMessage("angal.admission.willbedeletedandhisherhistorytransferedtothepatient")+"\n"+MessageBundle.getMessage("angal.common.code")+": "+
-						mergedPatient.getCode() + " " + mergedPatient.getName() + " " + mergedPatient.getAge() + " " + mergedPatient.getAddress() +"\n"+
-						MessageBundle.getMessage("angal.admission.continue"),
-						MessageBundle.getMessage("angal.admission.merge"), 
-						JOptionPane.YES_NO_OPTION);
-				if (ok != JOptionPane.YES_OPTION) return;
+	// 			//ASK CONFIRMATION
+	// 			// int ok = JOptionPane.showConfirmDialog(null, 
+	// 			// 		MessageBundle.getMessage("angal.admission.withthisoperationthepatient")+"\n"+MessageBundle.getMessage("angal.common.code")+": "+
+	// 			// 		patient2.getCode() + " " + patient2.getName() + " " + patient2.getAge() + " " + patient2.getAddress() +"\n"+
+	// 			// 		MessageBundle.getMessage("angal.admission.willbedeletedandhisherhistorytransferedtothepatient")+"\n"+MessageBundle.getMessage("angal.common.code")+": "+
+	// 			// 		mergedPatient.getCode() + " " + mergedPatient.getName() + " " + mergedPatient.getAge() + " " + mergedPatient.getAddress() +"\n"+
+	// 			// 		MessageBundle.getMessage("angal.admission.continue"),
+	// 			// 		MessageBundle.getMessage("angal.admission.merge"), 
+	// 			// 		JOptionPane.YES_NO_OPTION);
+	// 			// if (ok != JOptionPane.YES_OPTION) return;
 				
-				if (mergedPatient.getName().toUpperCase().compareTo(
-						patient2.getName().toUpperCase()) != 0) {
-					String[] names = {mergedPatient.getName(), patient2.getName()};
-					String whichName = (String) JOptionPane.showInputDialog(null, 
-							MessageBundle.getMessage("angal.admission.pleaseselectthefinalname"), 
-							MessageBundle.getMessage("angal.admission.differentnames"), 
-							JOptionPane.INFORMATION_MESSAGE, 
-							null, 
-							names, 
-							null);
-					if (whichName == null) return;
-					if (whichName.compareTo(names[1]) == 0) {
-						//patient2 name selected
-						mergedPatient.setFirstName(patient2.getFirstName());
-						mergedPatient.setSecondName(patient2.getSecondName());
-					}
-				}
-				if (mergedPatient.getBirthDate() != null &&
-						mergedPatient.getAgetype().compareTo("") == 0) {
-					//mergedPatient only Age
-					Date bdate2 = patient2.getBirthDate();
-					int age2 = patient2.getAge();
-					String ageType2 = patient2.getAgetype();
-					if (bdate2 != null) {
-						//patient2 has BirthDate
-						mergedPatient.setAge(age2);
-						mergedPatient.setBirthDate(bdate2);
-					}
-					if (bdate2 != null && ageType2.compareTo("") != 0) {
-						//patient2 has AgeType 
-						mergedPatient.setAge(age2);
-						mergedPatient.setAgetype(ageType2);
-					}
-				}
+	// 			// if (mergedPatient.getName().toUpperCase().compareTo(
+	// 			// 		patient2.getName().toUpperCase()) != 0) {
+	// 			// 	String[] names = {mergedPatient.getName(), patient2.getName()};
+	// 			// 	String whichName = (String) JOptionPane.showInputDialog(null, 
+	// 			// 			MessageBundle.getMessage("angal.admission.pleaseselectthefinalname"), 
+	// 			// 			MessageBundle.getMessage("angal.admission.differentnames"), 
+	// 			// 			JOptionPane.INFORMATION_MESSAGE, 
+	// 			// 			null, 
+	// 			// 			names, 
+	// 			// 			null);
+	// 			// 	if (whichName == null) return;
+	// 			// 	if (whichName.compareTo(names[1]) == 0) {
+	// 			// 		//patient2 name selected
+	// 			// 		mergedPatient.setFirstName(patient2.getFirstName());
+	// 			// 		mergedPatient.setSecondName(patient2.getSecondName());
+	// 			// 	}
+	// 			// }
+	// 			// if (mergedPatient.getBirthDate() != null &&
+	// 			// 		mergedPatient.getAgetype().compareTo("") == 0) {
+	// 			// 	//mergedPatient only Age
+	// 			// 	Date bdate2 = patient2.getBirthDate();
+	// 			// 	int age2 = patient2.getAge();
+	// 			// 	String ageType2 = patient2.getAgetype();
+	// 			// 	if (bdate2 != null) {
+	// 			// 		//patient2 has BirthDate
+	// 			// 		mergedPatient.setAge(age2);
+	// 			// 		mergedPatient.setBirthDate(bdate2);
+	// 			// 	}
+	// 			// 	if (bdate2 != null && ageType2.compareTo("") != 0) {
+	// 			// 		//patient2 has AgeType 
+	// 			// 		mergedPatient.setAge(age2);
+	// 			// 		mergedPatient.setAgetype(ageType2);
+	// 			// 	}
+	// 			// }
 				
-				if (mergedPatient.getAddress().compareTo("") == 0)
-					mergedPatient.setAddress(patient2.getAddress());
+	// 			// if (mergedPatient.getAddress().compareTo("") == 0)
+	// 			// 	mergedPatient.setAddress(patient2.getAddress());
 				
-				if (mergedPatient.getCity().compareTo("") == 0)
-					mergedPatient.setCity(patient2.getCity());
+	// 			// if (mergedPatient.getCity().compareTo("") == 0)
+	// 			// 	mergedPatient.setCity(patient2.getCity());
 				
-				if (mergedPatient.getNextKin().compareTo("") == 0)
-					mergedPatient.setNextKin(patient2.getNextKin());
+	// 			// if (mergedPatient.getNextKin().compareTo("") == 0)
+	// 			// 	mergedPatient.setNextKin(patient2.getNextKin());
 				
-				if (mergedPatient.getTelephone().compareTo("") == 0)
-					mergedPatient.setTelephone(patient2.getTelephone());
+	// 			// if (mergedPatient.getTelephone().compareTo("") == 0)
+	// 			// 	mergedPatient.setTelephone(patient2.getTelephone());
 				
-				if (mergedPatient.getMother_name().compareTo("") == 0)
-					mergedPatient.setMother_name(patient2.getMother_name());
+	// 			// if (mergedPatient.getMother_name().compareTo("") == 0)
+	// 			// 	mergedPatient.setMother_name(patient2.getMother_name());
 				
-				if (mergedPatient.getMother() == 'U')
-					mergedPatient.setMother(patient2.getMother());
+	// 			// if (mergedPatient.getMother() == 'U')
+	// 			// 	mergedPatient.setMother(patient2.getMother());
 				
-				if (mergedPatient.getFather_name().compareTo("") == 0)
-					mergedPatient.setFather_name(patient2.getFather_name());
+	// 			// if (mergedPatient.getFather_name().compareTo("") == 0)
+	// 			// 	mergedPatient.setFather_name(patient2.getFather_name());
 				
-				if (mergedPatient.getFather() == 'U')
-					mergedPatient.setFather(patient2.getFather());
+	// 			// if (mergedPatient.getFather() == 'U')
+	// 			// 	mergedPatient.setFather(patient2.getFather());
 				
-				if (mergedPatient.getBloodType().compareTo("") == 0)
-					mergedPatient.setBloodType(patient2.getBloodType());
+	// 			// if (mergedPatient.getBloodType().compareTo("") == 0)
+	// 			// 	mergedPatient.setBloodType(patient2.getBloodType());
 				
-				if (mergedPatient.getHasInsurance() == 'U')
-					mergedPatient.setHasInsurance(patient2.getHasInsurance());
+	// 			// if (mergedPatient.getHasInsurance() == 'U')
+	// 			// 	mergedPatient.setHasInsurance(patient2.getHasInsurance());
 				
-				if (mergedPatient.getParentTogether() == 'U')
-					mergedPatient.setParentTogether(patient2.getParentTogether());
+	// 			// if (mergedPatient.getParentTogether() == 'U')
+	// 			// 	mergedPatient.setParentTogether(patient2.getParentTogether());
 				
-				if (mergedPatient.getNote().compareTo("") == 0)
-					mergedPatient.setNote(patient2.getNote());
-				else {
-					String note = mergedPatient.getNote();
-					mergedPatient.setNote(patient2.getNote()+"\n\n"+note);
-				}
+	// 			// if (mergedPatient.getNote().compareTo("") == 0)
+	// 			// 	mergedPatient.setNote(patient2.getNote());
+	// 			// else {
+	// 			// 	String note = mergedPatient.getNote();
+	// 			// 	mergedPatient.setNote(patient2.getNote()+"\n\n"+note);
+	// 			// }
 
-				PatientBrowserManager patManager = new PatientBrowserManager();
-				if (patManager.mergePatientHistory(mergedPatient, patient2)) {
-					fireMyDeletedPatient(patient2);
-				}
-			}
-		});
-		return buttonMerge;
-	}
+	// 			// PatientBrowserManager patManager = new PatientBrowserManager();
+	// 			// if (patManager.mergePatientHistory(mergedPatient, patient2)) {
+	// 			// 	fireMyDeletedPatient(patient2);
+	// 			// }
+	// 		}
+	// 	});
+	// 	return buttonMerge;
+	// }
 
-	private JButton getButtonClose() {
-		JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close"));
-		buttonClose.setMnemonic(KeyEvent.VK_C);
-		buttonClose.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				//to free Memory
-				if (pPatient != null) pPatient.clear();
-				// if (wardList != null) wardList.clear();
-				// dispose();
-			}
-		});
-		return buttonClose;
-	}
+	// private JButton getButtonClose() {
+	// 	JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close"));
+	// 	buttonClose.setMnemonic(KeyEvent.VK_C);
+	// 	buttonClose.addActionListener(new ActionListener() {
+	// 		public void actionPerformed(ActionEvent event) {
+	// 			//to free Memory
+	// 			if (pPatient != null) pPatient.clear();
+	// 			// if (wardList != null) wardList.clear();
+	// 			// dispose();
+	// 		}
+	// 	});
+	// 	return buttonClose;
+	// }
 	
 	private void filterPatient(String key) {
-		table.setModel(new AdmittedPatientBrowserModel(key));
-		rowCounter.setText(rowCounterText + ": " + table.getRowCount());
-		searchString.requestFocus();
+		data = new AdmittedPatientBrowserModel(key);
+		patients = data.getPatientList();
+		table.setItems(patients);
+		rowCounter.setCaption(rowCounterText + ": " + data.getRowCount());
+		// searchString.requestFocus();
 	}
 	
 	private void searchPatient() {
-		String key = searchString.getText();
-		if (key.equals("")) {
+		// String key = searchString.getText();
+		// if (key.equals("")) {
 			// int ok = JOptionPane.showConfirmDialog(AdmittedPatientBrowser.this, 
 			// 		MessageBundle.getMessage("angal.admission.thiscouldretrievealargeamountofdataproceed"),
 			// 		MessageBundle.getMessage("angal.hospital"),
 			// 		JOptionPane.OK_CANCEL_OPTION);
 			// if (ok != JOptionPane.OK_OPTION) return;
-		}
-		pPatient = manager.getAdmittedPatients(key);
-		filterPatient(null);
+		// }
+		// pPatient = manager.getAdmittedPatients(key);
+		// filterPatient(null);
 	}
 	
-	private JButton getJSearchButton() {
-		if (jSearchButton == null) {
-			jSearchButton = new JButton();
-			jSearchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
-			jSearchButton.setPreferredSize(new Dimension(20, 20));
-			jSearchButton.addActionListener(new ActionListener() {
-				public void actionPerformed(final ActionEvent e) {
-					((JButton) e.getSource()).setEnabled(false);
-					SwingUtilities.invokeLater(new Runnable() {
-						public void run() {
-							searchPatient();
-							EventQueue.invokeLater(new Runnable() {
-								public void run() {
-									((JButton) e.getSource()).setEnabled(true);
-								}
-							});
-						}
-					});
-				}
-			});
-		}
-		return jSearchButton;
-	}
+	// private Button getJSearchButton() {
+	// 	if (jSearchButton == null) {
+	// 		jSearchButton = new Button();
+	// 		// jSearchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
+	// 		// jSearchButton.setPreferredSize(new Dimension(20, 20));
+	// 		jSearchButton.addClickListener(e -> {
+	// 			((Button) e.getSource()).setEnabled(false);
+	// 			SwingUtilities.invokeLater(new Runnable() {
+	// 				public void run() {
+	// 					searchPatient();
+	// 					EventQueue.invokeLater(new Runnable() {
+	// 						public void run() {
+	// 							((JButton) e.getSource()).setEnabled(true);
+	// 						}
+	// 					});
+	// 				}
+	// 			});
+	// 		});
+	// 	}
+	// 	return jSearchButton;
+	// }
 	
-	private JPanel setMyBorder(JPanel c, String title) {
-		javax.swing.border.Border b2 = BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder(title), BorderFactory
-						.createEmptyBorder(0, 0, 0, 0));
-		c.setBorder(b2);
-		return c;
-	}
+	// private JPanel setMyBorder(JPanel c, String title) {
+	// 	javax.swing.border.Border b2 = BorderFactory.createCompoundBorder(
+	// 			BorderFactory.createTitledBorder(title), BorderFactory
+	// 					.createEmptyBorder(0, 0, 0, 0));
+	// 	c.setBorder(b2);
+	// 	return c;
+	// }
 
-	class AdmittedPatientBrowserModel extends DefaultTableModel {
+	class AdmittedPatientBrowserModel{
 
 		/**
 		 * 
@@ -984,38 +899,38 @@ public class AdmittedPatientBrowser implements
 
 		ArrayList<AdmittedPatient> patientList = new ArrayList<AdmittedPatient>();
 		
-		public AdmittedPatientBrowserModel(String key) {
+		public AdmittedPatientBrowserModel(String key) {//qqq
 			for (AdmittedPatient ap : pPatient) {
 				Admission adm = ap.getAdmission();
 				// if not admitted stripes admitted
-				if (((String) patientClassBox.getSelectedItem())
-						.equals(patientClassItems[2])) {
-					if (adm != null)
-						continue;
-				}
-				// if admitted stripes not admitted
-				else if (((String) patientClassBox.getSelectedItem())
-						.equals(patientClassItems[1])) {
-					if (adm == null)
-						continue;
-				}
+				// if (((String) patientClassBox.getSelectedItem())
+				// 		.equals(patientClassItems[2])) {
+				// 	if (adm != null)
+				// 		continue;
+				// }
+				// // if admitted stripes not admitted
+				// else if (((String) patientClassBox.getSelectedItem())
+				// 		.equals(patientClassItems[1])) {
+				// 	if (adm == null)
+				// 		continue;
+				// }
 
 				// if all or admitted filters not matching ward
-				if (!((String) patientClassBox.getSelectedItem())
-						.equals(patientClassItems[2])) {
-					// if (adm != null) {
-					// 	int cc = -1;
-					// 	for (int j = 0; j < wardList.size(); j++) {
-					// 		if (adm.getWardId().equalsIgnoreCase(
-					// 				wardList.get(j).getCode())) {
-					// 			cc = j;
-					// 			break;
-					// 		}
-					// 	}
-					// 	if (!wardCheck[cc].isSelected())
-					// 		continue;
-					// }
-				}
+				// if (!((String) patientClassBox.getSelectedItem())
+				// 		.equals(patientClassItems[2])) {
+				// 	// if (adm != null) {
+				// 	// 	int cc = -1;
+				// 	// 	for (int j = 0; j < wardList.size(); j++) {
+				// 	// 		if (adm.getWardId().equalsIgnoreCase(
+				// 	// 				wardList.get(j).getCode())) {
+				// 	// 			cc = j;
+				// 	// 			break;
+				// 	// 		}
+				// 	// 	}
+				// 	// 	if (!wardCheck[cc].isSelected())
+				// 	// 		continue;
+				// 	// }
+				// }
 
 				if (key != null) {
 					
@@ -1052,6 +967,16 @@ public class AdmittedPatientBrowser implements
 			return pColums.length;
 		}
 
+		public List<Patient> getPatientList(){
+			List<Patient> qPatient=new ArrayList<Patient>();
+			AdmittedPatient admPat;
+			for(int i = 0; i < this.getRowCount(); i++){
+				admPat = patientList.get(i);
+				qPatient.add(admPat.getPatient());
+			}
+			return qPatient;
+		}
+
 		public Object getValueAt(int r, int c) {
 			AdmittedPatient admPat = patientList.get(r);
 			Patient patient = admPat.getPatient();
@@ -1085,28 +1010,28 @@ public class AdmittedPatientBrowser implements
 			return null;
 		}
 
-		@Override
-		public boolean isCellEditable(int arg0, int arg1) {
-			return false;
-		}
+		// @Override
+		// public boolean isCellEditable(int arg0, int arg1) {
+		// 	return false;
+		// }
 	}
 	
 	
-	class CenterTableCellRenderer extends DefaultTableCellRenderer {  
+	// class CenterTableCellRenderer extends DefaultTableCellRenderer {  
 		   
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
+	// 	/**
+	// 	 * 
+	// 	 */
+	// 	private static final long serialVersionUID = 1L;
 
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
-				boolean hasFocus, int row, int column) {  
+	// 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
+	// 			boolean hasFocus, int row, int column) {  
 		   
-			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
-			cell.setForeground(Color.BLACK);
-			setHorizontalAlignment(CENTER);	   
-			return cell;
-	   }
-	}
+	// 		Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
+	// 		cell.setForeground(Color.BLACK);
+	// 		setHorizontalAlignment(CENTER);	   
+	// 		return cell;
+	//    }
+	// }
 
 }
