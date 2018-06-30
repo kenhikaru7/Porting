@@ -47,6 +47,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.generaldata.SmsParameters;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
+import org.isf.admission.gui.AdmittedPatientBrowser;
 // import video.gui.PatientPhotoPanel;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
@@ -109,7 +110,8 @@ public class PatientInsertExtended{
 		// patientListeners.remove(PatientListener.class, listener);
 	}
 
-	// private void firePatientInserted(Patient aPatient) {
+	private void firePatientInserted(Patient aPatient) {
+		browser.patientInserted(aPatient);
 	// 	AWTEvent event = new AWTEvent(aPatient, AWTEvent.RESERVED_ID_MAX + 1) {
 
 	// 		private static final long serialVersionUID = -6853617821516727564L;
@@ -117,10 +119,12 @@ public class PatientInsertExtended{
 	// 	};
 
 	// 	EventListener[] listeners = patientListeners.getListeners(PatientListener.class);
+	// 	// logger.info("teu kadieu ning");
 	// 	for (int i = 0; i < listeners.length; i++) {
 	// 		((PatientListener) listeners[i]).patientInserted(event);
+	// 		logger.info("listener length yahoo"+i);
 	// 	}
-	// }
+	}
 
 	// private void firePatientUpdated(Patient aPatient) {
 	// 	AWTEvent event = new AWTEvent(aPatient, AWTEvent.RESERVED_ID_MAX + 1) {
@@ -295,7 +299,9 @@ public class PatientInsertExtended{
 	 * 
 	 */
 	private Window subWindow;
-	public PatientInsertExtended(UI main, Patient old, boolean inserting) {
+	private AdmittedPatientBrowser browser;
+	public PatientInsertExtended(UI main, Patient old, boolean inserting, AdmittedPatientBrowser browser) {
+		this.browser = browser;
 		logger = new Logging();
 		this.main = main;
 		subWindow = new Window();
@@ -370,6 +376,80 @@ public class PatientInsertExtended{
 	 * 
 	 * @return javax.swing.Button
 	 */
+	private void isPatientPresentYes(){
+		boolean result = false;
+		String firstName = jFirstNameTextField.getValue().trim();
+		String secondName = jSecondNameTextField.getValue().trim();
+		patient.setFirstName(firstName);
+		patient.setSecondName(secondName);
+		if (sexGroup.getValue()==MessageBundle.getMessage("angal.patient.female")) {
+			patient.setSex('F');
+		} else if (sexGroup.getValue()==MessageBundle.getMessage("angal.patient.male")) {
+			patient.setSex('M');
+		} else {
+			MessageBox.createInfo().withCaption("Message").withMessage("Please select a sex").withOkButton().open();
+			return;
+		}
+		patient.setTaxCode(jTaxCodeTextField.getValue().trim());
+		patient.setAddress(jAddressTextField.getValue().trim());
+		patient.setCity(jCityTextField.getValue().trim());
+		patient.setNextKin(jNextKinTextField.getValue().trim());
+		patient.setTelephone(jTelephoneTextField.getValue().replaceAll(" ", ""));
+		patient.setMother_name(jMotherNameTextField.getValue().trim());
+		if (motherGroup.getValue()==MessageBundle.getMessage("angal.patient.alive")) {
+			patient.setMother('A');
+		} else {
+			if (motherGroup.getValue()==MessageBundle.getMessage("angal.patient.dead")) {
+				patient.setMother('D');
+			} else
+				patient.setMother('U');
+		}
+		patient.setFather_name(jFatherNameTextField.getValue().trim());
+		if (fatherGroup.getValue()==MessageBundle.getMessage("angal.patient.alive")) {
+			patient.setFather('A');
+		} else {
+			if (fatherGroup.getValue()==MessageBundle.getMessage("angal.patient.dead")) {
+				patient.setFather('D');
+			} else
+				patient.setFather('U');
+		}
+		patient.setBloodType(jBloodTypeComboBox.getValue().toString());
+		if (insuranceGroup.getValue()==MessageBundle.getMessage("angal.patient.yes")) {
+			patient.setHasInsurance('Y');
+		} else {
+			if (insuranceGroup.getValue()==MessageBundle.getMessage("angal.patient.no")) {
+				patient.setHasInsurance('N');
+			} else
+				patient.setHasInsurance('U');
+		}
+
+		if (parentGroup.getValue()==MessageBundle.getMessage("angal.patient.yes")) {
+			patient.setParentTogether('Y');
+		} else {
+			if (parentGroup.getValue()==MessageBundle.getMessage("angal.patient.no")) {
+				patient.setParentTogether('N');
+			} else
+				patient.setParentTogether('U');
+		}
+
+	// 	patient.setNote(jNoteTextArea.getValue().trim());
+		result = manager.newPatient(patient);
+
+		if (!result)
+			MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.patient.thedatacouldnotbesaved")).withOkButton().open();
+		else {
+			if (justSave) {
+				logger.info("masuk justsave");
+				insert = false;
+				justSave = false;
+				// PatientInsertExtended.this.requestFocus();
+			} else {
+				subWindow.close();
+				firePatientInserted(patient);
+			}
+		}
+	}
+
 	boolean ok;
 	private Button getJOkButton(){
 		if (jOkButton == null) {
@@ -377,8 +457,6 @@ public class PatientInsertExtended{
 			jOkButton.setCaption(MessageBundle.getMessage("angal.common.ok"));
 			jOkButton.setClickShortcut(KeyEvent.VK_A + ('O' - 'A'));
 			jOkButton.addClickListener(e -> {
-				ok = true;
-				boolean result = false;
 				String firstName = jFirstNameTextField.getValue().trim();
 				String secondName = jSecondNameTextField.getValue().trim();
 				if (firstName.equals("")) {
@@ -389,95 +467,7 @@ public class PatientInsertExtended{
 					MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.patient.insertsecondname")).withOkButton().open();
 					return;
 				}
-				if (!checkAge()) {
-					MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.patient.insertage")).withOkButton().open();
-					return;
-				}
-				if (insert) {
-					String name = firstName + " " + secondName;
-					if(manager.isPatientPresent(name)){
-						MessageBox.createQuestion().withCaption(MessageBundle.getMessage("angal.patient.select"))
-						.withMessage(MessageBundle.getMessage("angal.patient.thepatientisalreadypresent") + ".\n" + MessageBundle.getMessage("angal.patient.doyouwanttocontinue") + "?")
-						.withYesButton(()-> {
-							ok=true;
-						})
-						.withNoButton(()-> {
-							ok=false;
-						}).open();
-					}
-					if(ok){
-						patient.setFirstName(firstName);
-						patient.setSecondName(secondName);
-						if (sexGroup.getValue()==MessageBundle.getMessage("angal.patient.female")) {
-							patient.setSex('F');
-						} else if (sexGroup.getValue()==MessageBundle.getMessage("angal.patient.male")) {
-							patient.setSex('M');
-						} else {
-							MessageBox.createInfo().withCaption("Message").withMessage("Please select a sex").withOkButton().open();
-							return;
-						}
-						patient.setTaxCode(jTaxCodeTextField.getValue().trim());
-						patient.setAddress(jAddressTextField.getValue().trim());
-						patient.setCity(jCityTextField.getValue().trim());
-						patient.setNextKin(jNextKinTextField.getValue().trim());
-						patient.setTelephone(jTelephoneTextField.getValue().replaceAll(" ", ""));
-						patient.setMother_name(jMotherNameTextField.getValue().trim());
-						if (motherGroup.getValue()==MessageBundle.getMessage("angal.patient.alive")) {
-							patient.setMother('A');
-						} else {
-							if (motherGroup.getValue()==MessageBundle.getMessage("angal.patient.dead")) {
-								patient.setMother('D');
-							} else
-								patient.setMother('U');
-						}
-						patient.setFather_name(jFatherNameTextField.getValue().trim());
-						if (fatherGroup.getValue()==MessageBundle.getMessage("angal.patient.alive")) {
-							patient.setFather('A');
-						} else {
-							if (fatherGroup.getValue()==MessageBundle.getMessage("angal.patient.dead")) {
-								patient.setFather('D');
-							} else
-								patient.setFather('U');
-						}
-						patient.setBloodType(jBloodTypeComboBox.getValue().toString());
-						if (insuranceGroup.getValue()==MessageBundle.getMessage("angal.patient.yes")) {
-							patient.setHasInsurance('Y');
-						} else {
-							if (insuranceGroup.getValue()==MessageBundle.getMessage("angal.patient.no")) {
-								patient.setHasInsurance('N');
-							} else
-								patient.setHasInsurance('U');
-						}
-
-						if (parentGroup.getValue()==MessageBundle.getMessage("angal.patient.yes")) {
-							patient.setParentTogether('Y');
-						} else {
-							if (parentGroup.getValue()==MessageBundle.getMessage("angal.patient.no")) {
-								patient.setParentTogether('N');
-							} else
-								patient.setParentTogether('U');
-						}
-
-					// 	patient.setNote(jNoteTextArea.getValue().trim());
-						result = manager.newPatient(patient);
-						// if (result)
-						// 	firePatientInserted(patient);
-
-						if (!result)
-							MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.patient.thedatacouldnotbesaved")).withOkButton().open();
-						else {
-							if (justSave) {
-								logger.info("masuk justsave");
-								insert = false;
-								justSave = false;
-								// PatientInsertExtended.this.requestFocus();
-							} else {
-								subWindow.close();
-							}
-						}
-					}else
-						return;
-				}
+				checkAge();
 			});
 
 		}
@@ -489,47 +479,57 @@ public class PatientInsertExtended{
 	 * 
 	 * @return javax.swing.Button
 	 */
-	boolean ok1;
-	MessageBox mb;
-	Thread t;
-	private boolean checkAge() {
-		// try{
-		DateTime bdate = new DateTime();
-		t = Thread.currentThread();
-		logger.info(t.getName());
+	private void ageFalse(){
+		MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.patient.insertage")).withOkButton().open();
+	}
+	private void ageChecked(){
+		String firstName = jFirstNameTextField.getValue().trim();
+		String secondName = jSecondNameTextField.getValue().trim();
+		patient.setAge(years);
+		patient.setBirthDate(bbdate.toDate());
+		patient.setAgetype("");
+		if (insert) {
+			String name = firstName + " " + secondName;
+			if(manager.isPatientPresent(name)){
+				MessageBox.createQuestion().withCaption(MessageBundle.getMessage("angal.patient.select"))
+				.withMessage(MessageBundle.getMessage("angal.patient.thepatientisalreadypresent") + ".\n" + MessageBundle.getMessage("angal.patient.doyouwanttocontinue") + "?")
+				.withYesButton(()-> {
+					isPatientPresentYes();
+				})
+				.withNoButton(()-> {
+					return;
+				}).open();
+			}else{
+				isPatientPresentYes();
+			}
+		}
+	}
+	DateTime bbdate = new DateTime();
+	private void checkAge() {
 		if (jAgeTypeButtonGroup.getValue()==MessageBundle.getMessage("angal.patient.modeage")) {
 			try {
 				years = Integer.parseInt(jAgeYears.getValue());
 				months = Integer.parseInt(jAgeMonths.getValue());
 				days = Integer.parseInt(jAgeDays.getValue());
 				if (years == 0 && months == 0 && days == 0) throw new NumberFormatException();
-				bdate = bdate.minusYears(years).minusMonths(months).minusDays(days);
+				bbdate = bbdate.minusYears(years).minusMonths(months).minusDays(days);
 			} catch (NumberFormatException ex1) {
 				MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.patient.insertvalidage")).withOkButton().open();
-				return false;
+				ageFalse();
 			}
 			if (years < 0 || years > 200)
-				return false;
-			if (years > 100) {
-				mb = MessageBox.createQuestion().withCaption(MessageBundle.getMessage("angal.patient.veryoldpatient"))
+				ageFalse();
+			else if (years > 100) {
+				MessageBox.createQuestion().withCaption(MessageBundle.getMessage("angal.patient.veryoldpatient"))
 				.withMessage(MessageBundle.getMessage("angal.patient.confirmage"))
 				.withYesButton(()-> {
-					ok1=true;
-					// t.start();
+					ageChecked();
 				})
 				.withNoButton(()-> {
-					ok1=false;
-					// t.start();
-				});
-				mb.open();
-			}
-			
-			// t.sleep(1000000);
-			
-			logger.info("jgn tembus pls");
-			// if(!ok1)
-			// 	return false;
-			// logger.info("testar");
+					ageFalse();
+				}).open();
+			}else
+				ageChecked();
 		}// else if (jAgeType_BirthDate.isSelected()) {
 		// 	if (cBirthDate == null) return false;
 		// 	else {
@@ -550,19 +550,11 @@ public class PatientInsertExtended{
 		// 	if (index == 1) {
 		// 		months = jAgeMonthsComboBox.getSelectedIndex();
 		// 		patient.setAgetype(ageType.getCode() + "/" + months);
-		// 		bdate = bdate.minusYears(years).minusMonths(months);
+		// 		bbdate = bbdate.minusYears(years).minusMonths(months);
 		// 	} else {
-		// 		bdate = bdate.minusYears(years);
+		// 		bbdate = bbdate.minusYears(years);
 		// 	}
 		// }
-		patient.setAge(years);
-		patient.setBirthDate(bdate.toDate());
-		patient.setAgetype("");
-		// }
-		// catch(InterruptedException e){
-			// logger.info(e);
-		// }
-		return true;
 	}
 
 	/**

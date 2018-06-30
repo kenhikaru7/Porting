@@ -90,8 +90,8 @@ import com.vaadin.ui.Grid;
  * 06/12/09 - Alex - Cosmetic changes to GUI
  -----------------------------------------------------------*/
 
-public class AdmittedPatientBrowser implements
-		PatientInsert.PatientListener//, AdmissionBrowser.AdmissionListener,
+public class AdmittedPatientBrowser// implements
+		//PatientInsert.PatientListener//, AdmissionBrowser.AdmissionListener,
 		//PatientInsertExtended.PatientListener,// AdmissionBrowser.AdmissionListener, //by Alex
 		//PatientDataBrowser.DeleteAdmissionListener
 		{
@@ -253,18 +253,20 @@ public class AdmittedPatientBrowser implements
 	 * mind PatientEdit return a patient patientInserted create a new
 	 * AdmittedPatient for table
 	 */
-	public void patientInserted(AWTEvent e) {
+	public void patientInserted(Patient aPatient) {//qqq
 		// Patient u = (Patient) e.getSource();
-		// pPatient.add(0, new AdmittedPatient(u, null));
-		// lastKey = "";
-		// // filterPatient(searchString.getText());
-		// try {
-		// 	if (table.getRowCount() > 0)
-		// 		table.setRowSelectionInterval(0, 0);
-		// } catch (Exception e1) {
-		// }
-		// searchString.requestFocus();
-		// rowCounter.setText(rowCounterText + ": " + pPatient.size());
+		pPatient.add(0, new AdmittedPatient(aPatient, null));
+		patients = data.getPatientList();
+		table.setItems(patients);
+		lastKey = "";
+		filterPatient(searchString.getValue());
+		try {
+			if (table.getBodyRowHeight() > 0)
+				table.select(aPatient);
+		} catch (Exception e1) {
+		}
+		searchString.focus();
+		rowCounter.setCaption(rowCounterText + ": " + pPatient.size());
 	}
 
 	public void patientUpdated(AWTEvent e) {
@@ -465,13 +467,12 @@ public class AdmittedPatientBrowser implements
 	// 	}
 	// 	return jButtonExamination;
 	// }
-
 	private Button getButtonNew() {
 		Button buttonNew = new Button(MessageBundle.getMessage("angal.admission.newpatient"));
 		buttonNew.setClickShortcut(KeyEvent.VK_N);
 		buttonNew.addClickListener(e -> {//qqq
 			if (GeneralData.PATIENTEXTENDED) {
-				PatientInsertExtended newrecord = new PatientInsertExtended(main, new Patient(), true);
+				PatientInsertExtended newrecord = new PatientInsertExtended(main, new Patient(), true, this);
 			// 	newrecord.addPatientListener(AdmittedPatientBrowser.this);
 			// 	newrecord.setVisible(true);
 			// } else {
