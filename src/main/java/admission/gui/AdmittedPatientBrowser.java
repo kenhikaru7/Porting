@@ -54,6 +54,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Grid;
+import de.steinwedel.messagebox.MessageBox;
 
 /**
  * This class shows a list of all known patients and for each if (and where) they are actually admitted, 
@@ -260,13 +261,10 @@ public class AdmittedPatientBrowser// implements
 		table.setItems(patients);
 		lastKey = "";
 		filterPatient(searchString.getValue());
-		try {
-			if (table.getBodyRowHeight() > 0)
-				table.select(aPatient);
-		} catch (Exception e1) {
-		}
-		searchString.focus();
 		rowCounter.setCaption(rowCounterText + ": " + pPatient.size());
+		table.select(aPatient);
+		searchString.focus();
+		searchString.focus();
 	}
 
 	public void patientUpdated(AWTEvent e) {
@@ -417,7 +415,7 @@ public class AdmittedPatientBrowser// implements
 		HorizontalLayout botSubContent = new HorizontalLayout();
 		this.windowContent.addComponent(botSubContent);
 		if (MainMenu.checkUserGrants("btnadmnew")) botSubContent.addComponent(getButtonNew());
-		// if (MainMenu.checkUserGrants("btnadmedit")) botSubContent.addComponent(getButtonEdit());
+		if (MainMenu.checkUserGrants("btnadmedit")) botSubContent.addComponent(getButtonEdit());
 		// if (MainMenu.checkUserGrants("btnadmdel")) botSubContent.addComponent(getButtonDel());
 		// if (MainMenu.checkUserGrants("btnadmadm")) botSubContent.addComponent(getButtonAdmission());
 		// if (MainMenu.checkUserGrants("btnadmexamination")) botSubContent.addComponent(getJButtonExamination());
@@ -484,33 +482,31 @@ public class AdmittedPatientBrowser// implements
 		return buttonNew;
 	}
 
-	// private JButton getButtonEdit() {
-	// 	JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.admission.editpatient"));
-	// 	buttonEdit.setMnemonic(KeyEvent.VK_E);
-	// 	buttonEdit.addActionListener(new ActionListener() {
-
-	// 		public void actionPerformed(ActionEvent event) {
-	// 			// if (table.getSelectedRow() < 0) {
-	// 			// 	JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectarow"),
-	// 			// 			MessageBundle.getMessage("angal.admission.editpatient"), JOptionPane.PLAIN_MESSAGE);
-	// 			// 	return;
-	// 			// }
-	// 			// patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
+	private Button getButtonEdit() {
+		Button buttonEdit = new Button(MessageBundle.getMessage("angal.admission.editpatient"));
+		buttonEdit.setClickShortcut(KeyEvent.VK_E);
+		buttonEdit.addClickListener(e-> {
+			searchString.focus();
+			if (table.getSelectedItems().isEmpty()) {
+				MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.common.pleaseselectarow"))
+				.withOkButton().open();
+				return;
+			}
+			patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
+			
+// 			// if (GeneralData.PATIENTEXTENDED) {
 				
-	// 			// if (GeneralData.PATIENTEXTENDED) {
-					
-	// 			// 	PatientInsertExtended editrecord = new PatientInsertExtended(AdmittedPatientBrowser.this, patient.getPatient(), false);
-	// 			// 	editrecord.addPatientListener(AdmittedPatientBrowser.this);
-	// 			// 	editrecord.setVisible(true);
-	// 			// } else {
-	// 			// 	PatientInsert editrecord = new PatientInsert(AdmittedPatientBrowser.this, patient.getPatient(), false);
-	// 			// 	editrecord.addPatientListener(AdmittedPatientBrowser.this);
-	// 			// 	editrecord.setVisible(true);
-	// 			// }
-	// 		}
-	// 	});
-	// 	return buttonEdit;
-	// }
+// 			// 	PatientInsertExtended editrecord = new PatientInsertExtended(AdmittedPatientBrowser.this, patient.getPatient(), false);
+// 			// 	editrecord.addPatientListener(AdmittedPatientBrowser.this);
+// 			// 	editrecord.setVisible(true);
+// 			// } else {
+// 			// 	PatientInsert editrecord = new PatientInsert(AdmittedPatientBrowser.this, patient.getPatient(), false);
+// 			// 	editrecord.addPatientListener(AdmittedPatientBrowser.this);
+// 			// 	editrecord.setVisible(true);
+			// }
+		});
+		return buttonEdit;
+	}
 
 	// private JButton getButtonDel() {
 	// 	JButton buttonDel = new JButton(MessageBundle.getMessage("angal.admission.deletepatient"));

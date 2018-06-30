@@ -432,7 +432,7 @@ public class PatientInsertExtended{
 				patient.setParentTogether('U');
 		}
 
-	// 	patient.setNote(jNoteTextArea.getValue().trim());
+		patient.setNote("");	// 	patient.setNote(jNoteTextArea.getValue().trim());
 		result = manager.newPatient(patient);
 
 		if (!result)
