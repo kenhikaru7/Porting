@@ -144,7 +144,7 @@ public class AdmittedPatientBrowser// implements
 		if (found){
 			pPatient.remove(cc);
 			lastKey = "";
-			// filterPatient(searchString.getText());
+			filterPatient(searchString.getValue());
 		}
 	}
 	
@@ -410,7 +410,7 @@ public class AdmittedPatientBrowser// implements
 		this.windowContent.addComponent(botSubContent);
 		if (MainMenu.checkUserGrants("btnadmnew")) botSubContent.addComponent(getButtonNew());
 		if (MainMenu.checkUserGrants("btnadmedit")) botSubContent.addComponent(getButtonEdit());
-		// if (MainMenu.checkUserGrants("btnadmdel")) botSubContent.addComponent(getButtonDel());
+		if (MainMenu.checkUserGrants("btnadmdel")) botSubContent.addComponent(getButtonDel());
 		// if (MainMenu.checkUserGrants("btnadmadm")) botSubContent.addComponent(getButtonAdmission());
 		// if (MainMenu.checkUserGrants("btnadmexamination")) botSubContent.addComponent(getJButtonExamination());
 		// if (GeneralData.OPDEXTENDED && MainMenu.checkUserGrants("btnadmopd")) botSubContent.addComponent(getButtonOpd());
@@ -481,7 +481,7 @@ public class AdmittedPatientBrowser// implements
 		buttonEdit.setClickShortcut(KeyEvent.VK_E);
 		buttonEdit.addClickListener(e-> {
 			if (table.getSelectedItems().isEmpty()) {
-				MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.common.pleaseselectarow"))
+				MessageBox.createInfo().withCaption(MessageBundle.getMessage("angal.admission.editpatient")).withMessage(MessageBundle.getMessage("angal.common.pleaseselectarow"))
 				.withOkButton().open();
 				return;
 			}
@@ -502,40 +502,30 @@ public class AdmittedPatientBrowser// implements
 		return buttonEdit;
 	}
 
-	// private JButton getButtonDel() {
-	// 	JButton buttonDel = new JButton(MessageBundle.getMessage("angal.admission.deletepatient"));
-	// 	buttonDel.setMnemonic(KeyEvent.VK_T);
-	// 	buttonDel.addActionListener(new ActionListener() {
-
-	// 		public void actionPerformed(ActionEvent event) {
-	// 			// if (table.getSelectedRow() < 0) {
-	// 			// 	JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectarow"),
-	// 			// 			MessageBundle.getMessage("angal.admission.deletepatient"), JOptionPane.PLAIN_MESSAGE);
-	// 			// 	return;
-	// 			// }
-	// 			// patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
-	// 			Patient pat = patient.getPatient();
-				
-	// 			int n = JOptionPane.showConfirmDialog(null,
-	// 					MessageBundle.getMessage("angal.admission.deletepatient") + " " +pat.getName() + "?",
-	// 					MessageBundle.getMessage("angal.admission.deletepatient"), JOptionPane.YES_NO_OPTION);
-				
-	// 			if (n == JOptionPane.YES_OPTION){
-	// 				PatientBrowserManager manager = new PatientBrowserManager();
-	// 				boolean result = manager.deletePatient(pat);
-	// 				if (result){
-	// 					AdmissionBrowserManager abm = new AdmissionBrowserManager();
-	// 					ArrayList<Admission> patientAdmissions = abm.getAdmissions(pat);
-	// 					for (Admission elem : patientAdmissions){
-	// 						abm.setDeleted(elem.getId());
-	// 					}
-	// 					fireMyDeletedPatient(pat);
-	// 				}
-	// 			}					
-	// 		}
-	// 	});
-	// 	return buttonDel;
-	// }
+	private Button getButtonDel() {
+		Button buttonDel = new Button(MessageBundle.getMessage("angal.admission.deletepatient"));
+		buttonDel.setClickShortcut(KeyEvent.VK_T);
+		buttonDel.addClickListener(e-> {
+			if (table.getSelectedItems().isEmpty()) {
+				MessageBox.createInfo().withCaption(MessageBundle.getMessage("angal.admission.deletepatient")).withMessage(MessageBundle.getMessage("angal.common.pleaseselectarow"))
+				.withOkButton().open();
+				return;
+			}
+			Patient pat = (Patient)table.getSelectedItems().toArray()[0];
+			MessageBox.createQuestion().withCaption(MessageBundle.getMessage("angal.admission.deletepatient"))
+			.withMessage(MessageBundle.getMessage("angal.admission.deletepatient") + " " +pat.getName() + "?")
+			.withYesButton(()-> {
+				PatientBrowserManager manager = new PatientBrowserManager();
+				boolean result = manager.deletePatient(pat);
+				if (result){
+					fireMyDeletedPatient(pat);
+				}
+			})
+			.withNoButton(()-> {
+			}).open();
+		});
+		return buttonDel;
+	}
 
 	// private JButton getButtonAdmission() {
 	// 	JButton buttonAdmission = new JButton(MessageBundle.getMessage("angal.admission.admission"));
