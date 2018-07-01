@@ -254,8 +254,7 @@ public class AdmittedPatientBrowser// implements
 	 * mind PatientEdit return a patient patientInserted create a new
 	 * AdmittedPatient for table
 	 */
-	public void patientInserted(Patient aPatient) {//qqq
-		// Patient u = (Patient) e.getSource();
+	public void patientInserted(Patient aPatient) {
 		pPatient.add(0, new AdmittedPatient(aPatient, null));
 		patients = data.getPatientList();
 		table.setItems(patients);
@@ -267,30 +266,25 @@ public class AdmittedPatientBrowser// implements
 		searchString.focus();
 	}
 
-	public void patientUpdated(AWTEvent e) {
-		
-		// Patient u = (Patient) e.getSource();
-		
-		// //remember selected row
+	public void patientUpdated(Patient aPatient) {
+		//remember selected row
 		// int row = table.getSelectedRow();
-		
-		// for (int i = 0; i < pPatient.size(); i++) {
-		// 	if ((pPatient.get(i).getPatient().getCode()).equals(u.getCode())) {
-		// 		Admission admission = pPatient.get(i).getAdmission();
-		// 		pPatient.remove(i);
-		// 		pPatient.add(i, new AdmittedPatient(u, admission));
-		// 		break;
-		// 	}
-		// }
-		// lastKey = "";
-		// // filterPatient(searchString.getText());
-		// try {
-		// 	table.setRowSelectionInterval(row,row);
-		// } catch (Exception e1) {
-		// }
-		
-		// searchString.requestFocus();
-		// rowCounter.setText(rowCounterText + ": " + pPatient.size());
+		for (int i = 0; i < pPatient.size(); i++) {
+			if ((pPatient.get(i).getPatient().getCode()).equals(aPatient.getCode())) {
+				Admission admission = pPatient.get(i).getAdmission();
+				pPatient.remove(i);
+				pPatient.add(i, new AdmittedPatient(aPatient, admission));
+				break;
+			}
+		}
+		patients = data.getPatientList();
+		table.setItems(patients);
+		lastKey = "";
+		filterPatient(searchString.getValue());
+		table.select(aPatient);
+		rowCounter.setCaption(rowCounterText + ": " + pPatient.size());
+		searchString.focus();
+		searchString.focus();
 	}
 
 	public AdmittedPatientBrowser(UI main) {
@@ -415,7 +409,7 @@ public class AdmittedPatientBrowser// implements
 		HorizontalLayout botSubContent = new HorizontalLayout();
 		this.windowContent.addComponent(botSubContent);
 		if (MainMenu.checkUserGrants("btnadmnew")) botSubContent.addComponent(getButtonNew());
-		if (MainMenu.checkUserGrants("btnadmedit")) botSubContent.addComponent(getButtonEdit());
+		// if (MainMenu.checkUserGrants("btnadmedit")) botSubContent.addComponent(getButtonEdit());
 		// if (MainMenu.checkUserGrants("btnadmdel")) botSubContent.addComponent(getButtonDel());
 		// if (MainMenu.checkUserGrants("btnadmadm")) botSubContent.addComponent(getButtonAdmission());
 		// if (MainMenu.checkUserGrants("btnadmexamination")) botSubContent.addComponent(getJButtonExamination());
@@ -486,20 +480,20 @@ public class AdmittedPatientBrowser// implements
 		Button buttonEdit = new Button(MessageBundle.getMessage("angal.admission.editpatient"));
 		buttonEdit.setClickShortcut(KeyEvent.VK_E);
 		buttonEdit.addClickListener(e-> {
-			searchString.focus();
 			if (table.getSelectedItems().isEmpty()) {
 				MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.common.pleaseselectarow"))
 				.withOkButton().open();
 				return;
 			}
-			patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
+			// Patient patientArray = (Patient)table.getSelectedItems().toArray()[0];
+			// patient = patientArray[0];
+			// patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
 			
-// 			// if (GeneralData.PATIENTEXTENDED) {
-				
-// 			// 	PatientInsertExtended editrecord = new PatientInsertExtended(AdmittedPatientBrowser.this, patient.getPatient(), false);
-// 			// 	editrecord.addPatientListener(AdmittedPatientBrowser.this);
-// 			// 	editrecord.setVisible(true);
-// 			// } else {
+			if (GeneralData.PATIENTEXTENDED) {
+				PatientInsertExtended editrecord = new PatientInsertExtended(main, (Patient)table.getSelectedItems().toArray()[0], false, this);
+				// editrecord.addPatientListener(AdmittedPatientBrowser.this);
+				// editrecord.setVisible(true);
+			} //else {
 // 			// 	PatientInsert editrecord = new PatientInsert(AdmittedPatientBrowser.this, patient.getPatient(), false);
 // 			// 	editrecord.addPatientListener(AdmittedPatientBrowser.this);
 // 			// 	editrecord.setVisible(true);

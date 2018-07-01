@@ -112,31 +112,11 @@ public class PatientInsertExtended{
 
 	private void firePatientInserted(Patient aPatient) {
 		browser.patientInserted(aPatient);
-	// 	AWTEvent event = new AWTEvent(aPatient, AWTEvent.RESERVED_ID_MAX + 1) {
-
-	// 		private static final long serialVersionUID = -6853617821516727564L;
-
-	// 	};
-
-	// 	EventListener[] listeners = patientListeners.getListeners(PatientListener.class);
-	// 	// logger.info("teu kadieu ning");
-	// 	for (int i = 0; i < listeners.length; i++) {
-	// 		((PatientListener) listeners[i]).patientInserted(event);
-	// 		logger.info("listener length yahoo"+i);
-	// 	}
 	}
 
-	// private void firePatientUpdated(Patient aPatient) {
-	// 	AWTEvent event = new AWTEvent(aPatient, AWTEvent.RESERVED_ID_MAX + 1) {
-
-	// 		private static final long serialVersionUID = 7777830932867901993L;
-
-	// 	};
-
-	// 	EventListener[] listeners = patientListeners.getListeners(PatientListener.class);
-	// 	for (int i = 0; i < listeners.length; i++)
-	// 		((PatientListener) listeners[i]).patientUpdated(event);
-	// }
+	private void firePatientUpdated(Patient aPatient) {
+		browser.patientUpdated(aPatient);
+	}
 
 	// COMPONENTS: Main
 	private UI main;
@@ -145,7 +125,7 @@ public class PatientInsertExtended{
 	private boolean insert;
 	private boolean justSave;
 	final private Patient patient;
-	// private int lock;
+	private int lock;
 	private PatientBrowserManager manager = new PatientBrowserManager();
 
 	// COMPONENTS: Data
@@ -312,9 +292,9 @@ public class PatientInsertExtended{
 		patient = old;
 		insert = inserting;
 
-		// if (!insert) {
-		// lock = patient.getLock();
-		// }
+		if (!insert) {
+			lock = patient.getLock();
+		}
 
 		initialize(subWindow);
 	}
@@ -395,7 +375,7 @@ public class PatientInsertExtended{
 		patient.setCity(jCityTextField.getValue().trim());
 		patient.setNextKin(jNextKinTextField.getValue().trim());
 		patient.setTelephone(jTelephoneTextField.getValue().replaceAll(" ", ""));
-		patient.setMother_name(jMotherNameTextField.getValue().trim());
+		patient.setMother_name(jMotherNameTextField.getValue().trim());//insert
 		if (motherGroup.getValue()==MessageBundle.getMessage("angal.patient.alive")) {
 			patient.setMother('A');
 		} else {
@@ -501,6 +481,67 @@ public class PatientInsertExtended{
 				}).open();
 			}else{
 				isPatientPresentYes();
+			}
+		} else { //update
+			patient.setFirstName(firstName);
+			patient.setSecondName(secondName);
+			if (sexGroup.getValue()==MessageBundle.getMessage("angal.patient.female")) {
+				patient.setSex('F');
+			} else if (sexGroup.getValue()==MessageBundle.getMessage("angal.patient.male")) {
+				patient.setSex('M');
+			} else {
+				MessageBox.createInfo().withCaption("Message").withMessage("Please select a sex").withOkButton().open();
+				return;
+			}
+			patient.setTaxCode(jTaxCodeTextField.getValue().trim());
+			patient.setAddress(jAddressTextField.getValue().trim());
+			patient.setCity(jCityTextField.getValue().trim());
+			patient.setNextKin(jNextKinTextField.getValue().trim());
+			patient.setTelephone(jTelephoneTextField.getValue().replaceAll(" ", ""));
+			patient.setMother_name(jMotherNameTextField.getValue().trim());
+			if (motherGroup.getValue()==MessageBundle.getMessage("angal.patient.alive")) {
+				patient.setMother('A');
+			} else {
+				if (motherGroup.getValue()==MessageBundle.getMessage("angal.patient.dead")) {
+					patient.setMother('D');
+				} else
+					patient.setMother('U');
+			}
+			patient.setFather_name(jFatherNameTextField.getValue().trim());
+			if (fatherGroup.getValue()==MessageBundle.getMessage("angal.patient.alive")) {
+				patient.setFather('A');
+			} else {
+				if (fatherGroup.getValue()==MessageBundle.getMessage("angal.patient.dead")) {
+					patient.setFather('D');
+				} else
+					patient.setFather('U');
+			}
+			patient.setBloodType(jBloodTypeComboBox.getValue().toString());
+			if (insuranceGroup.getValue()==MessageBundle.getMessage("angal.patient.yes")) {
+				patient.setHasInsurance('Y');
+			} else {
+				if (insuranceGroup.getValue()==MessageBundle.getMessage("angal.patient.no")) {
+					patient.setHasInsurance('N');
+				} else
+					patient.setHasInsurance('U');
+			}
+
+			if (parentGroup.getValue()==MessageBundle.getMessage("angal.patient.yes")) {
+				patient.setParentTogether('Y');
+			} else {
+				if (parentGroup.getValue()==MessageBundle.getMessage("angal.patient.no")) {
+					patient.setParentTogether('N');
+				} else
+					patient.setParentTogether('U');
+			}
+			boolean result = false;
+			patient.setNote("");	// 	patient.setNote(jNoteTextArea.getValue().trim());
+			result = manager.updatePatient(patient);
+			if (!result)
+				MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.patient.thedatacouldnotbesaved")).withOkButton().open();
+			else {
+				subWindow.close();
+				firePatientUpdated(patient);
 			}
 		}
 	}
@@ -680,7 +721,7 @@ public class PatientInsertExtended{
 			jBirthDateGroupPanel = new Panel();
 			// jBirthDateGroupPanel.setLayout(new BorderLayout());
 
-			if (!insert) {
+			if (!insert) {//qqqedit
 				Date sBirthDate = patient.getBirthDate();
 
 				if (sBirthDate != null) {
@@ -1010,7 +1051,7 @@ public class PatientInsertExtended{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private Panel getJAgeType() {
+	private Panel getJAgeType() {///fix
 		if (jAgeType == null) {
 			jAgeType = new Panel();
 			jAgeType.setCaption(MessageBundle.getMessage("angal.patient.agestar"));
@@ -1061,21 +1102,21 @@ public class PatientInsertExtended{
 		// 		}
 		// 	};
 
-		// 	if (!insert) {
-		// 		if (patient.getBirthDate() != null) {
-		// 			jAgeType_BirthDate.setSelected(true);
-		// 			calcAge(new DateTime(patient.getBirthDate()));
-		// 		} else if (patient.getAgetype() != null && patient.getAgetype().compareTo("") != 0) {
-		// 			parseAgeType();
-		// 			jAgeType_Description.setSelected(true);
-		// 		} else {
-		// 			jAgeType_Age.setSelected(true);
-		// 			years = patient.getAge();
+			if (!insert) {//qqqedit
+			// 	if (patient.getBirthDate() != null) {
+			// 		jAgeType_BirthDate.setSelected(true);
+					calcAge(new DateTime(patient.getBirthDate()));
+			// 	} else if (patient.getAgetype() != null && patient.getAgetype().compareTo("") != 0) {
+			// 		parseAgeType();
+			// 		jAgeType_Description.setSelected(true);
+			// 	} else {
+			// 		jAgeType_Age.setSelected(true);
+					years = patient.getAge();
 					
-		// 		}
-		// 	} else {
-		// 		jAgeType_Age.setSelected(true);
-		// 	}
+			// 	}
+			} //else {
+			// 	jAgeType_Age.setSelected(true);
+			// }
 
 		// 	jAgeType_Age.addClickListener(sliceActionListener);
 		// 	jAgeType_Description.addClickListener(sliceActionListener);
@@ -1232,7 +1273,7 @@ public class PatientInsertExtended{
 	 * @return javax.swing.Panel
 	 */
 	private HorizontalLayout getJAge() {
-		if (jAge == null) {
+		if (jAge == null) {//fix
 			jAge = new HorizontalLayout();
 			jAge.addComponent(new Label("Years"));
 			jAge.addComponent(getJAgeFieldYears());
@@ -1270,7 +1311,7 @@ public class PatientInsertExtended{
 					thisField.setSelection(0,thisField.getValue().length());
 				}
 			});
-			if (!insert) jAgeYears.setCaption(""+years);
+			if (!insert) jAgeYears.setValue(""+years);
 		}
 		return jAgeYears;
 	}
@@ -1288,7 +1329,7 @@ public class PatientInsertExtended{
 					thisField.setSelection(0,thisField.getValue().length());
 				}
 			});
-			if (!insert) jAgeMonths.setCaption(""+months); 
+			if (!insert) jAgeMonths.setValue(""+months); 
 		}
 		return jAgeMonths;
 	}
@@ -1306,7 +1347,7 @@ public class PatientInsertExtended{
 					thisField.setSelection(0,thisField.getValue().length());
 				}
 			});
-			if (!insert) jAgeDays.setCaption(""+days); 
+			if (!insert) jAgeDays.setValue(""+days); 
 		}
 		return jAgeDays;
 	}
@@ -1738,7 +1779,7 @@ public class PatientInsertExtended{
 			jMotherNameTextField = new TextField();
 			jMotherNameTextField.setMaxLength(15);
 			if (!insert)
-				jMotherNameTextField.setCaption(patient.getMother_name());
+				jMotherNameTextField.setValue(patient.getMother_name());
 		}
 		return jMotherNameTextField;
 	}
