@@ -409,7 +409,7 @@ public class AdmittedPatientBrowser// implements
 		HorizontalLayout botSubContent = new HorizontalLayout();
 		this.windowContent.addComponent(botSubContent);
 		if (MainMenu.checkUserGrants("btnadmnew")) botSubContent.addComponent(getButtonNew());
-		// if (MainMenu.checkUserGrants("btnadmedit")) botSubContent.addComponent(getButtonEdit());
+		if (MainMenu.checkUserGrants("btnadmedit")) botSubContent.addComponent(getButtonEdit());
 		// if (MainMenu.checkUserGrants("btnadmdel")) botSubContent.addComponent(getButtonDel());
 		// if (MainMenu.checkUserGrants("btnadmadm")) botSubContent.addComponent(getButtonAdmission());
 		// if (MainMenu.checkUserGrants("btnadmexamination")) botSubContent.addComponent(getJButtonExamination());
