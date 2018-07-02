@@ -287,9 +287,9 @@ public class AdmittedPatientBrowser// implements
 		searchString.focus();
 	}
 
-	public AdmittedPatientBrowser(UI main) {
+	public AdmittedPatientBrowser() {
 		logger = new Logging();
-		this.main = main;
+		this.main = UI.getCurrent();
 		Window subWindow = new Window(MessageBundle.getMessage("angal.admission.patientsbrowser"));
 		subWindow.setModal(true);
 		this.windowContent = new VerticalLayout();
@@ -337,7 +337,6 @@ public class AdmittedPatientBrowser// implements
 	 */
 	private void getControlPanel(HorizontalLayout layout) {
 
-		// JPanel mainPanel = new JPanel(new BorderLayout());
 		Panel panel = new Panel();
 		panel.setHeight("100%");
 		layout.addComponent(panel);

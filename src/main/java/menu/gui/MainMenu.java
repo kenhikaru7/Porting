@@ -117,8 +117,8 @@ public class MainMenu{
 	private VerticalLayout layout;
 	private UI main;
 
-	public MainMenu(UI main) {
-		this.main = main;
+	public MainMenu() {
+		this.main = UI.getCurrent();
 		myFrame = this;
 
 		GeneralData.getGeneralData();
@@ -266,7 +266,8 @@ public class MainMenu{
 			if (myMenu.contains(umi))
 				myMenu.remove(umi);
 		}
-		//RMF: start here
+
+		UI.getCurrent().getPage().setTitle(myUser.getUserName());
 		this.layout0 = new HorizontalLayout();
 		this.layout = new VerticalLayout();
 		// this.layout.setWidth(Sizeable.SIZE_UNDEFINED)
@@ -316,22 +317,27 @@ public class MainMenu{
 	 * @param itemMenuCode
 	 */
 	private void launchApp(String itemMenuCode) {
-
 		for (UserMenuItem u : myMenu) {
 			if (u.getCode().equals(itemMenuCode)) {
 				if (u.getCode().equalsIgnoreCase("EXIT")) {
 					actionExit(0);
 				} else if (u.isASubMenu()) {
-					// logger.info(u.getCode());
-					new SubMenu(this, u.getCode(), myMenu, this.main);
+					new SubMenu(this, u.getCode(), myMenu);
 					break;
 				} else {
 					String app = u.getMyClass();
 					// an empty menu item
 					if (app.equalsIgnoreCase("none"))
 						return;
-						logger.info(app);
-						Object target = new AdmittedPatientBrowser(this.main);
+					try{
+						Object target = Class.forName(app).newInstance();
+					} catch (InstantiationException ie) {
+						logger.info("InstantiationException");
+					} catch (IllegalAccessException iae) {
+						logger.info("IllegalAccessException");
+					} catch (ClassNotFoundException cnfe) {
+						logger.info("ClassNotFoundException");
+					}
 					break;
 				}
 			}

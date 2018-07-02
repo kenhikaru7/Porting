@@ -66,12 +66,13 @@ public class SubMenu{
 		// initialize(mainMenu, code, menu, parent.getBounds());
 	}
 	
-	public SubMenu(MainMenu parent, String code, ArrayList<UserMenuItem> menu, UI main) {
+	public SubMenu(MainMenu parent, String code, ArrayList<UserMenuItem> menu) {
 		// super(parent, "     ", true);
 		Window subWindow = new Window(code);
 		subWindow.setModal(true);
 		this.subContent = new VerticalLayout();
         subWindow.setContent(this.subContent);
+        main = UI.getCurrent();
         main.addWindow(subWindow);
 		this.prfButtonSize=parent.getMinButtonSize();
 		initialize(parent, code, menu, null);
