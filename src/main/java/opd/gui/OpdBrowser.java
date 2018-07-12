@@ -45,7 +45,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -66,6 +65,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.RadioButtonGroup;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.themes.ValoTheme;
 import de.steinwedel.messagebox.MessageBox;
 
@@ -133,7 +133,7 @@ public class OpdBrowser extends Window implements OpdEdit.SurgeryListener, OpdEd
 	//MODIFIED : alex
 	private String[] pColums = { MessageBundle.getMessage("angal.common.datem"), MessageBundle.getMessage("angal.opd.patientid"), MessageBundle.getMessage("angal.opd.fullname"), MessageBundle.getMessage("angal.opd.sexm"), MessageBundle.getMessage("angal.opd.agem"),MessageBundle.getMessage("angal.opd.diseasem"),MessageBundle.getMessage("angal.opd.diseasetypem"),MessageBundle.getMessage("angal.opd.patientstatus")};
 	private ArrayList<Opd> pSur;
-	private JTable jTable = null;
+	private Grid<Opd> jGrid;
 	private OpdBrowsingModel model;
 	private int[] pColumwidth = { 70, 70, 150, 30, 30, 195, 195, 50 };
 	private boolean[] columnResizable = { false, false, true, false, false, true, true, false };
@@ -151,47 +151,56 @@ public class OpdBrowser extends Window implements OpdEdit.SurgeryListener, OpdEd
 	private JRadioButton radiom;
 	private JRadioButton radiof;
 	private JRadioButton radioa;
-	
-	public JTable getJTable() {
-		if (jTable == null) {
-			model = new OpdBrowsingModel();
-			jTable = new JTable(model);
-			jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			TableColumnModel columnModel = jTable.getColumnModel();
-			DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
-			// cellRenderer.setHorizontalAlignment(Label.RIGHT);
-			for (int i = 0; i < pColums.length; i++) {
-				columnModel.getColumn(i).setMinWidth(pColumwidth[i]);
-				columnModel.getColumn(i).setCellRenderer(new AlignmentCellRenderer());
-				if (!columnResizable[i])
-					columnModel.getColumn(i).setMaxWidth(pColumwidth[i]);
-				if (!columnsVisible[i]) {
-					columnModel.getColumn(i).setMaxWidth(0);
-					columnModel.getColumn(i).setMinWidth(0);
-					columnModel.getColumn(i).setPreferredWidth(0);
-				}
-			}
-		}
-		return jTable;
-	}
-	
-	class AlignmentCellRenderer extends DefaultTableCellRenderer {  
-		
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
 
-		@Override
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-			
-			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
-			setHorizontalAlignment(columnsAlignment[column]);
-			if (columnsBold[column])
-				cell.setFont(new Font(null, Font.BOLD, 12));
-			return cell;
+	public Grid getGrid() {
+		if (jGrid == null) {
+			model = new OpdBrowsingModel();
+			jGrid = new Grid();
+			jGrid.setItems(pSur);
+			jGrid.addColumn(Opd::getSVisitDate).setCaption("DATE");
+			jGrid.addColumn(Opd::getpatientCode).setCaption("ID");
+			jGrid.addColumn(Opd::getFullName).setCaption("FULL NAME");
+			jGrid.addColumn(Opd::getSex).setCaption("SEX");
+			jGrid.addColumn(Opd::getAge).setCaption("AGE");
+			jGrid.addColumn(Opd::getDiseaseDesc).setCaption("DISEASE");
+			jGrid.addColumn(Opd::getDiseaseTypeDesc).setCaption("DISEASE TYPE");
+			jGrid.addColumn(Opd::getNewPatient).setCaption("STATUS");
+			// jGrid.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			// TableColumnModel columnModel = jGrid.getColumnModel();
+			// DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+			// cellRenderer.setHorizontalAlignment(Label.RIGHT);
+			// for (int i = 0; i < pColums.length; i++) {
+			// 	columnModel.getColumn(i).setMinWidth(pColumwidth[i]);
+			// 	columnModel.getColumn(i).setCellRenderer(new AlignmentCellRenderer());
+			// 	if (!columnResizable[i])
+			// 		columnModel.getColumn(i).setMaxWidth(pColumwidth[i]);
+			// 	if (!columnsVisible[i]) {
+			// 		columnModel.getColumn(i).setMaxWidth(0);
+			// 		columnModel.getColumn(i).setMinWidth(0);
+			// 		columnModel.getColumn(i).setPreferredWidth(0);
+			// 	}
+			// }
 		}
+		return jGrid;
 	}
+	
+	// class AlignmentCellRenderer extends DefaultTableCellRenderer {  
+		
+	// 	/**
+	// 	 * 
+	// 	 */
+	// 	private static final long serialVersionUID = 1L;
+
+	// 	@Override
+	// 	public Component getTableCellRendererComponent(Grid table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+			
+	// 		Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
+	// 		setHorizontalAlignment(columnsAlignment[column]);
+	// 		if (columnsBold[column])
+	// 			cell.setFont(new Font(null, Font.BOLD, 12));
+	// 		return cell;
+	// 	}
+	// }
 	
 	/**
 	 * This method initializes 
@@ -255,8 +264,9 @@ public class OpdBrowser extends Window implements OpdEdit.SurgeryListener, OpdEd
 			jContainLayout = new VerticalLayout();
 			// jContainLayout.addComponent(getjButtonLayout());//qqq
 			HorizontalLayout top = new HorizontalLayout();
-			jContainLayout.addComponent(getJSelectionLayout());
-			// jContainLayout.addComponent(getJTable());
+			top.addComponent(getJSelectionLayout());
+			top.addComponent(getGrid());
+			jContainLayout.addComponent(top);
 		}
 		return jContainLayout;
 	}
@@ -305,29 +315,29 @@ public class OpdBrowser extends Window implements OpdEdit.SurgeryListener, OpdEd
 			jEditButton = new JButton();
 			jEditButton.setText(MessageBundle.getMessage("angal.common.edit"));
 			jEditButton.setMnemonic(KeyEvent.VK_E);
-			jEditButton.addActionListener(new ActionListener() {
+			// jEditButton.addActionListener(new ActionListener() {
 				
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						// JOptionPane.showMessageDialog(OpdBrowser.this,
-						// 		MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-						// 		JOptionPane.PLAIN_MESSAGE);
-						// return;
-					} else {
-						selectedrow = jTable.getSelectedRow();
-						Opd opd = (Opd)(((OpdBrowsingModel) model).getValueAt(selectedrow, -1));
-						if (GeneralData.OPDEXTENDED) {
-							OpdEditExtended editrecord = new OpdEditExtended(opd, false);
-							editrecord.addSurgeryListener(OpdBrowser.this);
-							editrecord.setVisible(true);
-						} else {
-							OpdEdit editrecord = new OpdEdit(opd, false);
-							editrecord.addSurgeryListener(OpdBrowser.this);
-							editrecord.setVisible(true);
-						}
-					}
-				}
-			});
+			// 	// public void actionPerformed(ActionEvent event) {
+			// 	// 	if (jGrid.getSelectedRow() < 0) {
+			// 	// 		// JOptionPane.showMessageDialog(OpdBrowser.this,
+			// 	// 		// 		MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
+			// 	// 		// 		JOptionPane.PLAIN_MESSAGE);
+			// 	// 		// return;
+			// 	// 	} else {
+			// 	// 		selectedrow = jGrid.getSelectedRow();
+			// 	// 		Opd opd = (Opd)(((OpdBrowsingModel) model).getValueAt(selectedrow, -1));
+			// 	// 		if (GeneralData.OPDEXTENDED) {
+			// 	// 			OpdEditExtended editrecord = new OpdEditExtended(opd, false);
+			// 	// 			editrecord.addSurgeryListener(OpdBrowser.this);
+			// 	// 			editrecord.setVisible(true);
+			// 	// 		} else {
+			// 	// 			OpdEdit editrecord = new OpdEdit(opd, false);
+			// 	// 			editrecord.addSurgeryListener(OpdBrowser.this);
+			// 	// 			editrecord.setVisible(true);
+			// 	// 		}
+			// 	// 	}
+			// 	// }
+			// });
 		}
 		return jEditButton;
 	}
@@ -361,45 +371,45 @@ public class OpdBrowser extends Window implements OpdEdit.SurgeryListener, OpdEd
 			jDeteleButton = new JButton();
 			jDeteleButton.setText(MessageBundle.getMessage("angal.common.delete"));
 			jDeteleButton.setMnemonic(KeyEvent.VK_D);
-			jDeteleButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						// JOptionPane.showMessageDialog(OpdBrowser.this,
-						// 		MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-						// 		JOptionPane.PLAIN_MESSAGE);
-						return;
-					} else {
-						Opd opd = (Opd) (((OpdBrowsingModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
-						String dt="[not specified]";
-						try {
-							final DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
-							dt = currentDateFormat.format(opd.getVisitDate().getTime());
-						}
-						catch (Exception ex){
-						}
+			// jDeteleButton.addActionListener(new ActionListener() {
+			// 	public void actionPerformed(ActionEvent event) {
+			// 		if (jGrid.getSelectedRow() < 0) {
+			// 			// JOptionPane.showMessageDialog(OpdBrowser.this,
+			// 			// 		MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
+			// 			// 		JOptionPane.PLAIN_MESSAGE);
+			// 			return;
+			// 		} else {
+			// 			Opd opd = (Opd) (((OpdBrowsingModel) model)
+			// 					.getValueAt(jGrid.getSelectedRow(), -1));
+			// 			String dt="[not specified]";
+			// 			try {
+			// 				final DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
+			// 				dt = currentDateFormat.format(opd.getVisitDate().getTime());
+			// 			}
+			// 			catch (Exception ex){
+			// 			}
 		
 						
-						// int n = JOptionPane.showConfirmDialog(null,
-						// 		MessageBundle.getMessage("angal.opd.deletefollowingopd") +
-						// 		"\n"+MessageBundle.getMessage("angal.opd.registrationdate")+"="+dateFormat.format(opd.getDate()) + 
-						// 		"\n"+MessageBundle.getMessage("angal.opd.disease")+"= "+ ((opd.getDiseaseDesc()==null)? "["+MessageBundle.getMessage("angal.opd.notspecified")+"]": opd.getDiseaseDesc()) + 
-						// 		"\n"+MessageBundle.getMessage("angal.opd.age")+"="+ opd.getAge()+", "+"Sex="+" " +opd.getSex()+
-						// 		"\n"+MessageBundle.getMessage("angal.opd.visitdate")+"=" + dt +
-						// 		"\n ?",
-						// 		MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
+			// 			// int n = JOptionPane.showConfirmDialog(null,
+			// 			// 		MessageBundle.getMessage("angal.opd.deletefollowingopd") +
+			// 			// 		"\n"+MessageBundle.getMessage("angal.opd.registrationdate")+"="+dateFormat.format(opd.getDate()) + 
+			// 			// 		"\n"+MessageBundle.getMessage("angal.opd.disease")+"= "+ ((opd.getDiseaseDesc()==null)? "["+MessageBundle.getMessage("angal.opd.notspecified")+"]": opd.getDiseaseDesc()) + 
+			// 			// 		"\n"+MessageBundle.getMessage("angal.opd.age")+"="+ opd.getAge()+", "+"Sex="+" " +opd.getSex()+
+			// 			// 		"\n"+MessageBundle.getMessage("angal.opd.visitdate")+"=" + dt +
+			// 			// 		"\n ?",
+			// 			// 		MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
 						
-						// if ((n == JOptionPane.YES_OPTION)
-						// 		&& (manager.deleteOpd(opd))) {
-						// 	pSur.remove(pSur.size() - jTable.getSelectedRow()
-						// 			- 1);
-						// 	model.fireTableDataChanged();
-						// 	jTable.updateUI();
-						// }
-					}
-				}
+			// 			// if ((n == JOptionPane.YES_OPTION)
+			// 			// 		&& (manager.deleteOpd(opd))) {
+			// 			// 	pSur.remove(pSur.size() - jGrid.getSelectedRow()
+			// 			// 			- 1);
+			// 			// 	model.fireTableDataChanged();
+			// 			// 	jGrid.updateUI();
+			// 			// }
+			// 		}
+			// 	}
 				
-			});
+			// });
 		}
 		return jDeteleButton;
 	}
@@ -799,7 +809,7 @@ public class OpdBrowser extends Window implements OpdEdit.SurgeryListener, OpdEd
 		return jAgePanel;
 	}
 	
-	class OpdBrowsingModel extends DefaultTableModel {
+	class OpdBrowsingModel {
 		
 		private static final long serialVersionUID = -9129145534999353730L;
 		
@@ -869,11 +879,11 @@ public class OpdBrowser extends Window implements OpdEdit.SurgeryListener, OpdEd
 		}//"DATE", "PROG YEAR", "SEX", "AGE","DISEASE","DISEASE TYPE"};
 		
 		
-		@Override
-		public boolean isCellEditable(int arg0, int arg1) {
-			// return super.isCellEditable(arg0, arg1);
-			return false;
-		}
+		// @Override
+		// public boolean isCellEditable(int arg0, int arg1) {
+		// 	// return super.isCellEditable(arg0, arg1);
+		// 	return false;
+		// }
 		
 		/** 
 	     * This method converts a column number in the table
@@ -900,21 +910,21 @@ public class OpdBrowser extends Window implements OpdEdit.SurgeryListener, OpdEd
 	
 	
 	public void surgeryUpdated(AWTEvent e, Opd opd) {
-		pSur.set(pSur.size() - selectedrow - 1, opd);
-		//System.out.println("riga->" + selectedrow);
-		((OpdBrowsingModel) jTable.getModel()).fireTableDataChanged();
-		jTable.updateUI();
-		if ((jTable.getRowCount() > 0) && selectedrow > -1)
-			jTable.setRowSelectionInterval(selectedrow, selectedrow);
-		rowCounter.setValue(rowCounterText + pSur.size());
+		// pSur.set(pSur.size() - selectedrow - 1, opd);
+		// //System.out.println("riga->" + selectedrow);
+		// ((OpdBrowsingModel) jGrid.getModel()).fireTableDataChanged();
+		// jGrid.updateUI();
+		// if ((jGrid.getRowCount() > 0) && selectedrow > -1)
+		// 	jGrid.setRowSelectionInterval(selectedrow, selectedrow);
+		// rowCounter.setValue(rowCounterText + pSur.size());
 	}
 	
 	public void surgeryInserted(AWTEvent e, Opd opd) {
-		pSur.add(pSur.size(), opd);
-		((OpdBrowsingModel) jTable.getModel()).fireTableDataChanged();
-		if (jTable.getRowCount() > 0)
-			jTable.setRowSelectionInterval(0, 0);
-		rowCounter.setValue(rowCounterText + pSur.size());
+		// pSur.add(pSur.size(), opd);
+		// ((OpdBrowsingModel) jGrid.getModel()).fireTableDataChanged();
+		// if (jGrid.getRowCount() > 0)
+		// 	jGrid.setRowSelectionInterval(0, 0);
+		// rowCounter.setValue(rowCounterText + pSur.size());
 	}
 	
 	private Button getFilterButton() {
@@ -952,8 +962,8 @@ public class OpdBrowser extends Window implements OpdEdit.SurgeryListener, OpdEd
 					}
 					
 					model = new OpdBrowsingModel(diseasetype,disease,getDateFrom(), getDateTo(),ageFrom,ageTo,sex,newPatient);
-					model.fireTableDataChanged();
-					// jTable.updateUI();
+					jGrid.setItems(pSur);
+					// model.fireTableDataChanged();
 					rowCounter.setCaption(rowCounterText + pSur.size());
 			});
 		}

@@ -18,6 +18,8 @@ package org.isf.opd.model;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.text.SimpleDateFormat;
+import org.isf.generaldata.MessageBundle;
 
 public class Opd {
 	/**
@@ -53,10 +55,20 @@ public class Opd {
 	private String referralTo;		//R=referral to another unit; null=no referral to 
 	
 	private String userID;
-
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
 
 	public String getNewPatient() {
 		return newPatient;
+	}
+
+	public String getSNewPatient() {
+		String patientStatus;
+		if (getNewPatient().equals("N")){
+			patientStatus = MessageBundle.getMessage("angal.common.new");
+		} else {
+			patientStatus = MessageBundle.getMessage("angal.opd.reattendance");
+		}
+		return patientStatus;
 	}
 
 	public void setNewPatient(String newPatient) {
@@ -221,6 +233,16 @@ public class Opd {
 	
 	public GregorianCalendar getVisitDate() {
 		return visitDate;
+	}
+
+	public String getSVisitDate() {
+		String sVisitDate;
+		if(visitDate==null){
+			sVisitDate="";
+		}else{
+			sVisitDate=dateFormat.format(visitDate.getTime());
+		}
+		return sVisitDate;
 	}
 
 	public void setVisitDate(GregorianCalendar visDate) {
