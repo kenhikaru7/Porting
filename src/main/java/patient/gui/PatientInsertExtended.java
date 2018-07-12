@@ -48,7 +48,7 @@ import org.isf.generaldata.SmsParameters;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.admission.gui.AdmittedPatientBrowser;
-// import video.gui.PatientPhotoPanel;
+import org.isf.video.gui.PatientPhotoPanel;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -67,6 +67,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.RadioButtonGroup;
 import com.vaadin.ui.ComboBox;
@@ -258,9 +259,9 @@ public class PatientInsertExtended{
 	private RadioButtonGroup insuranceGroup = null;
 
 	// COMPONENTS: Note
-	private VerticalLayout jRightPanel = null;
-	// private ScrollPane jNoteScrollPane = null;
-	// private TextArea jNoteTextArea = null;
+	private VerticalLayout jRightLayout = null;
+	private Panel jNotePanel = null;
+	private TextArea jNoteTextArea = null;
 
 	// COMPONENTS: Buttons
 	private HorizontalLayout ButtonLayout = null;
@@ -270,7 +271,7 @@ public class PatientInsertExtended{
 	private Label labelRequiredFields;
 	private Logging logger;
 	
-	// private PatientPhotoPanel photoPanel;
+	private PatientPhotoPanel photoPanel;
 	
 
 	/**
@@ -280,10 +281,9 @@ public class PatientInsertExtended{
 	 */
 	private Window subWindow;
 	private AdmittedPatientBrowser browser;
-	public PatientInsertExtended(UI main, Patient old, boolean inserting, AdmittedPatientBrowser browser) {
-		this.browser = browser;
+	public PatientInsertExtended(Patient old, boolean inserting){
 		logger = new Logging();
-		this.main = main;
+		this.main = UI.getCurrent();
 		subWindow = new Window();
 		subWindow.setModal(true);
 		this.windowContent = new VerticalLayout();
@@ -298,6 +298,13 @@ public class PatientInsertExtended{
 
 		initialize(subWindow);
 	}
+
+	public PatientInsertExtended(Patient old, boolean inserting, AdmittedPatientBrowser browser) {//change argument browser to dinamically type one
+		this(old, inserting);
+		this.browser = browser;
+	}
+
+
 
 	/**
 	 * This method initializes this
@@ -334,7 +341,7 @@ public class PatientInsertExtended{
 		HorizontalLayout topWindow = new HorizontalLayout();
 		windowContent.addComponent(topWindow);
 		getJDataContainPanel(topWindow);//qqq
-		// getJRightPanel(topWindow);
+		getjRightLayout(topWindow);
 	}
 
 	/**
@@ -990,6 +997,7 @@ public class PatientInsertExtended{
 			jBloodTypePanel.setCaption(MessageBundle.getMessage("angal.patient.bloodtype"));
 			String[] bloodTypes = { MessageBundle.getMessage("angal.patient.bloodtype.unknown"), "0+", "A+", "B+", "AB+", "0-", "A-", "B-", "AB-" };
 			jBloodTypeComboBox = new ComboBox();
+			jBloodTypeComboBox.setEmptySelectionAllowed(false);
 			jBloodTypeComboBox.setItems(bloodTypes);
 			jBloodTypeComboBox.setSelectedItem(MessageBundle.getMessage("angal.patient.bloodtype.unknown"));
 			jBloodTypePanel.setContent(jBloodTypeComboBox);
@@ -1723,36 +1731,30 @@ public class PatientInsertExtended{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	// private void getJRightPanel(HorizontalLayout layout) {
-	// 	if (jRightPanel == null) {
-	// 		jRightPanel = new VerticalLayout();
-	// 		try {
-	// 			//jRightPanel.addComponent(getJPhoto(), BorderLayout.NORTH);
-	// 			photoPanel = new PatientPhotoPanel(this, patient.getCode(), patient.getPhoto());
+	private void getjRightLayout(HorizontalLayout layout) {
+		if (jRightLayout == null) {
+			jRightLayout = new VerticalLayout();
+			// try {
+			// 	// photoPanel = new PatientPhotoPanel(this, patient.getCode(), patient.getPhoto());
 				
-	// 		} catch (IOException e) {
-	// 			logger.info("masuk ke catch");
-	// 			e.printStackTrace();
-	// 		}
-	// 		// if (photoPanel != null) jRightPanel.addComponent(photoPanel, BorderLayout.NORTH);
-	// 		// jRightPanel.addComponent(getJNoteScrollPane(), BorderLayout.CENTER);
+			// } catch (IOException e) {
+			// 	logger.info("masuk ke catch photopanel");
+			// }
+			// if (photoPanel != null) jRightLayout.addComponent(photoPanel);
+			jRightLayout.addComponent(getjNotePanel());
 
-	// 	}
-	// 	layout.addComponent(jRightPanel);
-	// }
+		}
+		layout.addComponent(jRightLayout);
+	}
 
-	// private ScrollPane getJNoteScrollPane() {
-	// 	if (jNoteScrollPane == null) {
-	// 		jNoteScrollPane = new ScrollPane(getCaptionArea());
-	// 		jNoteScrollPane.setVerticalScrollBarPolicy(ScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-	// 		jNoteScrollPane.setHorizontalScrollBarPolicy(ScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-	// 		jNoteScrollPane.setPreferredSize(new Dimension(200, 200));
-	// 		jNoteScrollPane.setBorder(BorderFactory.createCompoundBorder(
-	// 				BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.patient.note")), BorderFactory.createEmptyBorder(5, 5, 5, 5)),
-	// 				jNoteScrollPane.getBorder()));
-	// 	}
-	// 	return jNoteScrollPane;
-	// }
+	private Panel getjNotePanel() {
+		if (jNotePanel == null) {
+			jNotePanel = new Panel(MessageBundle.getMessage("angal.patient.note"));
+			jNoteTextArea = new TextArea();
+			jNotePanel.setContent(jNoteTextArea);
+		}
+		return jNotePanel;
+	}
 
 	/**
 	 * This method initializes jFatherNameTextField

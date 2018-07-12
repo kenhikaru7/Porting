@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
-// import opd.model.Opd;
+import org.isf.opd.model.Opd;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -166,27 +166,27 @@ public class Patient {
 		 this.lock = 0;
 	}
 	
-	// public Patient(Opd opd) {
+	public Patient(Opd opd) {
 		
-	// 	 this.firstName = opd.getfirstName();
-	// 	 this.secondName = opd.getsecondName(); 
-	// 	 this.birthDate = null;
-	// 	 this.age = opd.getAge();
-	// 	 this.agetype = "";
-	// 	 this.sex = opd.getSex();
-	// 	 this.address = opd.getaddress();
-	// 	 this.city = opd.getcity();
-	// 	 this.nextKin = opd.getnextKin(); 
-	// 	 this.telephone = "";
-	// 	 this.mother_name = "";
-	// 	 this.mother = ' ';
-	// 	 this.father_name = "";
-	// 	 this.father = ' ';
-	// 	 this.bloodType = "";
-	// 	 this.hasInsurance = ' ';
-	// 	 this.parentTogether = ' ';
-	// 	 this.lock = 0;
-	// }
+		 this.firstName = opd.getfirstName();
+		 this.secondName = opd.getsecondName(); 
+		 this.birthDate = null;
+		 this.age = opd.getAge();
+		 this.agetype = "";
+		 this.sex = opd.getSex();
+		 this.address = opd.getaddress();
+		 this.city = opd.getcity();
+		 this.nextKin = opd.getnextKin(); 
+		 this.telephone = "";
+		 this.mother_name = "";
+		 this.mother = ' ';
+		 this.father_name = "";
+		 this.father = ' ';
+		 this.bloodType = "";
+		 this.hasInsurance = ' ';
+		 this.parentTogether = ' ';
+		 this.lock = 0;
+	}
 	
 	public Patient(String firstName, String secondName, Date birthDate, int age, String agetype, char sex,
 			String address, String city, String nextKin, String telephone,

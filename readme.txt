@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=D:\nyobavaadin\vaadin-archetype-application\lib\ -DgroupId=com.kota9 -DartifactId= -Dversion=1.1.0 -Dpackaging=jar

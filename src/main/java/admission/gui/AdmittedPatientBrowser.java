@@ -463,7 +463,7 @@ public class AdmittedPatientBrowser// implements
 		buttonNew.setClickShortcut(KeyEvent.VK_N);
 		buttonNew.addClickListener(e -> {//qqq
 			if (GeneralData.PATIENTEXTENDED) {
-				PatientInsertExtended newrecord = new PatientInsertExtended(main, new Patient(), true, this);
+				PatientInsertExtended newrecord = new PatientInsertExtended(new Patient(), true, this);
 			// 	newrecord.addPatientListener(AdmittedPatientBrowser.this);
 			// 	newrecord.setVisible(true);
 			// } else {
@@ -489,7 +489,7 @@ public class AdmittedPatientBrowser// implements
 			// patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
 			
 			if (GeneralData.PATIENTEXTENDED) {
-				PatientInsertExtended editrecord = new PatientInsertExtended(main, (Patient)table.getSelectedItems().toArray()[0], false, this);
+				PatientInsertExtended editrecord = new PatientInsertExtended((Patient)table.getSelectedItems().toArray()[0], false, this);
 				// editrecord.addPatientListener(AdmittedPatientBrowser.this);
 				// editrecord.setVisible(true);
 			} //else {
