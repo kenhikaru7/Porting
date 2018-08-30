@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.EventListener;
 import java.util.Locale;
 import java.util.StringTokenizer;
+import java.util.List;
 
 // import javax.swing.BorderFactory;
 // import javax.swing.BoxLayout;
@@ -75,6 +76,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import de.steinwedel.messagebox.MessageBox;
+import com.vaadin.ui.Component.Listener;
 
 /*------------------------------------------
  * PatientInsertExtended - model for the patient entry
@@ -91,36 +93,55 @@ import de.steinwedel.messagebox.MessageBox;
  *------------------------------------------*/
 
 
-public class PatientInsertExtended{
+public class PatientInsertExtended extends Window{
 
 	private static final long serialVersionUID = -827831581202765055L;
 
 	// private EventListenerList patientListeners = new EventListenerList();
+	private List<PatientListener> patientListeners;// = new ArrayList();
 	
-	public interface PatientListener extends EventListener {
-		public void patientUpdated(AWTEvent e);
+	public interface PatientListener{
+		public void patientUpdated(Patient aPatient);
 
-		public void patientInserted(AWTEvent e);
+		public void patientInserted(Patient aPatient);
 	}
 
-	public void addPatientListener(PatientListener l) {
-		// patientListeners.addComponent(PatientListener.class, l);
+	public synchronized void addPatientListener(PatientListener l) {
+		if(patientListeners==null)
+			patientListeners = new ArrayList<PatientListener>();
+		patientListeners.add(l);
 	}
 
-	public void removePatientListener(PatientListener listener) {
-		// patientListeners.remove(PatientListener.class, listener);
+	public void removePatientListener(PatientListener l) {
+		if(patientListeners==null){
+			patientListeners = new ArrayList<PatientListener>();
+			return;
+		}
+		patientListeners.remove(l);
 	}
 
-	private void firePatientInserted(Patient aPatient) {
-		browser.patientInserted(aPatient);
+	// private void firePatientInserted(Patient aPatient) {
+	// 	// browser.patientInserted(aPatient);
+	// 	patientListeners[0].patientInserted(aPatient);
+	// }
+
+	private synchronized void firePatientInserted(Patient aPatient) {
+		if(patientListeners != null){
+			for(PatientListener patientListener : patientListeners){
+				patientListener.patientInserted(aPatient);
+			}
+		}
 	}
 
 	private void firePatientUpdated(Patient aPatient) {
-		browser.patientUpdated(aPatient);
+		if(patientListeners != null){
+			for(PatientListener patientListener : patientListeners){
+				patientListener.patientUpdated(aPatient);
+			}
+		}
 	}
 
 	// COMPONENTS: Main
-	private UI main;
 	private VerticalLayout windowContent;
 	private Panel jMainPanel = null;
 	private boolean insert;
@@ -279,16 +300,13 @@ public class PatientInsertExtended{
 	 * @param owner 
 	 * 
 	 */
-	private Window subWindow;
 	private AdmittedPatientBrowser browser;
 	public PatientInsertExtended(Patient old, boolean inserting){
 		logger = new Logging();
-		this.main = UI.getCurrent();
-		subWindow = new Window();
-		subWindow.setModal(true);
+		this.setModal(true);
 		this.windowContent = new VerticalLayout();
-        subWindow.setContent(this.windowContent);
-        this.main.addWindow(subWindow);
+        this.setContent(this.windowContent);
+        UI.getCurrent().addWindow(this);
 		patient = old;
 		insert = inserting;
 
@@ -296,7 +314,7 @@ public class PatientInsertExtended{
 			lock = patient.getLock();
 		}
 
-		initialize(subWindow);
+		initialize(this);
 	}
 
 	public PatientInsertExtended(Patient old, boolean inserting, AdmittedPatientBrowser browser) {//change argument browser to dinamically type one
@@ -304,14 +322,12 @@ public class PatientInsertExtended{
 		this.browser = browser;
 	}
 
-
-
 	/**
 	 * This method initializes this
 	 * 
 	 */
 	private void initialize(Window window) {
-		getJContainPanel();
+		getWindowContent();
 		if (insert)
 			window.setCaption(MessageBundle.getMessage("angal.patient.title"));
 		else
@@ -327,8 +343,8 @@ public class PatientInsertExtended{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private void getJContainPanel() {
-		getJDataPanel();
+	private void getWindowContent() {
+		getDataLayout();
 		getButtonLayout();
 	}
 
@@ -337,7 +353,7 @@ public class PatientInsertExtended{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private void getJDataPanel() {
+	private void getDataLayout() {
 		HorizontalLayout topWindow = new HorizontalLayout();
 		windowContent.addComponent(topWindow);
 		getJDataContainPanel(topWindow);//qqq
@@ -352,7 +368,7 @@ public class PatientInsertExtended{
 	private void getButtonLayout() {
 		if (ButtonLayout == null) {
 			ButtonLayout = new HorizontalLayout();
-			ButtonLayout.addComponent(getJOkButton());
+			ButtonLayout.addComponent(getOkButton());
 			ButtonLayout.addComponent(getJCancelButton());
 		}
 		windowContent.addComponent(ButtonLayout);
@@ -431,14 +447,15 @@ public class PatientInsertExtended{
 				justSave = false;
 				// PatientInsertExtended.this.requestFocus();
 			} else {
-				subWindow.close();
+				//qqqw
+				this.close();
 				firePatientInserted(patient);
 			}
 		}
 	}
 
 	boolean ok;
-	private Button getJOkButton(){
+	private Button getOkButton(){
 		if (jOkButton == null) {
 			jOkButton = new Button();
 			jOkButton.setCaption(MessageBundle.getMessage("angal.common.ok"));
@@ -547,7 +564,7 @@ public class PatientInsertExtended{
 			if (!result)
 				MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.patient.thedatacouldnotbesaved")).withOkButton().open();
 			else {
-				subWindow.close();
+				this.close();
 				firePatientUpdated(patient);
 			}
 		}

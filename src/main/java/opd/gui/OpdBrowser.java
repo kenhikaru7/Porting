@@ -96,7 +96,7 @@ public class OpdBrowser extends Window implements OpdEdit.SurgeryListener, OpdEd
 	private VerticalLayout jContainLayout = null;
 //	private int pfrmWidth;
 	private int pfrmHeight;
-	private JButton jNewButton = null;
+	private Button jNewButton = null;
 	private JButton jEditButton = null;
 	private JButton jCloseButton = null;
 	private JButton jDeteleButton = null;
@@ -231,10 +231,10 @@ public class OpdBrowser extends Window implements OpdEdit.SurgeryListener, OpdEd
 	private HorizontalLayout getjButtonLayout() {
 		if (jButtonLayout == null) {
 			jButtonLayout = new HorizontalLayout();
-			// if (MainMenu.checkUserGrants("btnopdnew")) jButtonLayout.add(getJNewButton(), null);
-			// if (MainMenu.checkUserGrants("btnopdedit")) jButtonLayout.add(getJEditButton(), null);
-			// if (MainMenu.checkUserGrants("btnopddel")) jButtonLayout.add(getJDeteleButton(), null);
-			// jButtonLayout.add(getJCloseButton(), null);
+			if (MainMenu.checkUserGrants("btnopdnew")) jButtonLayout.addComponent(getJNewButton());
+			// if (MainMenu.checkUserGrants("btnopdedit")) jButtonLayout.addComponent(getJEditButton());
+			// if (MainMenu.checkUserGrants("btnopddel")) jButtonLayout.addComponent(getJDeteleButton());
+			// jButtonLayout.addComponent(getJCloseButton());
 		}
 		return jButtonLayout;
 	}
@@ -249,6 +249,7 @@ public class OpdBrowser extends Window implements OpdEdit.SurgeryListener, OpdEd
 	private void initialize() {
 		logger = new Logging();
 		UI.getCurrent().addWindow(this);
+		this.setModal(true);
 		this.setCaption(MessageBundle.getMessage("angal.opd.opdoutpatientdepartment")+"("+VERSION+")");
 		this.setContent(getjContainLayout());
 		rowCounter.setCaption(rowCounterText + pSur.size());
@@ -262,11 +263,11 @@ public class OpdBrowser extends Window implements OpdEdit.SurgeryListener, OpdEd
 	private VerticalLayout getjContainLayout() {
 		if (jContainLayout == null) {
 			jContainLayout = new VerticalLayout();
-			// jContainLayout.addComponent(getjButtonLayout());//qqq
 			HorizontalLayout top = new HorizontalLayout();
 			top.addComponent(getJSelectionLayout());
 			top.addComponent(getGrid());
 			jContainLayout.addComponent(top);
+			jContainLayout.addComponent(getjButtonLayout());
 		}
 		return jContainLayout;
 	}
@@ -276,25 +277,21 @@ public class OpdBrowser extends Window implements OpdEdit.SurgeryListener, OpdEd
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
-	private JButton getJNewButton() {
+	private Button getJNewButton() {
 		if (jNewButton == null) {
-			jNewButton = new JButton();
-			jNewButton.setText(MessageBundle.getMessage("angal.common.new"));
-			jNewButton.setMnemonic(KeyEvent.VK_N);
-			jNewButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					Opd newOpd = new Opd(0,' ',-1,"0",0);
-					if (GeneralData.OPDEXTENDED) {
-						OpdEditExtended newrecord = new OpdEditExtended(newOpd, true);
-						newrecord.addSurgeryListener(OpdBrowser.this);
-						newrecord.setVisible(true);
-					} else {
-						OpdEdit newrecord = new OpdEdit(newOpd, true);
-						newrecord.addSurgeryListener(OpdBrowser.this);
-						newrecord.setVisible(true);
-					}
-					
+			jNewButton = new Button();
+			jNewButton.setCaption(MessageBundle.getMessage("angal.common.new"));
+			jNewButton.setClickShortcut(KeyEvent.VK_N);
+			jNewButton.addClickListener(e -> {
+				Opd newOpd = new Opd(0,' ',-1,"0",0);
+				if (GeneralData.OPDEXTENDED) {
+					OpdEditExtended newrecord = new OpdEditExtended(newOpd, true);
+					// newrecord.addSurgeryListener(OpdBrowser.this);
+					// newrecord.setVisible(true);
+				} else {
+					OpdEdit newrecord = new OpdEdit(newOpd, true);
+					// newrecord.addSurgeryListener(OpdBrowser.this);
+					// newrecord.setVisible(true);
 				}
 			});
 		}
@@ -302,7 +299,7 @@ public class OpdBrowser extends Window implements OpdEdit.SurgeryListener, OpdEd
 	}
 	
 	public void NewOpd() {
-		jNewButton.doClick();
+		jNewButton.click();
 	}
 	
 	/**
@@ -655,7 +652,6 @@ public class OpdBrowser extends Window implements OpdEdit.SurgeryListener, OpdEd
 			jDiseaseTypeBox.setValue(allType);
 			jDiseaseTypeBox.setEmptySelectionAllowed(false);
 			jDiseaseTypeBox.addValueChangeListener(e-> {
-				// jDiseaseBox.removeAllItems();
 				jDiseaseBox.setItems();
 				getDiseaseBox();
 			});					
@@ -741,7 +737,8 @@ public class OpdBrowser extends Window implements OpdEdit.SurgeryListener, OpdEd
 					ageFrom = Integer.parseInt(jAgeFromTextField.getValue());
 					if ((ageFrom<0)||(ageFrom>200)) {
 						jAgeFromTextField.setValue("");
-						MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.opd.insertvalidage")).withOkButton().open();
+						MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.opd.insertvalidage"))
+						.withOkButton().open();
 					}
 				} catch (NumberFormatException ex) {
 					jAgeFromTextField.setValue("0");

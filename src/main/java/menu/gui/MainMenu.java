@@ -307,7 +307,6 @@ public class MainMenu{
 	 */
 	public void actionPerformed(Button.ClickEvent e) {
 		String command = e.getButton().getIconAlternateText();
-		// logger.info(command);
 		launchApp(command);
         // this.layout.addComponent(new Label("Thanks " + e.getButton().getCaption() + ", it works!"));
 	}

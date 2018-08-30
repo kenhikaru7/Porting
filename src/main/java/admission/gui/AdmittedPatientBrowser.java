@@ -91,9 +91,9 @@ import de.steinwedel.messagebox.MessageBox;
  * 06/12/09 - Alex - Cosmetic changes to GUI
  -----------------------------------------------------------*/
 
-public class AdmittedPatientBrowser// implements
-		//PatientInsert.PatientListener//, AdmissionBrowser.AdmissionListener,
-		//PatientInsertExtended.PatientListener,// AdmissionBrowser.AdmissionListener, //by Alex
+public class AdmittedPatientBrowser extends Window implements
+		// PatientInsert.PatientListener//, AdmissionBrowser.AdmissionListener,
+		PatientInsertExtended.PatientListener//, AdmissionBrowser.AdmissionListener, //by Alex
 		//PatientDataBrowser.DeleteAdmissionListener
 		{
 
@@ -289,12 +289,11 @@ public class AdmittedPatientBrowser// implements
 
 	public AdmittedPatientBrowser() {
 		logger = new Logging();
-		this.main = UI.getCurrent();
-		Window subWindow = new Window(MessageBundle.getMessage("angal.admission.patientsbrowser"));
-		subWindow.setModal(true);
+		this.setCaption(MessageBundle.getMessage("angal.admission.patientsbrowser"));
+		this.setModal(true);
 		this.windowContent = new VerticalLayout();
-        subWindow.setContent(this.windowContent);
-        this.main.addWindow(subWindow);
+        this.setContent(this.windowContent);
+        UI.getCurrent().addWindow(this);
 		myFrame = this;
 		if (!GeneralData.ENHANCEDSEARCH) {
 			//Load the whole list of patients
@@ -461,10 +460,10 @@ public class AdmittedPatientBrowser// implements
 	private Button getButtonNew() {
 		Button buttonNew = new Button(MessageBundle.getMessage("angal.admission.newpatient"));
 		buttonNew.setClickShortcut(KeyEvent.VK_N);
-		buttonNew.addClickListener(e -> {//qqq
+		buttonNew.addClickListener(e -> {
 			if (GeneralData.PATIENTEXTENDED) {
 				PatientInsertExtended newrecord = new PatientInsertExtended(new Patient(), true, this);
-			// 	newrecord.addPatientListener(AdmittedPatientBrowser.this);
+				newrecord.addPatientListener(this);
 			// 	newrecord.setVisible(true);
 			// } else {
 			// 	PatientInsert newrecord = new PatientInsert(AdmittedPatientBrowser.this, new Patient(), true);
@@ -490,7 +489,7 @@ public class AdmittedPatientBrowser// implements
 			
 			if (GeneralData.PATIENTEXTENDED) {
 				PatientInsertExtended editrecord = new PatientInsertExtended((Patient)table.getSelectedItems().toArray()[0], false, this);
-				// editrecord.addPatientListener(AdmittedPatientBrowser.this);
+				editrecord.addPatientListener(this);
 				// editrecord.setVisible(true);
 			} //else {
 // 			// 	PatientInsert editrecord = new PatientInsert(AdmittedPatientBrowser.this, patient.getPatient(), false);
