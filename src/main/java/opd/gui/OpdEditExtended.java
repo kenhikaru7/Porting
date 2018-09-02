@@ -58,6 +58,9 @@ import java.util.EventListener;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+import java.time.ZoneId;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -100,6 +103,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.RadioButtonGroup;
 import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.shared.ui.window.WindowMode;
 
 import de.steinwedel.messagebox.MessageBox;
 
@@ -129,9 +133,6 @@ import com.vaadin.ui.Component.Listener;
 
 public class OpdEditExtended extends Window implements PatientInsertExtended.PatientListener{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	// @Override
@@ -149,46 +150,42 @@ public class OpdEditExtended extends Window implements PatientInsertExtended.Pat
 		setPatient(opdPatient);
 	}
 
-	private EventListenerList surgeryListeners = new EventListenerList();
+	private List<OpdListener> opdListeners;
 
-	public interface SurgeryListener extends EventListener {
-		public void surgeryUpdated(AWTEvent e, Opd opd);
+	public interface OpdListener{
+		public void opdUpdated(Opd opd);
 
-		public void surgeryInserted(AWTEvent e, Opd opd);
+		public void opdInserted(Opd opd);
 	}
 
-	public void addSurgeryListener(SurgeryListener l){
-		surgeryListeners.add(SurgeryListener.class, l);
+	public void addOpdListener(OpdListener l){
+		if(opdListeners==null)
+			opdListeners = new ArrayList<OpdListener>();
+		opdListeners.add(l);
 	}
 
-	public void removeSurgeryListener(SurgeryListener listener){
-		surgeryListeners.remove(SurgeryListener.class, listener);
+	public void removeOpdListener(OpdListener listener){
+		if(opdListeners==null){
+			opdListeners = new ArrayList<OpdListener>();
+			return;
+		}
+		opdListeners.remove(listener);
 	}
 
-	private void fireSurgeryInserted(Opd opd){
-		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1){
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;};
-
-		EventListener[] listeners = surgeryListeners.getListeners(SurgeryListener.class);
-		for(int i = 0; i < listeners.length; i++)
-			((SurgeryListener) listeners[i]).surgeryInserted(event, opd);
+	private void fireOpdInserted(Opd opd){
+		if(opdListeners != null){
+			for(OpdListener opdListener : opdListeners){
+				opdListener.opdInserted(opd);
+			}
+		}
 	}
 
-	private void fireSurgeryUpdated(Opd opd){
-		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1){
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;};
-
-		EventListener[] listeners = surgeryListeners.getListeners(SurgeryListener.class);
-		for(int i = 0; i < listeners.length; i++)
-			((SurgeryListener) listeners[i]).surgeryUpdated(event, opd);
+	private void fireOpdUpdated(Opd opd){
+		if(opdListeners != null){
+			for(OpdListener opdListener : opdListeners){
+				opdListener.opdUpdated(opd);
+			}
+		}
 	}
 
 	private static final String VERSION = "1.3";
@@ -200,7 +197,7 @@ public class OpdEditExtended extends Window implements PatientInsertExtended.Pat
 	private HorizontalLayout jNorthLayout;
 	private VerticalLayout leftCentralLayout;
 	private VerticalLayout dataLayout = null;
-	private JPanel jPanelButtons = null;
+	private HorizontalLayout buttonLayout = null;
 	private Label jLabelDate = null;
 	private Label jLabelDiseaseType1 = null;
 	private Label jLabelDisease1 = null;
@@ -215,10 +212,10 @@ public class OpdEditExtended extends Window implements PatientInsertExtended.Pat
 	private JLabel jLabelSex = null;
 	private GregorianCalendar dateIn = null;
 	private DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
-	private DateField OpdDateFieldCal = null;
-	private JButton okButton = null;
-	private JButton cancelButton = null;
-	private JButton jButtonExamination = null;
+	private DateField opdDateFieldCal = null;
+	private Button okButton = null;
+	private Button cancelButton = null;
+	private Button jButtonExamination = null;
 	private CheckBox rePatientCheckBox = null;
 	private CheckBox newPatientCheckBox = null;
 	private CheckBox referralToCheckBox = null;
@@ -359,7 +356,6 @@ public class OpdEditExtended extends Window implements PatientInsertExtended.Pat
 			jLabelLastOpdNote.setValue("");
 			jFieldLastOpdNote.setValue("");
 			jNoteTextArea.setValue("");
-
 			return false;
 		}
 		lastOPDDisease1 = null;
@@ -382,7 +378,7 @@ public class OpdEditExtended extends Window implements PatientInsertExtended.Pat
 		StringBuilder lastOPDDisease = new StringBuilder();
 		lastOPDDisease.append(MessageBundle.getMessage("angal.opd.on")).append(" ").append(currentDateFormat.format(lastOpd.getVisitDate().getTime())).append(" - ");
 		if(lastOPDDisease1 != null){
-			setAttendance();
+			// setAttendance();
 			lastOPDDisease.append(lastOPDDisease1.getDescription());
 		}
 		if(lastOPDDisease2 != null) lastOPDDisease.append(", ").append(lastOPDDisease2.getDescription());
@@ -486,6 +482,7 @@ public class OpdEditExtended extends Window implements PatientInsertExtended.Pat
 	 */
 	private void initialize(){
 		this.setModal(true);
+		this.setWindowMode(WindowMode.MAXIMIZED);
 		logger = new Logging();
 		UI.getCurrent().addWindow(this);
 		this.setContent(getMainLayout());
@@ -532,7 +529,7 @@ public class OpdEditExtended extends Window implements PatientInsertExtended.Pat
 			centralLayout.addComponent(getLeftCentralLayout());
 			centralLayout.addComponent(getJNotePanel());
 			jMainLayout.addComponent(centralLayout);
-			// jMainLayout.addComponent(getJButtonPanel());
+			jMainLayout.addComponent(getButtonLayout());//qqq
 		}
 		return jMainLayout;
 	}
@@ -548,7 +545,7 @@ public class OpdEditExtended extends Window implements PatientInsertExtended.Pat
 			jLabelDate = new Label(MessageBundle.getMessage("angal.opd.attendancedate"));
 			dataLayout.addComponent(jLabelDate);
 			HorizontalLayout dateNOPD = new HorizontalLayout();
-			dateNOPD.addComponent(getOpdDateFieldCal());
+			dateNOPD.addComponent(getopdDateFieldCal());
 			dateNOPD.addComponent(getOpdNumberLayout());
 			dataLayout.addComponent(dateNOPD);
 
@@ -563,7 +560,7 @@ public class OpdEditExtended extends Window implements PatientInsertExtended.Pat
 
 			jLabelDiseaseType1 = new Label(MessageBundle.getMessage("angal.opd.diseasetype"));
 			dataLayout.addComponent(jLabelDiseaseType1);
-			dataLayout.addComponent(getDiseaseTypeBox());//qqq
+			dataLayout.addComponent(getDiseaseTypeBox());
 
 			jLabelDisease1 = new Label(MessageBundle.getMessage("angal.opd.diagnosis"));
 			dataLayout.addComponent(jLabelDisease1);
@@ -602,8 +599,8 @@ public class OpdEditExtended extends Window implements PatientInsertExtended.Pat
 	/**
 	 * 
 	 */
-	private DateField getOpdDateFieldCal(){
-		if(OpdDateFieldCal == null){
+	private DateField getopdDateFieldCal(){
+		if(opdDateFieldCal == null){
 			String d = "";
 
 			java.util.Date myDate = null;
@@ -618,16 +615,20 @@ public class OpdEditExtended extends Window implements PatientInsertExtended.Pat
 			}
 			if(dateIn == null){
 				d = "";
+				logger.info("datein null");
 			}else{
 				myDate = dateIn.getTime();
 				d = currentDateFormat.format(myDate);
 			}
-			OpdDateFieldCal = new DateField();
-			OpdDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			OpdDateFieldCal.setDateFormat("dd/MM/yy");
-			OpdDateFieldCal.setValue(LocalDate.now());
+			try{
+				opdDateFieldCal = new DateField("",currentDateFormat.parse(d).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+				opdDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
+				opdDateFieldCal.setDateFormat("dd/MM/yy");
+			}catch (ParseException e) {
+				e.printStackTrace();
+			}
 		}
-		return OpdDateFieldCal;
+		return opdDateFieldCal;
 	}
 
 	private HorizontalLayout getOpdNumberLayout(){
@@ -656,7 +657,7 @@ public class OpdEditExtended extends Window implements PatientInsertExtended.Pat
 		if(!insert)
 			return "" + opd.getYear();
 		GregorianCalendar date = new GregorianCalendar();
-		// date.setTime(OpdDateFieldCal.getDate());
+		date.setTime(Date.from(opdDateFieldCal.getValue().atStartOfDay(opdDateFieldCal.getZoneId().systemDefault()).toInstant()));
 		opd.setYear(opdManager.getProgYear(date.get(Calendar.YEAR)) + 1);
 		OpdNum = opd.getYear();
 		return "" + OpdNum;
@@ -1016,7 +1017,7 @@ public class OpdEditExtended extends Window implements PatientInsertExtended.Pat
 			jFieldFirstName = new TextField();
 			jFieldFirstName.setMaxLength(50);
 			jFieldFirstName.setCaption(MessageBundle.getMessage("angal.opd.first.name") + "\t");
-			jFieldFirstName.setEnabled(false);// jFieldFirstName.setEnabled(false);
+			jFieldFirstName.setEnabled(false);
 			patientForm.addComponent(jFieldFirstName);
 
 			jFieldSecondName = new TextField();
@@ -1029,7 +1030,7 @@ public class OpdEditExtended extends Window implements PatientInsertExtended.Pat
 			jFieldAddress = new TextField();
 			jFieldAddress.setCaption(MessageBundle.getMessage("angal.opd.address"));
 			jFieldAddress.setMaxLength(50);
-			jFieldAddress.setEnabled(false);// jFieldAddress.setEnabled(false);
+			jFieldAddress.setEnabled(false);
 			// jFieldAddress.setFocusable(false);
 			patientForm.addComponent(jFieldAddress);
 
@@ -1059,11 +1060,9 @@ public class OpdEditExtended extends Window implements PatientInsertExtended.Pat
 			sexGroup.setItems(MessageBundle.getMessage("angal.opd.male"),MessageBundle.getMessage("angal.opd.female"));
 			sexGroup.setValue(MessageBundle.getMessage("angal.opd.male"));
 			sexGroup.setEnabled(false);
-			// radiom.setFocusable(false);
-			// radiof.setFocusable(false);
 			patientForm.addComponent(sexGroup);
 			
-			patientLayout.addComponent(getJPatientNoteArea());//getJPatientNote() //qqq
+			patientLayout.addComponent(getJPatientNoteArea());//getJPatientNote()
 
 			if(opdPatient != null) setPatient(opdPatient);
 		}
@@ -1097,55 +1096,55 @@ public class OpdEditExtended extends Window implements PatientInsertExtended.Pat
 	}
 
 	/**
-	 * This method initializes jPanelButtons
+	 * This method initializes buttonLayout
 	 * 
 	 * @return javax.swing.JPanel
 	 */
-	private JPanel getJButtonPanel(){
-		if(jPanelButtons == null){
-			jPanelButtons = new JPanel();
-			jPanelButtons.add(getOkButton(), null);
-			if(insert && MainMenu.checkUserGrants("btnopdnewexamination") || 
-					!insert && MainMenu.checkUserGrants("btnopdeditexamination"))
-				jPanelButtons.add(getJButtonExamination(), null);
-			jPanelButtons.add(getCancelButton(), null);
+	private HorizontalLayout getButtonLayout(){
+		if(buttonLayout == null){
+			buttonLayout = new HorizontalLayout();
+			buttonLayout.addComponent(getOkButton());//qqq
+			// if(insert && MainMenu.checkUserGrants("btnopdnewexamination") || 
+			// 		!insert && MainMenu.checkUserGrants("btnopdeditexamination"))
+			// 	buttonLayout.addComponent(getJButtonExamination(), null);
+			buttonLayout.addComponent(getCancelButton());
 		}
-		return jPanelButtons;
+		return buttonLayout;
 	}
 
-	private JButton getJButtonExamination(){
-		if(jButtonExamination == null){
-			jButtonExamination = new JButton(MessageBundle.getMessage("angal.opd.examination"));
-			jButtonExamination.setMnemonic(KeyEvent.VK_E);
+	private Button getJButtonExamination(){
+	// 	if(jButtonExamination == null){
+	// 		jButtonExamination = new JButton(MessageBundle.getMessage("angal.opd.examination"));
+	// 		jButtonExamination.setMnemonic(KeyEvent.VK_E);
 
-			jButtonExamination.addActionListener(new ActionListener(){
+	// 		jButtonExamination.addActionListener(new ActionListener(){
 
-				public void actionPerformed(ActionEvent e){
-					// if(opdPatient == null){
-					// 	JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.opd.pleaseselectapatient"));
-					// 	return;
-					// }
+	// 			public void actionPerformed(ActionEvent e){
+	// 				// if(opdPatient == null){
+	// 				// 	JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.opd.pleaseselectapatient"));
+	// 				// 	return;
+	// 				// }
 
-					// PatientExamination patex;
-					// ExaminationOperations examOperations = new ExaminationOperations();
+	// 				// PatientExamination patex;
+	// 				// ExaminationOperations examOperations = new ExaminationOperations();
 
-					// PatientExamination lastPatex = examOperations.getLastByPatID(opdPatient.getCode());
-					// if(lastPatex != null){
-					// 	patex = examOperations.getFromLastPatientExamination(lastPatex);
-					// }else{
-					// 	patex = examOperations.getDefaultPatientExamination(opdPatient);
-					// }
+	// 				// PatientExamination lastPatex = examOperations.getLastByPatID(opdPatient.getCode());
+	// 				// if(lastPatex != null){
+	// 				// 	patex = examOperations.getFromLastPatientExamination(lastPatex);
+	// 				// }else{
+	// 				// 	patex = examOperations.getDefaultPatientExamination(opdPatient);
+	// 				// }
 
-					// GenderPatientExamination gpatex = new GenderPatientExamination(patex, opdPatient.getSex() == 'M');
+	// 				// GenderPatientExamination gpatex = new GenderPatientExamination(patex, opdPatient.getSex() == 'M');
 
-					// PatientExaminationEdit dialog = new PatientExaminationEdit(OpdEditExtended.this, gpatex);
-					// dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					// dialog.pack();
-					// dialog.setLocationRelativeTo(null);
-					// dialog.setVisible(true);
-				}
-			});
-		}
+	// 				// PatientExaminationEdit dialog = new PatientExaminationEdit(OpdEditExtended.this, gpatex);
+	// 				// dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+	// 				// dialog.pack();
+	// 				// dialog.setLocationRelativeTo(null);
+	// 				// dialog.setVisible(true);
+	// 			}
+	// 		});
+	// 	}
 		return jButtonExamination;
 	}
 
@@ -1156,179 +1155,176 @@ public class OpdEditExtended extends Window implements PatientInsertExtended.Pat
 	 */
 
 	//alex: modified method to take data from Patient Object instead from jTextFields
-	private JButton getOkButton(){
+	private Button getOkButton(){
 		if(okButton == null){
-			okButton = new JButton(MessageBundle.getMessage("angal.common.ok"));
-			okButton.setMnemonic(KeyEvent.VK_O);
+			okButton = new Button(MessageBundle.getMessage("angal.common.ok"));
+			okButton.setClickShortcut(KeyEvent.VK_O);
 
-			okButton.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e){
-					if(!jOpdNumField.getValue().equals("") || !jOpdNumField.getValue().contains(" ")){
-						OpdBrowserManager opm = new OpdBrowserManager();
-						GregorianCalendar gregDate = new GregorianCalendar();
-						// gregDate.setTime(OpdDateFieldCal.getDate());
-						boolean opdNumExist = false;
-						int opdNum;
-						try {
-							opdNum = Integer.parseInt(jOpdNumField.getValue());
-						} catch (NumberFormatException e1){
-							JOptionPane.showMessageDialog(null,
-									MessageBundle.getMessage("angal.opd.opdnumbermustbeanumber"));
-							return;
-						}
-
-						int opdEdit = 0;
-						if(insert){
-							opdNumExist = opm.isExistOpdNum(opdNum, gregDate.get(Calendar.YEAR));
-						}else{
-							opdEdit = opd.getYear();
-						}
-
-						if(opdNum != opdEdit){
-							opdNumExist = opm.isExistOpdNum(opdNum, gregDate.get(Calendar.YEAR));
-						}else{
-							opdNumExist = false;
-						}
-
-						if(!opdNumExist){
-							opd.setYear(opdNum);
-
-							boolean result = false;
-							String newPatient = "";
-							String referralTo = null;
-							String referralFrom = null;
-							String disease = null;
-							String disease2 = null;
-							String disease3 = null;
-							String diseaseType = null;
-							String diseaseDesc = "";
-							String diseaseTypeDesc = "";
-
-						// 	if(diseaseBox1.getSelectedIndex() == 0){
-						// JOptionPane.showMessageDialog(null,MessageBundle.getMessage("angal.opd.pleaseselectadisease"));
-						// 		return;
-						// 	}
-							if(opdPatient == null){
-
-						JOptionPane.showMessageDialog(null,MessageBundle.getMessage("angal.opd.pleaseselectapatient"));
-								return;
-							}
-
-							if(newPatientCheckBox.getValue()){
-								newPatient = "N";
-							}else{
-								newPatient = "R";
-							}
-							if(referralToCheckBox.getValue()){
-								referralTo = "R";
-							}else{
-								referralTo = "";
-							}
-							if(referralFromCheckBox.getValue()){
-								referralFrom = "R";
-							}else{
-								referralFrom = "";
-							}
-							// disease
-							// if(diseaseBox1.getSelectedIndex() > 0){
-							// 	disease = ((Disease) diseaseBox1.getSelectedItem()).getCode();
-							// 	diseaseDesc = ((Disease) diseaseBox1.getSelectedItem()).getDescription();
-							// 	diseaseTypeDesc = ((Disease) diseaseBox1.getSelectedItem()).getType().getDescription();
-							// 	diseaseType = (((Disease) diseaseBox1.getSelectedItem()).getType().getCode());
-							// }
-							// disease2
-							// if(diseaseBox2.getSelectedIndex() > 0){
-							// 	disease2 = ((Disease) diseaseBox2.getSelectedItem().get()).getCode();
-							// }
-							// disease3
-							// if(diseaseBox3.getSelectedIndex() > 0){
-							// 	disease3 = ((Disease) diseaseBox3.getSelectedItem().get()).getCode();
-							// }
-							// Check double diseases
-							if(disease2 != null && disease == disease2){
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.opd.duplicatediseasesnotallowed"));
-								disease2 = null;
-								return;
-							}
-							if(disease3 != null && disease == disease3){
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.opd.duplicatediseasesnotallowed"));
-								disease3 = null;
-								return;
-							}
-							if(disease2 != null && disease3 != null && disease2 == disease3){
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.opd.duplicatediseasesnotallowed"));
-								disease3 = null;
-								return;
-							}
-							// String d = currentDateFormat.format(OpdDateFieldCal.getDate());
-// 							if(d.equals("")){
-// 						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.opd.pleaseinsertattendancedate"));
-// 								return;
-// 							}
-// 							opd.setNote(jNoteTextArea.getText());
-// 							opd.setpatientCode(opdPatient.getCode()); // ADDED : alex
-// 							opd.setFullName(opdPatient.getName());
-// 							opd.setNewPatient(newPatient);
-// 							opd.setReferralFrom(referralFrom);
-// 							opd.setReferralTo(referralTo);
-// 							opd.setSex(opdPatient.getSex());
-
-// 							opd.setfirstName(opdPatient.getFirstName());
-// 							opd.setsecondName(opdPatient.getSecondName());
-// 							opd.setaddress(opdPatient.getAddress());
-// 							opd.setcity(opdPatient.getCity());
-// 							opd.setnextKin(opdPatient.getNextKin());
-
-// 							opd.setDisease(disease);
-// 							opd.setDiseaseType(diseaseType);
-// 							opd.setDiseaseDesc(diseaseDesc);
-// 							opd.setDiseaseTypeDesc(diseaseTypeDesc);
-// 							opd.setDisease2(disease2);
-// 							opd.setDisease3(disease3);
-
-// 							String user = MainMenu.getUser();
-// //							String opdUser = opd.getUserID();
-// //							if(opdUser != null && !opdUser.equals(user)){
-// //								int yes = JOptionPane.showConfirmDialog(OpdEditExtended.this, MessageBundle.getMessage("angal.opd.youaresigningnewdatawithyournameconfirm"));
-// //								if(yes != JOptionPane.YES_OPTION) return;
-// //							}
-// 							opd.setUserID(user);
-// 							opd.setVisitDate(gregDate);
-// 							if(insert){
-// 								GregorianCalendar date = new GregorianCalendar();
-// 								opd.setYear(opdNum);
-// 								opd.setAge(opdPatient.getAge());
-// 								// remember forlater use
-// 								RememberDates.setLastOpdVisitDate(gregDate);
-// 								result = opdManager.newOpd(opd);
-// 								if(result){
-// 									fireSurgeryInserted(opd);
-// 								}
-// 								if(!result)
-// 									JOptionPane.showMessageDialog(null,
-// 											MessageBundle.getMessage("angal.opd.thedatacouldnotbesaved"));
-// 								// else
-// 									// dispose();
-// 							}else{ // Update
-// 								opd.setYear(opdNum);
-// 								result = opdManager.updateOpd(opd);
-// 								if(result){
-// 									fireSurgeryUpdated(opd);
-// 								};
-// 								if(!result)
-// 									JOptionPane.showMessageDialog(null,
-// 											MessageBundle.getMessage("angal.opd.thedatacouldnotbesaved"));
-// 								// else
-// 									// dispose();
-// 							};
-
-						}else{
-							JOptionPane.showMessageDialog(null,
-									MessageBundle.getMessage("angal.opd.opdnumberalreadyexist"));
-							return;
-						};
+			okButton.addClickListener(e->{
+				if(!jOpdNumField.getValue().equals("") || !jOpdNumField.getValue().contains(" ")){
+					OpdBrowserManager opm = new OpdBrowserManager();
+					GregorianCalendar gregDate = new GregorianCalendar();
+					if(opdDateFieldCal.getValue()==null){
+						MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.opd.pleaseinsertattendancedate"))
+						.withOkButton().open();
+						return;
 					}
-				}
+					gregDate.setTime(Date.from(opdDateFieldCal.getValue().atStartOfDay(opdDateFieldCal.getZoneId().systemDefault()).toInstant()));
+					boolean opdNumExist = false;
+					int opdNum;
+					try {
+						opdNum = Integer.parseInt(jOpdNumField.getValue());
+					} catch (NumberFormatException e1){
+						MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.opd.opdnumbermustbeanumber"))
+						.withOkButton().open();
+						return;
+					}
+					int opdEdit = 0;
+					if(insert){
+						opdNumExist = opm.isExistOpdNum(opdNum, gregDate.get(Calendar.YEAR));
+					}else{
+						opdEdit = opd.getYear();
+					}
+
+					if(opdNum != opdEdit){
+						opdNumExist = opm.isExistOpdNum(opdNum, gregDate.get(Calendar.YEAR));
+					}else{
+						opdNumExist = false;
+					}
+
+					if(!opdNumExist){
+						opd.setYear(opdNum);
+
+						boolean result = false;
+						String newPatient = "";
+						String referralTo = null;
+						String referralFrom = null;
+						String disease = null;
+						String disease2 = null;
+						String disease3 = null;
+						String diseaseType = null;
+						String diseaseDesc = "";
+						String diseaseTypeDesc = "";
+
+						if(!diseaseBox1.getSelectedItem().isPresent()){
+							MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.opd.pleaseselectadisease"))
+							.withOkButton().open();
+							return;
+						}
+						if(opdPatient == null){
+							MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.opd.pleaseselectapatient"))
+							.withOkButton().open();
+							return;
+						}
+
+						if(newPatientCheckBox.getValue()){
+							newPatient = "N";
+						}else{
+							newPatient = "R";
+						}
+						if(referralToCheckBox.getValue()){
+							referralTo = "R";
+						}else{
+							referralTo = "";
+						}
+						if(referralFromCheckBox.getValue()){
+							referralFrom = "R";
+						}else{
+							referralFrom = "";
+						}
+						// disease
+						if(diseaseBox1.getSelectedItem().isPresent()){
+							disease = ((Disease) diseaseBox1.getSelectedItem().get()).getCode();
+							diseaseDesc = ((Disease) diseaseBox1.getSelectedItem().get()).getDescription();
+							diseaseTypeDesc = ((Disease) diseaseBox1.getSelectedItem().get()).getType().getDescription();
+							diseaseType = (((Disease) diseaseBox1.getSelectedItem().get()).getType().getCode());
+						}
+						// disease2
+						if(diseaseBox2.getSelectedItem().isPresent()){
+							disease2 = ((Disease) diseaseBox2.getSelectedItem().get()).getCode();
+						}
+						// disease3
+						if(diseaseBox3.getSelectedItem().isPresent()){
+							disease3 = ((Disease) diseaseBox3.getSelectedItem().get()).getCode();
+						}
+						// Check double diseases
+						if(disease2 != null && disease == disease2){
+							MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.opd.duplicatediseasesnotallowed"))
+							.withOkButton().open();
+							disease2 = null;
+							return;
+						}
+						if(disease3 != null && disease == disease3){
+							MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.opd.duplicatediseasesnotallowed"))
+							.withOkButton().open();
+							disease3 = null;
+							return;
+						}
+						if(disease2 != null && disease3 != null && disease2 == disease3){
+							MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.opd.duplicatediseasesnotallowed"))
+							.withOkButton().open();
+							disease3 = null;
+							return;
+						}
+						String d = currentDateFormat.format(Date.from(opdDateFieldCal.getValue().atStartOfDay(opdDateFieldCal.getZoneId().systemDefault()).toInstant()));
+							opd.setNote(jNoteTextArea.getValue());
+							opd.setpatientCode(opdPatient.getCode());
+							opd.setFullName(opdPatient.getName());
+							opd.setNewPatient(newPatient);
+							opd.setReferralFrom(referralFrom);
+							opd.setReferralTo(referralTo);
+							opd.setSex(opdPatient.getSex());
+
+							opd.setfirstName(opdPatient.getFirstName());
+							opd.setsecondName(opdPatient.getSecondName());
+							opd.setaddress(opdPatient.getAddress());
+							opd.setcity(opdPatient.getCity());
+							opd.setnextKin(opdPatient.getNextKin());
+
+							opd.setDisease(disease);
+							opd.setDiseaseType(diseaseType);
+							opd.setDiseaseDesc(diseaseDesc);
+							opd.setDiseaseTypeDesc(diseaseTypeDesc);
+							opd.setDisease2(disease2);
+							opd.setDisease3(disease3);
+
+							String user = MainMenu.getUser();
+							opd.setUserID(user);
+							opd.setVisitDate(gregDate);
+							if(insert){
+								GregorianCalendar date = new GregorianCalendar();
+								opd.setYear(opdNum);
+								opd.setAge(opdPatient.getAge());
+								// remember forlater use
+								RememberDates.setLastOpdVisitDate(gregDate);
+								result = opdManager.newOpd(opd);
+								if(result){
+									fireOpdInserted(opd);
+								}
+								if(!result)
+									MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.opd.thedatacouldnotbesaved"))
+									.withOkButton().open();
+								else
+									this.close();
+							}else{ // Update
+								opd.setYear(opdNum);
+								result = opdManager.updateOpd(opd);
+								if(result){
+									fireOpdUpdated(opd);
+								};
+								if(!result)
+									MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.opd.thedatacouldnotbesaved"))
+									.withOkButton().open();
+								else
+									this.close();
+							}
+					}else{
+						MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.opd.opdnumberalreadyexist"))
+						.withOkButton().open();
+						return;
+					};
+				}else
+					logger.info("contain space");
 			});
 		}
 		return okButton;
@@ -1339,25 +1335,23 @@ public class OpdEditExtended extends Window implements PatientInsertExtended.Pat
 	 * 
 	 * @return javax.swing.JButton
 	 */
-	private JButton getCancelButton(){
+	private Button getCancelButton(){
 		if(cancelButton == null){
-			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel"));
-			cancelButton.setMnemonic(KeyEvent.VK_C);
-			cancelButton.addActionListener(new java.awt.event.ActionListener(){
-				public void actionPerformed(java.awt.event.ActionEvent e){
-					// to free Memory
-					pat.clear();
-					opdArray.clear();
-					diseasesAll.clear();
-					diseasesOPD.clear();
-					types.clear();
-					jComboPatResult.setItems();
-					diseaseTypeBox.setItems();
-					diseaseBox1.setItems();
-					diseaseBox2.setItems();
-					diseaseBox3.setItems();
-					// dispose();
-				}
+			cancelButton = new Button(MessageBundle.getMessage("angal.common.cancel"));
+			cancelButton.setClickShortcut(KeyEvent.VK_C);
+			cancelButton.addClickListener(e->{
+				// to free Memory
+				pat.clear();
+				opdArray.clear();
+				diseasesAll.clear();
+				diseasesOPD.clear();
+				types.clear();
+				jComboPatResult.setItems();
+				diseaseTypeBox.setItems();
+				diseaseBox1.setItems();
+				diseaseBox2.setItems();
+				diseaseBox3.setItems();
+				this.close();
 			});
 		}
 		return cancelButton;

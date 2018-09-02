@@ -98,7 +98,7 @@ public class PatientInsertExtended extends Window{
 	private static final long serialVersionUID = -827831581202765055L;
 
 	// private EventListenerList patientListeners = new EventListenerList();
-	private List<PatientListener> patientListeners;// = new ArrayList();
+	private List<PatientListener> patientListeners;
 	
 	public interface PatientListener{
 		public void patientUpdated(Patient aPatient);
@@ -106,7 +106,7 @@ public class PatientInsertExtended extends Window{
 		public void patientInserted(Patient aPatient);
 	}
 
-	public synchronized void addPatientListener(PatientListener l) {
+	public void addPatientListener(PatientListener l) {
 		if(patientListeners==null)
 			patientListeners = new ArrayList<PatientListener>();
 		patientListeners.add(l);
@@ -120,12 +120,7 @@ public class PatientInsertExtended extends Window{
 		patientListeners.remove(l);
 	}
 
-	// private void firePatientInserted(Patient aPatient) {
-	// 	// browser.patientInserted(aPatient);
-	// 	patientListeners[0].patientInserted(aPatient);
-	// }
-
-	private synchronized void firePatientInserted(Patient aPatient) {
+	private void firePatientInserted(Patient aPatient) {
 		if(patientListeners != null){
 			for(PatientListener patientListener : patientListeners){
 				patientListener.patientInserted(aPatient);
