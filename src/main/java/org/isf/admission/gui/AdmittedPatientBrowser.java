@@ -39,8 +39,8 @@ import org.isf.patient.model.Patient;
 // import therapy.gui.TherapyEdit;qqd
 import org.isf.utils.db.NormalizeString;
 import org.isf.utils.jobjects.BusyState;
-import org.isf.utils.jobjects.ModalWindow;
 import org.isf.utils.time.TimeTools;
+import org.isf.utils.jobjects.ModalWindow;
 import org.isf.utils.Logging;
 // import ward.manager.WardBrowserManager;qqd
 // import ward.model.Ward;qqd

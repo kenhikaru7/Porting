@@ -35,13 +35,27 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import java.io.File;
+import com.vaadin.server.FileResource;
+
+import com.vaadin.ui.Button;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.jobjects.ModalWindow;
+import org.isf.utils.Logging;
 
-public class SelectPatient extends JDialog {
+public class SelectPatient extends ModalWindow {
 	
 //LISTENER INTERFACE --------------------------------------------------------
 	private EventListenerList selectionListener = new EventListenerList();
@@ -69,54 +83,32 @@ public class SelectPatient extends JDialog {
 	}
 //---------------------------------------------------------------------------	
 	private static final long serialVersionUID = 1L;
-	private JPanel jPanelButtons;
-	private JPanel jPanelTop;
-	private JPanel jPanelCenter;
-	private JTable jTablePatient;
+	private HorizontalLayout buttonsLayout;
+	private HorizontalLayout topLayout;
+	private HorizontalLayout centerLayout;
+	private Grid<Patient> patientGrid;
 	private JScrollPane jScrollPaneTablePatient;
-	private JButton jButtonCancel;
-	private JButton jButtonSelect;
-	private JLabel jLabelSearch;
-	private JTextField jTextFieldSearchPatient;
-	private JButton jSearchButton;
-	private JPanel jPanelDataPatient;
+	private Button cancelButton;
+	private Button buttonSelect;
+	private Label searchLabel;
+	private TextField searchPatientTextField;
+	private Button searchButton;
+	private VerticalLayout patientDataLayout;
 	private Patient patient;
 	private PatientSummary ps;
 	private String[] patColums = { MessageBundle.getMessage("angal.common.code"), MessageBundle.getMessage("angal.patient.name") }; 
 	private int[] patColumsWidth = { 100, 250 };
 	private boolean[] patColumsResizable = { false, true };
 
+	private Logging logger = new Logging();
+
 	PatientBrowserManager patManager = new PatientBrowserManager();
 	ArrayList<Patient> patArray = new ArrayList<Patient>();
 	ArrayList<Patient> patSearch = new ArrayList<Patient>();
 	private String lastKey = "";
-		
-	public SelectPatient(JFrame owner, Patient pat) {
-		super(owner, true);
-		if (!GeneralData.ENHANCEDSEARCH) {
-			patArray = patManager.getPatientWithHeightAndWeight(null);
-			patSearch = patArray;
-		}
-		if (pat == null) {
-			patient = null;
-		} else
-			patient = pat;
-		ps = new PatientSummary(patient);
-		initComponents();
-		addWindowListener(new WindowAdapter(){
-			
-			public void windowClosing(WindowEvent e) {
-				//to free memory
-				patArray.clear();
-				patSearch.clear();
-				dispose();
-			}			
-		});
-		setLocationRelativeTo(null);
-	}
 	
-	public SelectPatient(JDialog owner, Patient pat) {
-		super(owner, true);
+	public SelectPatient(Patient pat) {
+		// super(owner, true);
 		if (!GeneralData.ENHANCEDSEARCH) {
 			patArray = patManager.getPatientWithHeightAndWeight(null);
 			patSearch = patArray;
@@ -127,114 +119,107 @@ public class SelectPatient extends JDialog {
 			patient = pat;
 		ps = new PatientSummary(patient);
 		initComponents();
-		addWindowListener(new WindowAdapter(){
+		// addWindowListener(new WindowAdapter(){
 			
-			public void windowClosing(WindowEvent e) {
-				//to free memory
-				patArray.clear();
-				patSearch.clear();
-				dispose();
-			}			
-		});
-		setLocationRelativeTo(null);
+		// 	public void windowClosing(WindowEvent e) {
+		// 		//to free memory
+		// 		patArray.clear();
+		// 		patSearch.clear();
+		// 		close();
+		// 	}			
+		// });
+		// setLocationRelativeTo(null);
 	}
 	
 	public SelectPatient(JDialog owner, String search) {
-		super(owner, true);
-		if (!GeneralData.ENHANCEDSEARCH) {
-			patArray = patManager.getPatientWithHeightAndWeight(null);
-			patSearch = patArray;
-		}
-		ps = new PatientSummary(patient);
-		initComponents();
-		addWindowListener(new WindowAdapter(){
+		// super(owner, true);
+		// if (!GeneralData.ENHANCEDSEARCH) {
+		// 	patArray = patManager.getPatientWithHeightAndWeight(null);
+		// 	patSearch = patArray;
+		// }
+		// ps = new PatientSummary(patient);
+		// initComponents();
+		// addWindowListener(new WindowAdapter(){
 			
-			public void windowClosing(WindowEvent e) {
-				//to free memory
-				patArray.clear();
-				patSearch.clear();
-				dispose();
-			}			
-		});
-		setLocationRelativeTo(null);
-		jTextFieldSearchPatient.setText(search);
-		if (GeneralData.ENHANCEDSEARCH) {
-			jSearchButton.doClick();
-		}
+		// 	public void windowClosing(WindowEvent e) {
+		// 		//to free memory
+		// 		patArray.clear();
+		// 		patSearch.clear();
+		// 		close();
+		// 	}			
+		// });
+		// setLocationRelativeTo(null);
+		// searchPatientTextField.setText(search);
+		// if (GeneralData.ENHANCEDSEARCH) {
+		// 	searchButton.doClick();
+		// }
 	}
 
 	private void initComponents() {
-		add(getJPanelTop(), BorderLayout.NORTH);
-		add(getJPanelCenter(), BorderLayout.CENTER);
-		add(getJPanelButtons(), BorderLayout.SOUTH);
-		setTitle(MessageBundle.getMessage("angal.patient.patientselection"));
-		pack();
+		UI.getCurrent().addWindow(this);
+		VerticalLayout windowContent = new VerticalLayout();
+		showAsModal();
+		setContent(windowContent);
+		windowContent.addComponent(getTopLayout());
+		windowContent.addComponent(getCenterLayout());
+		windowContent.addComponent(getButtonsLayout());
+		setCaption(MessageBundle.getMessage("angal.patient.patientselection"));
+		// pack();
 	}
 
-	private JPanel getJPanelDataPatient() {
-		if (jPanelDataPatient == null) {
-			jPanelDataPatient = ps.getPatientCompleteSummary();
-			jPanelDataPatient.setAlignmentY(Box.TOP_ALIGNMENT);
+	private VerticalLayout getPatientDataLayout() {
+		if (patientDataLayout == null) {
+			patientDataLayout = ps.getPatientCompleteSummary();
 		}
-		return jPanelDataPatient;
+		return patientDataLayout;
 	}
 
-	private JTextField getJTextFieldSearchPatient() {
-		if (jTextFieldSearchPatient == null) {
-			jTextFieldSearchPatient = new VoLimitedTextField(100,20);
-			jTextFieldSearchPatient.setText("");
-			jTextFieldSearchPatient.selectAll();
+	private TextField getSearchPatientTextField() {
+		if (searchPatientTextField == null) {
+			searchPatientTextField = new TextField();//20col
+			searchPatientTextField.setMaxLength(100);
+			searchPatientTextField.setValue("");
+			searchPatientTextField.selectAll();
 			if (GeneralData.ENHANCEDSEARCH) {
-				jTextFieldSearchPatient.addKeyListener(new KeyListener() {
+				searchPatientTextField.addValueChangeListener(e->{
 	
-					public void keyPressed(KeyEvent e) {
-						int key = e.getKeyCode();
-					     if (key == KeyEvent.VK_ENTER) {
-					    	 jSearchButton.doClick();
-					     }
-					}
+					// public void keyPressed(KeyEvent e) {
+					// 	int key = e.getKeyCode();
+					//      if (key == KeyEvent.VK_ENTER) {
+					//     	 searchButton.doClick();
+					//      }
+					// }
 	
-					public void keyReleased(KeyEvent e) {
-					}
+					// public void keyReleased(KeyEvent e) {
+					// }
 	
-					public void keyTyped(KeyEvent e) {
-					}
+					// public void keyTyped(KeyEvent e) {
+					// }
 				});
 			} else {
-				jTextFieldSearchPatient.addKeyListener(new KeyListener() {
-					
-					public void keyTyped(KeyEvent e) {
-						lastKey = "";
-						String s = "" + e.getKeyChar();
-						if (Character.isLetterOrDigit(e.getKeyChar())) {
-							lastKey = s;
-						}
-						filterPatient();
+				searchPatientTextField.addValueChangeListener(e->{
+					lastKey = "";
+					String s = "" + e.getValue();
+					if (e.getValue().matches("[A-Za-z0-9]+")) {
+						lastKey = s;
 					}
-	
-					public void keyPressed(KeyEvent e) {
-					}
-	
-					public void keyReleased(KeyEvent e) {
-					}
+					filterPatient();
 				});
 			}
 		}
-		return jTextFieldSearchPatient;
+		return searchPatientTextField;
 	}
 
 	private void filterPatient() {
 		
-		String s = jTextFieldSearchPatient.getText() + lastKey;
+		String s = searchPatientTextField.getValue();
 		s.trim();
 		String[] s1 = s.split(" ");
 		
 		//System.out.println(s);
 
 		patSearch = new ArrayList<Patient>();
-		
 		for (Patient pat : patArray) {
-		
 			if (!s.equals("")) {
 				String name = pat.getSearchString();
 				int a = 0;
@@ -248,242 +233,181 @@ public class SelectPatient extends JDialog {
 				patSearch.add(pat);
 			}
 		}
-		
-		if (jTablePatient.getRowCount() == 0) {
+		if (patSearch.size() == 0) {
 			
 			patient = null;
 			updatePatientSummary();
 		}
-		if (jTablePatient.getRowCount() == 1) {
+		if (patSearch.size() == 1) {
 			
-			patient = (Patient)jTablePatient.getValueAt(0, -1);
+			patient = patSearch.get(0);
 			updatePatientSummary();
 		}
-		jTablePatient.updateUI();
-		jTextFieldSearchPatient.requestFocus();
+		patientGrid.setItems(patSearch);
+		searchPatientTextField.focus();
 	}
 	
-	private JLabel getJLabelSearch() {
-		if (jLabelSearch == null) {
-			jLabelSearch = new JLabel();
-			jLabelSearch.setText(MessageBundle.getMessage("angal.patient.searchpatient"));
+	private Label getSearchLabel() {
+		if (searchLabel == null) {
+			searchLabel = new Label();
+			searchLabel.setValue(MessageBundle.getMessage("angal.patient.searchpatient"));
 		}
-		return jLabelSearch;
+		return searchLabel;
 	}
 
-	private JButton getJButtonSelect() {
-		if (jButtonSelect == null) {
-			jButtonSelect = new JButton();
-			jButtonSelect.setMnemonic(KeyEvent.VK_S);
-			jButtonSelect.setText(MessageBundle.getMessage("angal.patient.select"));
-			jButtonSelect.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent arg0) {
-					
-					if (patient != null) {
-						//to free memory
-						patArray.clear();
-						patSearch.clear();
-						fireSelectedPatient(patient);
-						dispose();
-					} else return;
-				}				
-			});
-		}
-		return jButtonSelect;
-	}
-
-	private JButton getJButtonCancel() {
-		if (jButtonCancel == null) {
-			jButtonCancel = new JButton();
-			jButtonCancel.setMnemonic(KeyEvent.VK_C);
-			jButtonCancel.setText(MessageBundle.getMessage("angal.common.cancel"));
-			jButtonCancel.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
+	private Button getSelectButton() {
+		if (buttonSelect == null) {
+			buttonSelect = new Button();
+			buttonSelect.setClickShortcut(KeyEvent.VK_S);
+			buttonSelect.setCaption(MessageBundle.getMessage("angal.patient.select"));
+			buttonSelect.addClickListener(e->{
+				if (patient != null) {
 					//to free memory
 					patArray.clear();
 					patSearch.clear();
-					dispose();
-				}
+					fireSelectedPatient(patient);
+					close();
+				} else return;				
 			});
 		}
-		return jButtonCancel;
+		return buttonSelect;
 	}
 
-	private JScrollPane getJScrollPaneTablePatient() {
-		if (jScrollPaneTablePatient == null) {
-			jScrollPaneTablePatient = new JScrollPane();
-			jScrollPaneTablePatient.setViewportView(getJTablePatient());
-			jScrollPaneTablePatient.setAlignmentY(Box.TOP_ALIGNMENT);
+	private Button getCancelButton() {
+		if (cancelButton == null) {
+			cancelButton = new Button();
+			cancelButton.setClickShortcut(KeyEvent.VK_C);
+			cancelButton.setCaption(MessageBundle.getMessage("angal.common.cancel"));
+			cancelButton.addClickListener(e->{
+				//to free memory
+				patArray.clear();
+				patSearch.clear();
+				close();
+			});
 		}
-		return jScrollPaneTablePatient;
+		return cancelButton;
 	}
 
-	private JTable getJTablePatient() {
-		if (jTablePatient == null) {
-			jTablePatient = new JTable();
-			jTablePatient.setModel(new SelectPatientModel());
-			jTablePatient.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			for (int i = 0 ; i < patColums.length; i++) {
-				jTablePatient.getColumnModel().getColumn(i).setMinWidth(patColumsWidth[i]);
-				if (!patColumsResizable[i]) jTablePatient.getColumnModel().getColumn(i).setMaxWidth(patColumsWidth[i]);
-			}
-			jTablePatient.setAutoCreateColumnsFromModel(false);
-			jTablePatient.getColumnModel().getColumn(0).setCellRenderer(new CenterTableCellRenderer());
+	private Grid getPatientGrid() {
+		if (patientGrid == null) {
+			patientGrid = new Grid();
+			patientGrid.setItems(patSearch);
+			patientGrid.addColumn(Patient::getCode).setCaption("Code");
+			patientGrid.addColumn(Patient::getName).setCaption("Name");
+			// for (int i = 0 ; i < patColums.length; i++) {
+			// 	patientGrid.getColumnModel().getColumn(i).setMinWidth(patColumsWidth[i]);
+			// 	if (!patColumsResizable[i]) patientGrid.getColumnModel().getColumn(i).setMaxWidth(patColumsWidth[i]);
+			// }
+			// patientGrid.setAutoCreateColumnsFromModel(false);
+			// patientGrid.getColumnModel().getColumn(0).setCellRenderer(new CenterTableCellRenderer());
 			
-			ListSelectionModel listSelectionModel = jTablePatient.getSelectionModel();
-			listSelectionModel.addListSelectionListener(new ListSelectionListener() {
+			patientGrid.addItemClickListener(e->{
+				// if (!e.getValueIsAdjusting()) {
+				int index = e.getRowIndex();
+				// patient = (Patient)patientGrid.getValueAt(index, -1);
+				patient = e.getItem();
+				updatePatientSummary();	
+				// }
+			});
+			// ListSelectionModel listSelectionModel = patientGrid.getSelectionModel();
+			// listSelectionModel.addListSelectionListener(new ListSelectionListener() {
 
-				public void valueChanged(ListSelectionEvent e) {
-					if (!e.getValueIsAdjusting()) {
+			// 	public void valueChanged(ListSelectionEvent e) {
+			// 		if (!e.getValueIsAdjusting()) {
 						
-						int index = jTablePatient.getSelectedRow();
-						patient = (Patient)jTablePatient.getValueAt(index, -1);
-						updatePatientSummary();
+			// 			int index = patientGrid.getSelectedRow();
+			// 			patient = (Patient)patientGrid.getValueAt(index, -1);
+			// 			updatePatientSummary();
 						
-					}
-				}
-			});
+			// 		}
+			// 	}
+			// });
 			
-			jTablePatient.addMouseListener(new MouseListener() {
+			// patientGrid.addMouseListener(new MouseListener() {
 				
-				public void mouseReleased(MouseEvent e) {}
+			// 	public void mouseReleased(MouseEvent e) {}
 				
-				public void mousePressed(MouseEvent e) {}
+			// 	public void mousePressed(MouseEvent e) {}
 				
-				public void mouseExited(MouseEvent e) {}
+			// 	public void mouseExited(MouseEvent e) {}
 				
-				public void mouseEntered(MouseEvent e) {}
+			// 	public void mouseEntered(MouseEvent e) {}
 				
-				public void mouseClicked(MouseEvent e) {
-					if (e.getClickCount() == 2 && !e.isConsumed()) {
-						e.consume();
-						jButtonSelect.doClick();
-					}
-				}
-			});
+			// 	public void mouseClicked(MouseEvent e) {
+			// 		if (e.getClickCount() == 2 && !e.isConsumed()) {
+			// 			e.consume();
+			// 			buttonSelect.doClick();
+			// 		}
+			// 	}
+			// });
 		}
-		return jTablePatient;
+		return patientGrid;
 	}
 
 	private void updatePatientSummary() {
-		jPanelCenter.remove(jPanelDataPatient);
+		centerLayout.removeComponent(patientDataLayout);
 		ps = new PatientSummary(patient);
-		jPanelDataPatient = ps.getPatientCompleteSummary();
-		jPanelDataPatient.setAlignmentY(Box.TOP_ALIGNMENT);
+		patientDataLayout = ps.getPatientCompleteSummary();
+		// patientDataLayout.setAlignmentY(Box.TOP_ALIGNMENT);
 		
-		jPanelCenter.add(jPanelDataPatient);
-		jPanelCenter.validate();
-		jPanelCenter.repaint();
+		centerLayout.addComponent(patientDataLayout);
+		// centerLayout.validate();
+		// centerLayout.repaint();
 	}
 	
-	private JPanel getJPanelCenter() {
-		if (jPanelCenter == null) {
-			jPanelCenter = new JPanel();
-			jPanelCenter.setLayout(new BoxLayout(jPanelCenter, BoxLayout.X_AXIS));
-			jPanelCenter.add(getJScrollPaneTablePatient());
-			jPanelCenter.add(getJPanelDataPatient());
+	private HorizontalLayout getCenterLayout() {
+		if (centerLayout == null) {
+			centerLayout = new HorizontalLayout();
+			centerLayout.addComponent(getPatientGrid());
+			centerLayout.addComponent(getPatientDataLayout());
 
-			if (patient != null) {
-				for (int i = 0; i < patSearch.size(); i++) {
-					if (patSearch.get(i).getCode().equals(patient.getCode())) {
-						jTablePatient.addRowSelectionInterval(i, i);
-						int j = 0;
-						if (i > 10) j = i-10; //to center the selected row
-						jTablePatient.scrollRectToVisible(jTablePatient.getCellRect(j,i,true));
-						break;
-					}
-				}
-			}
+			// if (patient != null) {
+			// 	for (int i = 0; i < patSearch.size(); i++) {
+			// 		if (patSearch.get(i).getCode().equals(patient.getCode())) {
+			// 			patientGrid.addRowSelectionInterval(i, i);
+			// 			int j = 0;
+			// 			if (i > 10) j = i-10; //to center the selected row
+			// 			patientGrid.scrollRectToVisible(patientGrid.getCellRect(j,i,true));
+			// 			break;
+			// 		}
+			// 	}
+			// }
 		}
-		return jPanelCenter;
+		return centerLayout;
 	}
 
-	private JPanel getJPanelTop() {
-		if (jPanelTop == null) {
-			jPanelTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			jPanelTop.add(getJLabelSearch());
-			jPanelTop.add(getJTextFieldSearchPatient());
-			if (GeneralData.ENHANCEDSEARCH) jPanelTop.add(getJSearchButton());
+	private HorizontalLayout getTopLayout() {
+		if (topLayout == null) {
+			topLayout = new HorizontalLayout();
+			topLayout.addComponent(getSearchLabel());
+			topLayout.addComponent(getSearchPatientTextField());
+			if (GeneralData.ENHANCEDSEARCH) topLayout.addComponent(getSearchButton());
 		}
-		return jPanelTop;
+		return topLayout;
 	}
 
-	private JButton getJSearchButton() {
-		if (jSearchButton == null) {
-			jSearchButton = new JButton();
-			jSearchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
-			jSearchButton.setPreferredSize(new Dimension(20, 20));
-			jSearchButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent e) {
-					patArray = patManager.getPatientWithHeightAndWeight(jTextFieldSearchPatient.getText());
-					filterPatient();
-				}
+	private Button getSearchButton() {
+		if (searchButton == null) {
+			searchButton = new Button();	
+			searchButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/zoom_r_button.png")));
+			// searchButton.setPreferredSize(new Dimension(20, 20));
+			searchButton.addClickListener(e->{
+				patArray = patManager.getPatientWithHeightAndWeight(searchPatientTextField.getValue());
+				filterPatient();
 			});
 		}
-		return jSearchButton;
+		return searchButton;
 	}
 
-	private JPanel getJPanelButtons() {
-		if (jPanelButtons == null) {
-			jPanelButtons = new JPanel();
-			jPanelButtons.add(getJButtonSelect());
-			jPanelButtons.add(getJButtonCancel());
+	private HorizontalLayout getButtonsLayout() {
+		if (buttonsLayout == null) {
+			buttonsLayout = new HorizontalLayout();
+			buttonsLayout.addComponent(getSelectButton());
+			buttonsLayout.addComponent(getCancelButton());
 		}
-		return jPanelButtons;
+		return buttonsLayout;
 	}
 
-	class SelectPatientModel extends DefaultTableModel {
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
-		public SelectPatientModel() {
-		}
-
-		public int getRowCount() {
-			if (patSearch == null)
-				return 0;
-			return patSearch.size();
-		}
-
-		public String getColumnName(int c) {
-			return patColums[c];
-		}
-
-		public int getColumnCount() {
-			return patColums.length;
-		}
-
-		public Object getValueAt(int r, int c) {
-			Patient patient = patSearch.get(r); 
-			if (c == -1) {
-				return patient;
-			} else if (c == 0) {
-				return patient.getCode();
-			}  else if (c == 1) {
-				return patient.getName();
-			} /*else if (c == 2) {
-				return patient.getAge();
-			} else if (c == 3) {
-				return patient.getSex();
-			} else if (c == 4) {
-				return patient.getCity() + " "
-						+ patient.getAddress();
-			} */
-			return null;
-		}
-
-		@Override
-		public boolean isCellEditable(int arg0, int arg1) {
-			return false;
-		}
-	}
-	
 	class CenterTableCellRenderer extends DefaultTableCellRenderer {  
 		   
 		/**

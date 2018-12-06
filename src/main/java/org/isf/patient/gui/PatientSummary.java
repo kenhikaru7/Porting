@@ -18,9 +18,26 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import java.io.File;
+import com.vaadin.server.FileResource;
+
+// import com.vaadin.ui.Button;
+// import com.vaadin.ui.FormLayout;
+// import com.vaadin.ui.Grid;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
+import com.vaadin.ui.TextArea;
+// import com.vaadin.ui.TextField;
+// import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+
+import com.vaadin.shared.ui.ContentMode;
+
 import org.isf.generaldata.MessageBundle;
 import org.isf.patient.model.Patient;
 import org.isf.utils.time.TimeTools;
+import org.isf.utils.Logging;
 
 /**
  * A class to compose a summary of the data of a given patient
@@ -36,8 +53,10 @@ public class PatientSummary {
 	private int borderTickness = 10;
 	private int imageMaxWidth = 140;
 
+	private Logging logger = new Logging();
+
 	public PatientSummary(Patient patient) {
-		super();
+		// super();
 		this.patient = patient;
 	}
 
@@ -49,16 +68,16 @@ public class PatientSummary {
 	public JPanel getPatientDataPanel() {
 		JPanel p = new JPanel(new BorderLayout(borderTickness, borderTickness));
 
-		p.add(getPatientTitlePanel(), BorderLayout.NORTH);
+		// p.addComponent(getPatientTitlePanel(), BorderLayout.NORTH);
 		JPanel dataPanel = null;
 		dataPanel = new JPanel();
-		dataPanel.setLayout(new BoxLayout(dataPanel, BoxLayout.Y_AXIS));
-		dataPanel.add(setMyBorder(getPatientNamePanel(), MessageBundle.getMessage("angal.admission.namem")));
-		dataPanel.add(setMyBorder(getPatientTaxCodePanel(), MessageBundle.getMessage("angal.admission.taxcode")));
-		dataPanel.add(setMyBorder(getPatientSexPanel(), MessageBundle.getMessage("angal.admission.sexm")));
-		dataPanel.add(setMyBorder(getPatientAgePanel(), MessageBundle.getMessage("angal.admission.agem")));
-		dataPanel.add(setMyBorder(getPatientNotePanel(), MessageBundle.getMessage("angal.admission.patientnotes")));
-		p.add(dataPanel, BorderLayout.CENTER);
+		// dataPanel.setLayout(new BoxLayout(dataPanel, BoxLayout.Y_AXIS));
+		// dataPanel.add(setMyBorder(getPatientNamePanel(), MessageBundle.getMessage("angal.admission.namem")));
+		// dataPanel.add(setMyBorder(getPatientTaxCodePanel(), MessageBundle.getMessage("angal.admission.taxcode")));
+		// dataPanel.add(setMyBorder(getPatientSexPanel(), MessageBundle.getMessage("angal.admission.sexm")));
+		// dataPanel.add(setMyBorder(getPatientAgePanel(), MessageBundle.getMessage("angal.admission.agem")));
+		// dataPanel.add(setMyBorder(getPatientNotePanel(), MessageBundle.getMessage("angal.admission.patientnotes")));
+		// p.addComponent(dataPanel, BorderLayout.CENTER);
 
 		return p;
 	}
@@ -68,56 +87,52 @@ public class PatientSummary {
 	 * 
 	 * @return
 	 */
-	public JPanel getPatientCompleteSummary() {
+	public VerticalLayout getPatientCompleteSummary() {
 
-		JPanel p = new JPanel(new BorderLayout(borderTickness,borderTickness));
+		VerticalLayout p = new VerticalLayout();
 
-		//p.add(getPatientTitlePanel(), BorderLayout.NORTH);
-		p.add(getPatientCard(), BorderLayout.NORTH);
+		p.addComponent(getPatientCard());
 		
 		JPanel dataPanel = null;
 		dataPanel = new JPanel();
 		dataPanel.setLayout(new BoxLayout(dataPanel, BoxLayout.Y_AXIS));
 
-//		dataPanel.add(setMyBorder(getPatientNamePanel(), MessageBundle.getMessage("angal.admission.namem")));
-//		dataPanel.add(getPatientSexAndAgePanel());
-		dataPanel.add(setMyBorder(getPatientTaxCodePanel(), MessageBundle.getMessage("angal.admission.taxcode")));
-		dataPanel.add(getPatientAddressAndCityPanel());
-		dataPanel.add(setMyBorder(getPatientParentNewsPanel(), MessageBundle.getMessage("angal.admission.parents")));
-		dataPanel.add(getPatientKinAndTelephonePanel());
-		dataPanel.add(getPatientBloodAndEcoPanel());
+		p.addComponent(getPatientTaxCodePanel());
+		p.addComponent(getPatientAddressAndCityLayout());
+		p.addComponent(getPatientParentNewsPanel());
+		p.addComponent(getPatientKinAndTelephoneLayout());
+		p.addComponent(getPatientBloodAndEcoLayout());
 		
-		p.add(dataPanel, BorderLayout.CENTER);
-		p.add(setMyBorder(getPatientNotePanel(), MessageBundle.getMessage("angal.admission.patientnotes")), BorderLayout.SOUTH);
+		p.addComponent(getPatientNotePanel());
 		
-		Dimension dim = p.getPreferredSize();
-		p.setMaximumSize(new Dimension(maximumWidth, dim.height));
+// 		Dimension dim = p.getPreferredSize();
+// 		p.setMaximumSize(new Dimension(maximumWidth, dim.height));
 
 		return p;
 	}
 
-	private JPanel getPatientAddressAndCityPanel() {
-		JPanel dataPanel = null;
-		dataPanel = new JPanel(new java.awt.GridLayout(1, 2));
-		dataPanel.add(setMyBorder(getPatientAddressPanel(), MessageBundle.getMessage("angal.admission.addressm")));
-		dataPanel.add(setMyBorder(getPatientCityPanel(), MessageBundle.getMessage("angal.admission.city")));
-		return dataPanel;
+	private HorizontalLayout getPatientAddressAndCityLayout() {
+		HorizontalLayout addressAndCityLayout = null;
+		addressAndCityLayout = new HorizontalLayout();
+		addressAndCityLayout.addComponent(getPatientAddressPanel());
+		addressAndCityLayout.addComponent(getPatientCityPanel());
+		return addressAndCityLayout;
 	}
 
-	private JPanel getPatientBloodAndEcoPanel() {
-		JPanel dataPanel = null;
-		dataPanel = new JPanel(new java.awt.GridLayout(1, 2));
-		dataPanel.add(setMyBorder(getPatientBloodTypePanel(), MessageBundle.getMessage("angal.admission.bloodtype")));
-		dataPanel.add(setMyBorder(getPatientEcoStatusPanel(), MessageBundle.getMessage("angal.admission.insurance")));
-		return dataPanel;
+	private HorizontalLayout getPatientBloodAndEcoLayout() {
+		HorizontalLayout tempLayout = null;
+		tempLayout = new HorizontalLayout();
+		tempLayout.addComponent(getPatientBloodTypePanel());
+		tempLayout.addComponent(getPatientEcoStatusPanel());
+		return tempLayout;
 	}
 
-	private JPanel getPatientKinAndTelephonePanel() {
-		JPanel dataPanel = null;
-		dataPanel = new JPanel(new java.awt.GridLayout(1, 2));
-		dataPanel.add(setMyBorder(getPatientKinPanel(), MessageBundle.getMessage("angal.admission.nextkin")));
-		dataPanel.add(setMyBorder(getPatientTelephonePanel(), MessageBundle.getMessage("angal.admission.telephone")));
-		return dataPanel;
+	private HorizontalLayout getPatientKinAndTelephoneLayout() {
+		HorizontalLayout tempLayout = null;
+		tempLayout = new HorizontalLayout();
+		tempLayout.addComponent(getPatientKinPanel());
+		tempLayout.addComponent(getPatientTelephonePanel());
+		return tempLayout;
 	}
 
 	final int insetSize = 5;
@@ -126,7 +141,7 @@ public class PatientSummary {
 		JLabel l = new JLabel(MessageBundle.getMessage("angal.admission.patientsummary") + " (" + MessageBundle.getMessage("angal.common.code") + ": " + patient.getCode() + ")");
 		l.setBackground(Color.CYAN);
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.CENTER, insetSize, insetSize));
-		lP.add(l);
+		// lP.setContent(l);
 		return lP;
 	}
 	
@@ -142,55 +157,54 @@ public class PatientSummary {
 		return photo.getScaledInstance(scaledW, scaledH, Image.SCALE_SMOOTH);
 	}
 	
-	private JPanel getPatientCard() {
-		JPanel cardPanel = new JPanel();
-		cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.X_AXIS));
-		cardPanel.setBackground(Color.WHITE);
-		cardPanel.setBorder(BorderFactory.createEmptyBorder(insetSize, insetSize, insetSize, insetSize));
+	private HorizontalLayout getPatientCard() {
+		HorizontalLayout cardLayout = new HorizontalLayout();
+		// cardLayout.setLayout(new BoxLayout(cardLayout, BoxLayout.X_AXIS));
+		// cardLayout.setBackground(Color.WHITE);
+		// cardLayout.setBorder(BorderFactory.createEmptyBorder(insetSize, insetSize, insetSize, insetSize));
 		
-		JPanel patientData = new JPanel();
-		patientData.setLayout(new BoxLayout(patientData, BoxLayout.Y_AXIS));
-		patientData.setBackground(Color.WHITE);
-		patientData.setBorder(BorderFactory.createEmptyBorder(insetSize, insetSize, insetSize, insetSize));
+		VerticalLayout patientData = new VerticalLayout();
+		// patientData.setLayout(new BoxLayout(patientData, BoxLayout.Y_AXIS));
+		// patientData.setBackground(Color.WHITE);
+		// patientData.setBorder(BorderFactory.createEmptyBorder(insetSize, insetSize, insetSize, insetSize));
 		
 		if (patient == null) patient = new Patient();
 		Integer code = patient.getCode();
-		JLabel patientCode = null;
+		Label patientCode = null;
 		if (code != null) 
-			patientCode = new JLabel(MessageBundle.getMessage("angal.common.code") + ": " + code.toString());
+			patientCode = new Label(MessageBundle.getMessage("angal.common.code") + ": " + code.toString());
 		else 
-			patientCode = new JLabel(" ");
-		JLabel patientName = new JLabel(MessageBundle.getMessage("angal.patient.name") + ": " + filtra(patient.getName()));
-		JLabel patientAge = new JLabel(MessageBundle.getMessage("angal.patient.age") + ": " + TimeTools.getFormattedAge(patient.getBirthDate()));
-		JLabel patientSex = new JLabel(MessageBundle.getMessage("angal.patient.sex") + ": " + patient.getSex());
-		JLabel patientTOB = new JLabel(MessageBundle.getMessage("angal.patient.tobm") + ": " + filtra(patient.getBloodType()));
+			patientCode = new Label(" ");
+		Label patientName = new Label(MessageBundle.getMessage("angal.patient.name") + ": " + filtra(patient.getName()));
+		Label patientAge = new Label(MessageBundle.getMessage("angal.patient.age") + ": " + TimeTools.getFormattedAge(patient.getBirthDate()));
+		Label patientSex = new Label(MessageBundle.getMessage("angal.patient.sex") + ": " + patient.getSex());
+		Label patientTOB = new Label(MessageBundle.getMessage("angal.patient.tobm") + ": " + filtra(patient.getBloodType()));
 		
-		JLabel patientPhoto = new JLabel();
+		Label patientPhoto = new Label();
 		Image photo = patient.getPhoto();
 		
 		if (photo != null) {
-			patientPhoto.setIcon(new ImageIcon(scaleImage(imageMaxWidth, photo)));
+			// patientPhoto.setIcon(new ImageIcon(scaleImage(imageMaxWidth, photo)));
 		} else {
 			try {
-				Image noPhotoImage = ImageIO.read(new File("rsc/images/nophoto.png"));
-				patientPhoto.setIcon(new ImageIcon(scaleImage(imageMaxWidth, noPhotoImage)));
-			} catch (IOException ioe) {
+				patientPhoto.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/images/nophoto.png")));
+			} catch (Exception ioe) {
 				System.out.println("rsc/images/nophoto.png is missing...");
 			}
 		}
 		
-		patientData.add(patientCode);
-		patientData.add(Box.createVerticalStrut(insetSize));
-		patientData.add(patientName);
-		patientData.add(patientAge);
-		patientData.add(patientSex);
-		patientData.add(Box.createVerticalGlue());
-		patientData.add(patientTOB);
+		patientData.addComponent(patientCode);
+		// patientData.addComponent(Box.createVerticalStrut(insetSize));
+		patientData.addComponent(patientName);
+		patientData.addComponent(patientAge);
+		patientData.addComponent(patientSex);
+		// patientData.addComponent(Box.createVerticalGlue());
+		patientData.addComponent(patientTOB);
 		
-		cardPanel.add(patientPhoto);
-		cardPanel.add(Box.createHorizontalStrut(insetSize));
-		cardPanel.add(patientData);
-		return cardPanel;
+		cardLayout.addComponent(patientPhoto);
+		// cardLayout.addComponent(Box.createHorizontalStrut(insetSize));
+		cardLayout.addComponent(patientData);
+		return cardLayout;
 	}
 
 	private String filtra(String string) {
@@ -202,117 +216,113 @@ public class PatientSummary {
 	private JPanel getPatientNamePanel() {
 		JLabel l = new JLabel(patient.getSecondName() + " " + patient.getFirstName());
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
-		lP.add(l);
+		// lP.setContent(l);
 		return lP;
 	}
 
-	private JPanel getPatientTaxCodePanel() {
-		JLabel l = new JLabel(patient.getTaxCode() + " ");
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
-		lP.add(l);
+	private Panel getPatientTaxCodePanel() {
+		Label l = new Label(patient.getTaxCode() + " ");
+		// Panel lP = new Panel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
+		Panel lP = new Panel(MessageBundle.getMessage("angal.admission.taxcode"));
+		lP.setContent(l);
 		return lP;
 	}
 
-	private JPanel getPatientKinPanel() {
-		JLabel l = null;
+	private Panel getPatientKinPanel() {
+		Label l = null;
 		if (patient.getNextKin() == null || patient.getNextKin().equalsIgnoreCase("")) {
-			//l = new JLabel(MessageBundle.getMessage("angal.admission.unknown"));
-			l = new JLabel(" ");
+			l = new Label(" ");
 		} else {
-			l = new JLabel(patient.getNextKin());
+			l = new Label(patient.getNextKin());
 		}
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
-		lP.add(l);
+		Panel lP = new Panel(MessageBundle.getMessage("angal.admission.nextkin"));
+		lP.setContent(l);
 		return lP;
 	}
 
-	private JPanel getPatientTelephonePanel() {
-		JLabel l = null;
+	private Panel getPatientTelephonePanel() {
+		Label l = null;
 		if (patient.getTelephone() == null || patient.getTelephone().equalsIgnoreCase("")) {
 			//l = new JLabel(MessageBundle.getMessage("angal.admission.unknown"));
-			l = new JLabel(" ");
+			l = new Label(" ");
 		} else {
-			l = new JLabel("" + patient.getTelephone());
+			l = new Label("" + patient.getTelephone());
 		}
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
-		lP.add(l);
+		Panel lP = new Panel(MessageBundle.getMessage("angal.admission.telephone"));
+		lP.setContent(l);
 		return lP;
 	}
 	
-	private JPanel getPatientAddressPanel() {
-		JLabel l = null;
+	private Panel getPatientAddressPanel() {
+		Label l = null;
 		if (patient.getAddress() == null || patient.getAddress().equalsIgnoreCase("")) {
-			//l = new JLabel(MessageBundle.getMessage("angal.admission.unknown"));
-			l = new JLabel(" ");
+			l = new Label(" ");
 		} else {
-			l = new JLabel("" + patient.getAddress());
+			l = new Label("" + patient.getAddress());
 		}
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
-		lP.add(l);
+		Panel lP = new Panel(MessageBundle.getMessage("angal.admission.addressm"));
+		lP.setContent(l);
 		return lP;
 	}
 
-	private JPanel getPatientCityPanel() {
-		JLabel l = null;
+	private Panel getPatientCityPanel() {
+		Label l = null;
 		if (patient.getCity() == null || patient.getCity().equalsIgnoreCase("")) {
-			//l = new JLabel(MessageBundle.getMessage("angal.admission.unknown"));
-			l = new JLabel(" ");
+			l = new Label(" ");
 		} else {
-			l = new JLabel("" + patient.getCity());
+			l = new Label("" + patient.getCity());
 		}
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
-		lP.add(l);
+		Panel lP = new Panel(MessageBundle.getMessage("angal.admission.city"));
+		lP.setContent(l);
 		return lP;
 	}
 
 	// Panel for Blood Type
-	private JPanel getPatientBloodTypePanel() {
-		JLabel l = null;
+	private Panel getPatientBloodTypePanel() {
+		Label l = null;
 		String c = new String(patient.getBloodType());
 		if (c == null || c.equalsIgnoreCase("Unknown")) {
-			l = new JLabel(MessageBundle.getMessage("angal.admission.bloodtypeisunknown"));
-			l = new JLabel(" ");
+			l = new Label(MessageBundle.getMessage("angal.admission.bloodtypeisunknown"));
+			l = new Label(" ");
 		} else {
-			// l = new
-			// JLabel(MessageBundle.getMessage("angal.admission.bloodtypeis")+c);
-			l = new JLabel(c); // Added - Bundle is not necessary here
+			l = new Label(c); // Added - Bundle is not necessary here
 		}
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
-		lP.add(l);
+		Panel lP = new Panel(MessageBundle.getMessage("angal.admission.bloodtype"));
+		lP.setContent(l);
 		return lP;
 	}
 
-	private JPanel getPatientEcoStatusPanel() {
-		JLabel l = null;
+	private Panel getPatientEcoStatusPanel() {
+		Label l = null;
 		char c = patient.getHasInsurance();
 		if (c == 'Y') {
-			l = new JLabel(MessageBundle.getMessage("angal.admission.hasinsuranceyes"));
+			l = new Label(MessageBundle.getMessage("angal.admission.hasinsuranceyes"));
 		} else if (c == 'N') {
-			l = new JLabel(MessageBundle.getMessage("angal.admission.hasinsuranceno"));
+			l = new Label(MessageBundle.getMessage("angal.admission.hasinsuranceno"));
 		} else {
-			l = new JLabel(MessageBundle.getMessage("angal.admission.unknown"));
-			l = new JLabel(" ");
+			l = new Label(MessageBundle.getMessage("angal.admission.unknown"));
+			l = new Label(" ");
 		}
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
-		lP.add(l);
+		Panel lP = new Panel(MessageBundle.getMessage("angal.admission.insurance"));
+		lP.setContent(l);
 		return lP;
 	}
 
 	private JPanel getPatientAgePanel() {
 		JLabel l = new JLabel("" + patient.getAge());
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
-		lP.add(l);
+		// lP.setContent(l);
 		return lP;
 	}
 
 	private JPanel getPatientSexPanel() {
 		JLabel l = new JLabel((patient.getSex() == 'F' ? MessageBundle.getMessage("angal.admission.female") : MessageBundle.getMessage("angal.admission.male")));
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
-		lP.add(l);
+		// lP.setContent(l);
 		return lP;
 	}
 
-	private JPanel getPatientParentNewsPanel() {
+	private Panel getPatientParentNewsPanel() {
 		StringBuffer labelBfr = new StringBuffer("<html>");
 		if (patient.getMother() == 'A')
 			labelBfr.append(MessageBundle.getMessage("angal.admission.motherisalive"));
@@ -333,25 +343,31 @@ public class PatientSummary {
 		else 
 			labelBfr.append("<BR>");
 		labelBfr.append("</html>");
-		JLabel l = new JLabel(labelBfr.toString());
-		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
-		lP.add(l);
+		Label l = new Label(labelBfr.toString());
+		l.setContentMode(ContentMode.HTML);
+		Panel lP = new Panel(MessageBundle.getMessage("angal.admission.parents"));
+		lP.setContent(l);
 		return lP;
 	}
 
 	// alex: modified with scroolbar
-	private JPanel getPatientNotePanel() {
-		JTextArea textArea = new JTextArea(3, 40);
-		textArea.setText(patient.getNote());
-		textArea.setEditable(false);
-		textArea.setLineWrap(true);
+	private Panel getPatientNotePanel() {
+		TextArea textArea = new TextArea();//3, 40
+		try{
+			textArea.setValue(patient.getNote());
+		}
+		catch(Exception e){
+			textArea.setValue("");
+		}
+		textArea.setEnabled(false);
+		textArea.setWordWrap(true);
 
-		JScrollPane scrollPane = new JScrollPane(textArea);
-		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		// JScrollPane scrollPane = new JScrollPane(textArea);
+		// scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		// scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-		JPanel lP = new JPanel(new BorderLayout());
-		lP.add(scrollPane, BorderLayout.CENTER);
+		Panel lP = new Panel(MessageBundle.getMessage("angal.admission.patientnotes"));
+		lP.setContent(textArea);
 
 		return lP;
 	}

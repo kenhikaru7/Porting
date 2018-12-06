@@ -7,6 +7,8 @@ import java.io.File;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Window;
+import com.vaadin.shared.ui.window.WindowMode;
+import org.isf.utils.Logging;
 /**
  * @author Santhosh Kumar T - santhosh@in.fiorano.com
  * 
@@ -22,13 +24,13 @@ public class ModalWindow extends Window {
 	
 	String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
 	FileResource resource = new FileResource(new File(basepath +"/WEB-INF/icons/oh.png"));
-
+	Logging logger = new Logging();
 	/**
 	 * method to enable/disable a owner JFrame launching this ModalJFrame
 	 * @param owner - the JFrame owner
 	 */
 	public void showAsModal() {
-		
+		setWindowMode(WindowMode.MAXIMIZED);
 		setIcon(resource);
 		setModal(true);
 		// this.addWindowListener(new WindowAdapter() {

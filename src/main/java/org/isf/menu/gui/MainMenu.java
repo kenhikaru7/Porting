@@ -15,6 +15,7 @@ import org.isf.utils.jobjects.ModalWindow;
 //import sms.service.SmsSender;
 //import xmpp.gui.CommunicationFrame;
 //import xmpp.service.Server;
+import org.isf.utils.Logging;
 
 import org.jivesoftware.smack.XMPPException;
 import org.slf4j.Logger;
@@ -34,7 +35,7 @@ import com.vaadin.ui.Image;
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.server.ThemeResource;
 
-public class MainMenu{
+public class MainMenu implements SubMenu.CommandListener{
 	private static final long serialVersionUID = 7620582079916035164L;
 	private boolean flag_Xmpp = false;
 	private boolean flag_Sms = false;
@@ -53,11 +54,9 @@ public class MainMenu{
 	// 	}
 	// }
 
-	// public void commandInserted(AWTEvent e) {
-	// 	if (e.getSource() instanceof String) {
-	// 		launchApp((String) e.getSource());
-	// 	}
-	// }
+	public void commandInserted(String aCommand) {
+		launchApp(aCommand);
+	}
 
 	public static boolean checkUserGrants(String code) {
 
@@ -101,6 +100,7 @@ public class MainMenu{
 	private HorizontalLayout layout0;
 	private VerticalLayout layout;
 	private UI main;
+	private Logging qlogger = new Logging();
 
 	public MainMenu() {
 

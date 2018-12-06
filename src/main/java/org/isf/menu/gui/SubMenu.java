@@ -1,11 +1,11 @@
 package org.isf.menu.gui;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import org.isf.menu.model.*;
+import org.isf.utils.Logging;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -21,37 +21,30 @@ public class SubMenu extends Window{
 	private static final long serialVersionUID = 7620582079916035164L;
 	
 	
-	private EventListenerList commandListeners = new EventListenerList();
+	private List<CommandListener> commandListeners = new ArrayList<CommandListener>();
 
-    public interface CommandListener extends EventListener {
-        public void commandInserted(AWTEvent e);
+    public interface CommandListener{
+        public void commandInserted(String aCommand);
     }
 
     public void addCommandListener(CommandListener listener) {
-    	commandListeners.add(CommandListener.class, listener);
+    	commandListeners.add(listener);
     }
 
     public void removeCommandListener(CommandListener listener) {
-    	commandListeners.remove(CommandListener.class, listener);
+    	commandListeners.remove(listener);
     }
 
     private void fireCommandInserted(String aCommand) {
-        AWTEvent event = new AWTEvent(aCommand, AWTEvent.RESERVED_ID_MAX + 1) {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;};
-
-        EventListener[] listeners = commandListeners.getListeners(CommandListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((CommandListener)listeners[i]).commandInserted(event);
+        for (CommandListener commandListener : commandListeners)
+            commandListener.commandInserted(aCommand);
     }
 		
 	
 	private ArrayList<UserMenuItem> myMenu;
 	private MainMenu mainMenu;
 	private VerticalLayout subContent;
+	Logging logger;
 	
 	private int prfButtonSize=0;
 	public int getMinButtonSize(){
@@ -65,25 +58,23 @@ public class SubMenu extends Window{
 		// initialize(mainMenu, code, menu, parent.getBounds());
 	}
 	
-	public SubMenu(MainMenu parent, String code, ArrayList<UserMenuItem> menu) {
+	public SubMenu(MainMenu mainMenu,String code, ArrayList<UserMenuItem> menu) {
 		// super(parent, "     ", true);
 		setCaption(code);
 		setModal(true);
 		this.subContent = new VerticalLayout();
         setContent(this.subContent);
         UI.getCurrent().addWindow(this);
-		this.prfButtonSize=parent.getMinButtonSize();
-		initialize(parent, code, menu, null);
+		// this.prfButtonSize=parent.getMinButtonSize();
+		initialize(mainMenu, code, menu, null);
 	}
 	
 	
-	private void initialize(MainMenu mainMenu, String code, ArrayList<UserMenuItem> menu, String RectangleparentBounds){
-
+	private void initialize(MainMenu mainMenu ,String code, ArrayList<UserMenuItem> menu, String RectangleparentBounds){
+		logger = new Logging();
 		final int displacement = 50;
 		
-		this.mainMenu = mainMenu;
-		
-		// addCommandListener(mainMenu);
+		addCommandListener(mainMenu);
 		// q
 		myMenu = menu;
 		
@@ -103,26 +94,6 @@ public class SubMenu extends Window{
 		// setResizable(false);
 		// pack();
 		// setVisible(true);
-	}
-	
-	public void actionPerformed(Button.ClickEvent e) {
-
-		String command = e.getButton().getIconAlternateText();
-		for(UserMenuItem u : myMenu){
-			if (u.getCode().equals(command)){
-				if (u.isASubMenu()){
-					// dispose();
-					new SubMenu(this, u.getCode(), myMenu, mainMenu );					
-					break;
-				}
-				else {
-					// dispose();
-					fireCommandInserted(u.getCode());					
-					break;
-				}
-			}
-		}
-		
 	}
 	
 	private class SubPanel{
@@ -155,7 +126,24 @@ public class SubMenu extends Window{
 					if (!u.isActive())
 						button[k-1].setEnabled(false);
 					else 
-						button[k-1].addClickListener(dialogFrame::actionPerformed); 
+						button[k-1].addClickListener(e->{
+							String command = e.getButton().getIconAlternateText();
+							for(UserMenuItem menu : myMenu){
+								if (menu.getCode().equals(command)){
+									if (menu.isASubMenu()){
+										close();
+										// new SubMenu(menu.getCode(), myMenu, mainMenu );					
+										break;
+									}
+									else {
+										close();
+										fireCommandInserted(menu.getCode());					
+										break;
+									}
+								}
+							}
+							
+						}); 
 					k++;
 				}
 
