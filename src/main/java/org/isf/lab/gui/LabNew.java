@@ -44,7 +44,9 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
 import java.io.File;
+
 import com.vaadin.server.FileResource;
+import com.vaadin.server.VaadinService;
 import de.steinwedel.messagebox.MessageBox;
 
 import com.vaadin.ui.Button;
@@ -115,7 +117,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		// if (inOut.equalsIgnoreCase("R")) jRadioButtonOPD.setSelected(true);
 		// else jRadioButtonIPD.setSelected(true);
 	}
-	
+	private String resPath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
 	private static final long serialVersionUID = 1L;
 	private Grid<Laboratory> examsGrid;
 	private JScrollPane jScrollPaneTable;
@@ -444,7 +446,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 			trashPatientButton = new Button();
 			trashPatientButton.setClickShortcut(KeyEvent.VK_R);
 			// trashPatientButton.setPreferredSize(new Dimension(25,25));
-			trashPatientButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/remove_patient_button.png"))); //$NON-NLS-1$
+			trashPatientButton.setIcon(new FileResource(new File(resPath+"/WEB-INF/icons/remove_patient_button.png"))); //$NON-NLS-1$
 			trashPatientButton.setDescription(MessageBundle.getMessage("angal.labnew.tooltip.removepatientassociationwiththisexam")); //$NON-NLS-1$
 			trashPatientButton.addClickListener(e->{
 				patientSelected = null;
@@ -464,7 +466,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 			pickPatientButton = new Button();
 			pickPatientButton.setCaption(MessageBundle.getMessage("angal.labnew.pickpatient"));  //$NON-NLS-1$
 			pickPatientButton.setClickShortcut(KeyEvent.VK_P);
-			pickPatientButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/pick_patient_button.png"))); //$NON-NLS-1$
+			pickPatientButton.setIcon(new FileResource(new File(resPath+"/WEB-INF/icons/pick_patient_button.png"))); //$NON-NLS-1$
 			pickPatientButton.setDescription(MessageBundle.getMessage("angal.labnew.tooltip.associateapatientwiththisexam"));  //$NON-NLS-1$
 			pickPatientButton.addClickListener(e->{
 				SelectPatient sp = new SelectPatient(patientSelected);
@@ -630,10 +632,10 @@ public class LabNew extends ModalWindow implements SelectionListener {
 			addExamButton = new Button();
 			addExamButton.setCaption(MessageBundle.getMessage("angal.labnew.exam")); //$NON-NLS-1$
 			addExamButton.setClickShortcut(KeyEvent.VK_E);
-			addExamButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
+			addExamButton.setIcon(new FileResource(new File(resPath+"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
 			addExamButton.addClickListener(e->{
 				Laboratory lab = new Laboratory();
-				Image icon = new Image(null,new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/material_dialog.png")));
+				Image icon = new Image(null,new FileResource(new File(resPath+"/WEB-INF/icons/material_dialog.png")));
 				ComboBox mat = new ComboBox(MessageBundle.getMessage("angal.labnew.selectamaterial"));
 				mat.setEmptySelectionAllowed(false);
 				mat.setItems(matList);
@@ -642,7 +644,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 				.withOkButton(()->{
 					if(mat.isEmpty())
 						return;
-					Image icon0 = new Image(null,new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/exam_dialog.png")));
+					Image icon0 = new Image(null,new FileResource(new File(resPath+"/WEB-INF/icons/exam_dialog.png")));
 					ListSelect exa = new ListSelect(MessageBundle.getMessage("angal.labnew.selectanexam"));
 					exa.setItems(exaArray.toArray());
 					MessageBox.create().withIcon(icon0).withCaption(MessageBundle.getMessage("angal.labnew.exam")).withMessage(exa)
@@ -662,7 +664,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 									exaRowTemp.add(exaRow);
 								}
 							}
-							Image icon1 = new Image(null,new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/list_dialog.png")));
+							Image icon1 = new Image(null,new FileResource(new File(resPath+"/WEB-INF/icons/list_dialog.png")));
 							ComboBox exaRow = new ComboBox(MessageBundle.getMessage("angal.labnew.selectaresult"));
 							exaRow.setItems(exaRowTemp.toArray());
 							exaRow.setEmptySelectionAllowed(false);
@@ -706,7 +708,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		if (removeExamButton == null) {
 			removeExamButton = new Button();
 			removeExamButton.setCaption(MessageBundle.getMessage("angal.labnew.remove")); //$NON-NLS-1$
-			removeExamButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/delete_button.png"))); //$NON-NLS-1$
+			removeExamButton.setIcon(new FileResource(new File(resPath+"/WEB-INF/icons/delete_button.png"))); //$NON-NLS-1$
 			removeExamButton.addClickListener(e->{
 				if(examsGrid.getSelectedItems().isEmpty()){
 					MessageBox.createError().withCaption("Error").withMessage(MessageBundle.getMessage("angal.labnew.pleaseselectanexam")).open();

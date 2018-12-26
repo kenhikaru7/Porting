@@ -43,6 +43,7 @@ import javax.swing.table.TableModel;
 
 import java.io.File;
 import com.vaadin.server.FileResource;
+import com.vaadin.server.VaadinService;
 import com.vaadin.shared.ui.ContentMode;
 
 import com.vaadin.ui.renderers.HtmlRenderer;
@@ -115,7 +116,6 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 	public void patientSelected(Patient patient) {
 		patientSelected = patient;
 		ArrayList<Bill> patientPendingBills = billManager.getPendingBills(patient.getCode());
-		logger.info("dklasfjn aldjfkasdjfasdlk");//qqq
 		if (patientPendingBills.isEmpty()) {
 			//BILL
 			thisBill.setPatID(patientSelected.getCode());
@@ -210,6 +210,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 	private Object[] paymentClasses = {Date.class, Double.class};
 	
 	private String currencyCod = new HospitalBrowsingManager().getHospitalCurrencyCod();
+	private String resPath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
 	
 	//Prices and Lists (ALL)
 	private PriceListManager prcManager = new PriceListManager();
@@ -453,7 +454,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 					if (keepDate && evt.getValue().toString().compareTo(
 						evt.getOldValue().toString()) != 0 && nowLocalDate.toString().compareTo(
 						evt.getOldValue().toString()) != 0) {
-						MessageBox.createQuestion().withCaption("Warning").withIcon(new Image(null,new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/clock_dialog.png"))))
+						MessageBox.createQuestion().withCaption("Warning").withIcon(new Image(null,new FileResource(new File(resPath +"/WEB-INF/icons/clock_dialog.png"))))
 						.withMessage(MessageBundle.getMessage("angal.newbill.doyoureallywanttochangetheoriginaldate"))
 						.withYesButton(()->{
 							keepDate = false;
@@ -502,7 +503,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 			trashPatientButton = new Button();
 			trashPatientButton.setClickShortcut(KeyEvent.VK_R);
 			// trashPatientButton.setPreferredSize(new Dimension(25,25));
-			trashPatientButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/remove_patient_button.png"))); //$NON-NLS-1$
+			trashPatientButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/remove_patient_button.png"))); //$NON-NLS-1$
 			trashPatientButton.setDescription(MessageBundle.getMessage("angal.newbill.tooltip.removepatientassociationwiththisbill")); //$NON-NLS-1$
 			trashPatientButton.addClickListener(e->{
 				patientSelected = null;
@@ -529,7 +530,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 			pickPatientButton = new Button();
 			pickPatientButton.setCaption(MessageBundle.getMessage("angal.newbill.pickpatient")); //$NON-NLS-1$
 			pickPatientButton.setClickShortcut(KeyEvent.VK_P);
-			pickPatientButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/pick_patient_button.png"))); //$NON-NLS-1$
+			pickPatientButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/pick_patient_button.png"))); //$NON-NLS-1$
 			pickPatientButton.setDescription(MessageBundle.getMessage("angal.newbill.tooltip.associateapatientwiththisbill")); //$NON-NLS-1$
 			pickPatientButton.addClickListener(e->{
 				SelectPatient sp = new SelectPatient(patientSelected);
@@ -771,10 +772,10 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 			balanceButton.setCaption(MessageBundle.getMessage("angal.newbill.givechange") + "..."); //$NON-NLS-1$
 			balanceButton.setClickShortcut(KeyEvent.VK_B);
 			// balanceButton.setMaximumSize(new Dimension(ButtonWidth, ButtonHeight));
-			balanceButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/money_button.png"))); //$NON-NLS-1$
+			balanceButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/money_button.png"))); //$NON-NLS-1$
 			if(insert) balanceButton.setEnabled(false);
 			balanceButton.addClickListener(e->{
-				Image icon = new Image(null,new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/money_dialog.png")));
+				Image icon = new Image(null,new FileResource(new File(resPath +"/WEB-INF/icons/money_dialog.png")));
 				TextField tempTF = new TextField();
 				tempTF.setValue("0");
 				tempTF.setCaption(MessageBundle.getMessage("angal.newbill.entercustomercash"));
@@ -810,8 +811,9 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 			saveButton.setCaption(MessageBundle.getMessage("angal.common.save")); //$NON-NLS-1$
 			saveButton.setClickShortcut(KeyEvent.VK_S);
 			// saveButton.setMaximumSize(new Dimension(ButtonWidth, ButtonHeight));
-			saveButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/save_button.png"))); //$NON-NLS-1$
+			saveButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/save_button.png"))); //$NON-NLS-1$
 			saveButton.addClickListener(e->{
+
 				GregorianCalendar upDate = new GregorianCalendar();
 				GregorianCalendar firstPay = new GregorianCalendar();
 				
@@ -823,19 +825,24 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 				}
 				
 				if (billDate.after(today)) {
-					MessageBox.createError().withCaption(MessageBundle.getMessage("angal.newbill.title"))
-					.withMessage(MessageBundle.getMessage("angal.newbill.billsinfuturenotallowed")).open();
+					MessageBox.createError()
+					.withCaption(MessageBundle.getMessage("angal.newbill.title"))
+					.withMessage(MessageBundle.getMessage("angal.newbill.billsinfuturenotallowed"))
+					.open();
 					return;
 				}
 
 				if (billDate.after(firstPay)) {
-					MessageBox.createError().withCaption(MessageBundle.getMessage("angal.newbill.title"))
-					.withMessage(MessageBundle.getMessage("angal.newbill.billdateafterfirstpayment")).open();
+					MessageBox.createError()
+					.withCaption(MessageBundle.getMessage("angal.newbill.title"))
+					.withMessage(MessageBundle.getMessage("angal.newbill.billdateafterfirstpayment"))
+					.open();
 					return;
 				}
 				
 				if (patientTextField.getValue().equals("")) { //$NON-NLS-1$
-					MessageBox.createError().withCaption(MessageBundle.getMessage("angal.newbill.title"))
+					MessageBox.createError()
+					.withCaption(MessageBundle.getMessage("angal.newbill.title"))
 					.withMessage(MessageBundle.getMessage("angal.newbill.pleaseinsertanameforthepatient"))
 					.open();
 					return;
@@ -917,7 +924,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 			printPaymentButton.setCaption(MessageBundle.getMessage("angal.newbill.paymentreceipt")); //$NON-NLS-1$
 			// printPaymentButton.setMaximumSize(new Dimension(ButtonWidthPayment, ButtonHeight));
 			// printPaymentButton.setHorizontalAlignment(SwingConstants.LEFT);
-			printPaymentButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/receipt_button.png"))); //$NON-NLS-1$
+			printPaymentButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/receipt_button.png"))); //$NON-NLS-1$
 			printPaymentButton.addClickListener(e->{
 				// public void actionPerformed(ActionEvent e) {
 				// 	TxtPrinter.getTxtPrinter();
@@ -937,7 +944,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 			paidButton.setCaption(MessageBundle.getMessage("angal.newbill.paid")); //$NON-NLS-1$
 			paidButton.setClickShortcut(KeyEvent.VK_A);
 			// paidButton.setMaximumSize(new Dimension(ButtonWidth, ButtonHeight));
-			paidButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/ok_button.png"))); //$NON-NLS-1$
+			paidButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/ok_button.png"))); //$NON-NLS-1$
 			if(insert) paidButton.setEnabled(false);
 			paidButton.addClickListener(e->{
 				
@@ -946,7 +953,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 					.withMessage(MessageBundle.getMessage("angal.newbill.pleaseinsertanameforthepatient"))
 					.open();
 				}
-				Image icon = new Image(null,new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/money_dialog.png")));
+				Image icon = new Image(null,new FileResource(new File(resPath +"/WEB-INF/icons/money_dialog.png")));
 				MessageBox.create().withIcon(icon).withCaption(MessageBundle.getMessage("angal.newbill.paid"))
 				.withMessage(MessageBundle.getMessage("angal.newbill.doyouwanttosetaspaidcurrentbill"))
 				.withYesButton(()->{
@@ -956,7 +963,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 				}).open();
 				if (balance.compareTo(new BigDecimal(0)) > 0) {
 					if (billDate.before(today)) { //if Bill is in the past the user will be asked for PAID date
-						icon = new Image(null,new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/calendar_dialog.png")));
+						icon = new Image(null,new FileResource(new File(resPath +"/WEB-INF/icons/calendar_dialog.png")));
 						DateTimeField datePayChooser = new DateTimeField("",LocalDateTime.now());
 						datePayChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 						datePayChooser.setDateFormat("dd/MM/yy - HH:mm:ss");
@@ -1005,10 +1012,10 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 			closeButton.setCaption(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
 			closeButton.setClickShortcut(KeyEvent.VK_C);
 			// closeButton.setMaximumSize(new Dimension(ButtonWidth, ButtonHeight));
-			closeButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/close_button.png"))); //$NON-NLS-1$
+			closeButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/close_button.png"))); //$NON-NLS-1$
 			closeButton.addClickListener(e->{
 				if (modified) {
-					Image icon = new Image(null,new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/save_dialog.png")));
+					Image icon = new Image(null,new FileResource(new File(resPath +"/WEB-INF/icons/save_dialog.png")));
 					MessageBox.create().withIcon(icon).withCaption(MessageBundle.getMessage("angal.common.save"))
 					.withMessage(MessageBundle.getMessage("angal.newbill.billhasbeenchangedwouldyouliketosavechanges"))
 					.withYesButton(()->{
@@ -1029,9 +1036,9 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 			addRefundButton.setCaption(MessageBundle.getMessage("angal.newbill.refund")); //$NON-NLS-1$
 			// addRefundButton.setMaximumSize(new Dimension(ButtonWidthPayment, ButtonHeight));
 			// addRefundButton.setHorizontalAlignment(SwingConstants.LEFT);
-			addRefundButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
+			addRefundButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
 			addRefundButton.addClickListener(e->{
-				Image icon = new Image(null,new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/money_dialog.png")));
+				Image icon = new Image(null,new FileResource(new File(resPath +"/WEB-INF/icons/money_dialog.png")));
 				
 				datePay = new GregorianCalendar();
 				TextField quantity = new TextField(MessageBundle.getMessage("angal.newbill.insertquantity"));
@@ -1088,9 +1095,9 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 			addPaymentButton.setClickShortcut(KeyEvent.VK_Y);
 			// addPaymentButton.setMaximumSize(new Dimension(ButtonWidthPayment, ButtonHeight));
 			// addPaymentButton.setHorizontalAlignment(SwingConstants.LEFT);
-			addPaymentButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
+			addPaymentButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
 			addPaymentButton.addClickListener(e->{
-				Image icon = new Image(null,new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/money_dialog.png")));
+				Image icon = new Image(null,new FileResource(new File(resPath +"/WEB-INF/icons/money_dialog.png")));
 				TextField tempTF = new TextField(MessageBundle.getMessage("angal.newbill.insertquantity"),"0");
 				tempTF.selectAll();
 				datePay = new GregorianCalendar();
@@ -1144,7 +1151,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 			removePaymentButton.setClickShortcut(KeyEvent.VK_Y);
 			// removePaymentButton.setMaximumSize(new Dimension(ButtonWidthPayment, ButtonHeight));
 			// removePaymentButton.setHorizontalAlignment(SwingConstants.LEFT);
-			removePaymentButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/delete_button.png"))); //$NON-NLS-1$
+			removePaymentButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/delete_button.png"))); //$NON-NLS-1$
 			removePaymentButton.addClickListener(e->{
 				try{
 					removePayment((BillPayments) paymentGrid.getSelectedItems().toArray()[0]);
@@ -1166,7 +1173,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 			addOtherButton.setClickShortcut(KeyEvent.VK_T);
 			// addOtherButton.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			// addOtherButton.setHorizontalAlignment(SwingConstants.LEFT);
-			addOtherButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
+			addOtherButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
 			addOtherButton.addClickListener(e->{
 				isPrice = true;
 				HashMap<Integer,PricesOthers> othersHashMap = new HashMap<Integer,PricesOthers>();
@@ -1181,7 +1188,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 						othArray.add(price);
 				}
 				
-				icon = new Image(null,new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/plus_dialog.png")));
+				icon = new Image(null,new FileResource(new File(resPath +"/WEB-INF/icons/plus_dialog.png")));
 				ComboBox oth = new ComboBox(MessageBundle.getMessage("angal.newbill.pleaseselectanitem"));
 				oth.setEmptySelectionAllowed(false);
 				oth.setItems(othArray.toArray());
@@ -1190,7 +1197,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 				.withOkButton(()->{
 					if (!oth.isEmpty()) {
 						if (othersHashMap.get(Integer.valueOf(((Price)oth.getValue()).getItem())).isUndefined()) {
-							icon = new Image(null,new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/money_dialog.png")));
+							icon = new Image(null,new FileResource(new File(resPath +"/WEB-INF/icons/money_dialog.png")));
 							TextField tempTF = new TextField(MessageBundle.getMessage("angal.newbill.howmuchisit"),"0");
 							tempTF.selectAll();
 							MessageBox.create().withIcon(icon).withCaption(MessageBundle.getMessage("angal.newbill.undefined"))
@@ -1213,7 +1220,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 						}
 						if (othersHashMap.get(Integer.valueOf(((Price)oth.getValue()).getItem())).isDaily()) {
 							qty=1;
-							icon = new Image(null,new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/calendar_dialog.png")));
+							icon = new Image(null,new FileResource(new File(resPath +"/WEB-INF/icons/calendar_dialog.png")));
 							TextField tempTF = new TextField(MessageBundle.getMessage("angal.newbill.howmanydays"),""+qty);
 							MessageBox.create().withIcon(icon).withCaption(MessageBundle.getMessage("angal.newbill.days"))
 							.withMessage(tempTF).withOkButton(()->{
@@ -1243,7 +1250,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 			addExamButton.setClickShortcut(KeyEvent.VK_E);
 			// addExamButton.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			// addExamButton.setHorizontalAlignment(SwingConstants.LEFT);
-			addExamButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
+			addExamButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
 			addExamButton.addClickListener(e->{
 				ArrayList<Price> exaArray = new ArrayList<Price>();
 				for (Price price : prcListArray) {
@@ -1251,7 +1258,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 					if (price.getGroup().equals("EXA")) //$NON-NLS-1$
 						exaArray.add(price);
 				}
-				icon = new Image(null,new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/exam_dialog.png")));
+				icon = new Image(null,new FileResource(new File(resPath +"/WEB-INF/icons/exam_dialog.png")));
 				ListSelect tempList = new ListSelect(MessageBundle.getMessage("angal.newbill.selectanexam"));
 				tempList.setItems(exaArray.toArray());
 				MessageBox.create().withIcon(icon).withCaption(MessageBundle.getMessage("angal.newbill.exam")).withMessage(tempList)
@@ -1271,14 +1278,14 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 			addOperationButton.setClickShortcut(KeyEvent.VK_O);
 			// addOperationButton.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			// addOperationButton.setHorizontalAlignment(SwingConstants.LEFT);
-			addOperationButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
+			addOperationButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
 			addOperationButton.addClickListener(e->{
 				ArrayList<Price> opeArray = new ArrayList<Price>();
 				for (Price price : prcListArray) {	
 					if (price.getGroup().equals("OPE")) //$NON-NLS-1$
 						opeArray.add(price);
 				}
-				icon = new Image(null,new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/operation_dialog.png")));
+				icon = new Image(null,new FileResource(new File(resPath +"/WEB-INF/icons/operation_dialog.png")));
 				ListSelect tempList = new ListSelect(MessageBundle.getMessage("angal.newbill.selectanoperation"));
 				tempList.setItems(opeArray.toArray());
 				MessageBox.create().withIcon(icon).withCaption(MessageBundle.getMessage("angal.newbill.operation")).withMessage(tempList)
@@ -1295,7 +1302,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 			addMedicalButton.setClickShortcut(KeyEvent.VK_M);
 			// addMedicalButton.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			// addMedicalButton.setHorizontalAlignment(SwingConstants.LEFT);
-			addMedicalButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
+			addMedicalButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
 			addMedicalButton.addClickListener(e->{
 				ArrayList<Price> medArray = new ArrayList<Price>();
 				for (Price price : prcListArray) {
@@ -1305,7 +1312,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 				ListSelect medicalList = new ListSelect();
 				medicalList.setItems(medArray.toArray());
 				medicalList.setCaption(MessageBundle.getMessage("angal.newbill.selectamedical"));
-				Image icon = new Image(null,new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/medical_dialog.png")));
+				Image icon = new Image(null,new FileResource(new File(resPath +"/WEB-INF/icons/medical_dialog.png")));
 				MessageBox.create().withCaption(MessageBundle.getMessage("angal.newbill.medical")).withIcon(icon).withMessage(medicalList)
 				.withOkButton(()->{
 					if (!medicalList.isEmpty()) {
@@ -1341,9 +1348,9 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 			customButton.setClickShortcut(KeyEvent.VK_U);
 			// customButton.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			// customButton.setHorizontalAlignment(SwingConstants.LEFT);
-			customButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
+			customButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
 			customButton.addClickListener(e->{
-				icon = new Image(null,new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/custom_dialog.png")));
+				icon = new Image(null,new FileResource(new File(resPath +"/WEB-INF/icons/custom_dialog.png")));
 				TextField tempTF = new TextField(MessageBundle.getMessage("angal.newbill.chooseadescription"),MessageBundle.getMessage("angal.newbill.newdescription"));
 				tempTF.selectAll();
 				MessageBox.create().withIcon(icon).withCaption(MessageBundle.getMessage("angal.newbill.customitem"))
@@ -1351,7 +1358,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 					if (tempTF.isEmpty() || tempTF.getValue().equals("")) { //$NON-NLS-1$
 						return;
 					} else {
-						icon = new Image(null,new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/money_dialog.png")));
+						icon = new Image(null,new FileResource(new File(resPath +"/WEB-INF/icons/money_dialog.png")));
 						TextField tempTF1 = new TextField(MessageBundle.getMessage("angal.newbill.howmuchisit"),"0");
 						tempTF1.selectAll();
 						MessageBox.create().withIcon(icon).withCaption(MessageBundle.getMessage("angal.newbill.customitem"))
@@ -1387,7 +1394,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 			removeItemButton.setClickShortcut(KeyEvent.VK_R);
 			// removeItemButton.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			// removeItemButton.setHorizontalAlignment(SwingConstants.LEFT);
-			removeItemButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/delete_button.png"))); //$NON-NLS-1$
+			removeItemButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/delete_button.png"))); //$NON-NLS-1$
 			removeItemButton.addClickListener(e->{
 				try{
 					removeItem((BillItems) billGrid.getSelectedItems().toArray()[0]);

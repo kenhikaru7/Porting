@@ -20,6 +20,7 @@ import javax.swing.JTextArea;
 
 import java.io.File;
 import com.vaadin.server.FileResource;
+import com.vaadin.server.VaadinService;
 
 // import com.vaadin.ui.Button;
 // import com.vaadin.ui.FormLayout;
@@ -46,7 +47,7 @@ import org.isf.utils.Logging;
  * 
  */
 public class PatientSummary {
-
+	private String resPath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
 	private Patient patient;
 	
 	private int maximumWidth = 350;
@@ -187,7 +188,7 @@ public class PatientSummary {
 			// patientPhoto.setIcon(new ImageIcon(scaleImage(imageMaxWidth, photo)));
 		} else {
 			try {
-				patientPhoto.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/images/nophoto.png")));
+				patientPhoto.setIcon(new FileResource(new File(resPath+"/WEB-INF/images/nophoto.png")));
 			} catch (Exception ioe) {
 				System.out.println("rsc/images/nophoto.png is missing...");
 			}

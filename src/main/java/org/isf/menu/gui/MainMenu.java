@@ -304,7 +304,8 @@ public class MainMenu implements SubMenu.CommandListener{
 		for (UserMenuItem u : myMenu) {
 			if (u.getCode().equals(itemMenuCode)) {
 				if (u.getCode().equalsIgnoreCase("EXIT")) {
-					actionExit(0);
+					UI.getCurrent().close();
+					// actionExit(0);
 				} else if (u.isASubMenu()) {
 					new SubMenu(this, u.getCode(), myMenu);
 					break;

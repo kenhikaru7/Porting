@@ -37,6 +37,7 @@ import javax.swing.table.DefaultTableModel;
 
 import java.io.File;
 import com.vaadin.server.FileResource;
+import com.vaadin.server.VaadinService;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
@@ -82,6 +83,7 @@ public class SelectPatient extends ModalWindow {
 			((SelectionListener)listeners[i]).patientSelected(patient);
 	}
 //---------------------------------------------------------------------------	
+	private String resPath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
 	private static final long serialVersionUID = 1L;
 	private HorizontalLayout buttonsLayout;
 	private HorizontalLayout topLayout;
@@ -389,7 +391,7 @@ public class SelectPatient extends ModalWindow {
 	private Button getSearchButton() {
 		if (searchButton == null) {
 			searchButton = new Button();	
-			searchButton.setIcon(new FileResource(new File("D:/nyobavaadin/vaadin-archetype-application/src/main/webapp" +"/WEB-INF/icons/zoom_r_button.png")));
+			searchButton.setIcon(new FileResource(new File(resPath+"/WEB-INF/icons/zoom_r_button.png")));
 			// searchButton.setPreferredSize(new Dimension(20, 20));
 			searchButton.addClickListener(e->{
 				patArray = patManager.getPatientWithHeightAndWeight(searchPatientTextField.getValue());
