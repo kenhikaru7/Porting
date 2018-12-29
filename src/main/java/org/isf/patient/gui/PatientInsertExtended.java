@@ -455,7 +455,7 @@ public class PatientInsertExtended extends ModalWindow{
 		if (jOkButton == null) {
 			jOkButton = new Button();
 			jOkButton.setCaption(MessageBundle.getMessage("angal.common.ok"));
-			jOkButton.setClickShortcut(KeyEvent.VK_A + ('O' - 'A'));
+			////jOkButton.setClickShortcut(KeyEvent.VK_A + ('O' - 'A'));
 			jOkButton.addClickListener(e -> {
 				String firstName = jFirstNameTextField.getValue().trim();
 				String secondName = jSecondNameTextField.getValue().trim();
@@ -627,7 +627,7 @@ public class PatientInsertExtended extends ModalWindow{
 		if (jCancelButton == null) {
 			jCancelButton = new Button();
 			jCancelButton.setCaption("Cancel");
-			jCancelButton.setClickShortcut(KeyEvent.VK_A + ('C' - 'A'));
+			////jCancelButton.setClickShortcut(KeyEvent.VK_A + ('C' - 'A'));
 			// jCancelButton.addClickListener(new java.awt.event.ActionListener() {
 			// 	public void actionPerformed(java.awt.event.ActionEvent e) {
 			// 		// dispose();
@@ -840,8 +840,8 @@ public class PatientInsertExtended extends ModalWindow{
 			sexGroup.setCaption(MessageBundle.getMessage("angal.patient.sexstar"));
 			sexGroup.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
 			sexGroup.setItems(MessageBundle.getMessage("angal.patient.male"),MessageBundle.getMessage("angal.patient.female"));
-		// 	radiom.setClickShortcut(KeyEvent.VK_A + ('M' - 'A'));//unimplemented
-		// 	radiof.setClickShortcut(KeyEvent.VK_A + ('F' - 'A'));
+		// 	////radiom.setClickShortcut(KeyEvent.VK_A + ('M' - 'A'));//unimplemented
+		// 	////radiof.setClickShortcut(KeyEvent.VK_A + ('F' - 'A'));
 			// jSexPanel.addComponent(getJSexLabelPanel());
 			if (!insert) {
 				if (patient.getSex() == 'F')
@@ -1599,7 +1599,7 @@ public class PatientInsertExtended extends ModalWindow{
 	// private RadioButton getJInsurance_Yes() {
 	// 	if (jInsurance_Yes == null) {
 	// 		jInsurance_Yes = new RadioButton();
-	// 		jInsurance_Yes.setClickShortcut(KeyEvent.VK_A + ('R' - 'A'));
+	// 		jInsurance_////Yes.setClickShortcut(KeyEvent.VK_A + ('R' - 'A'));
 	// 		jInsurance_Yes.setCaption(MessageBundle.getMessage("angal.patient.hasinsuranceyes"));
 	// 	}
 	// 	return jInsurance_Yes;
@@ -1613,7 +1613,7 @@ public class PatientInsertExtended extends ModalWindow{
 	// private RadioButton getJInsurance_No() {
 	// 	if (jInsurance_No == null) {
 	// 		jInsurance_No = new RadioButton();
-	// 		jInsurance_No.setClickShortcut(KeyEvent.VK_A + ('P' - 'A'));
+	// 		jInsurance_////No.setClickShortcut(KeyEvent.VK_A + ('P' - 'A'));
 	// 		jInsurance_No.setCaption(MessageBundle.getMessage("angal.patient.hasinsuranceno"));
 	// 	}
 	// 	return jInsurance_No;
@@ -1628,7 +1628,7 @@ public class PatientInsertExtended extends ModalWindow{
 	// 	if (jInsurance_Unknown == null) {
 	// 		jInsurance_Unknown = new RadioButton();
 	// 		jInsurance_Unknown.setCaption(MessageBundle.getMessage("angal.patient.unknown"));
-	// 		jInsurance_Unknown.setClickShortcut(KeyEvent.VK_A + ('U' - 'A'));
+	// 		jInsurance_////Unknown.setClickShortcut(KeyEvent.VK_A + ('U' - 'A'));
 	// 		jInsurance_Unknown.setSelected(true);
 	// 	}
 	// 	return jInsurance_Unknown;

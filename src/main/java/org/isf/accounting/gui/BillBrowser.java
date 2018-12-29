@@ -442,7 +442,7 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		if (closeButton == null) {
 			closeButton = new Button();
 			closeButton.setCaption(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
-			closeButton.setClickShortcut(KeyEvent.VK_C);
+			////closeButton.setClickShortcut(KeyEvent.VK_C);
 			closeButton.addClickListener(e->{
 				//to free memory
 				billPeriod.clear();
@@ -460,7 +460,7 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		if (editButton == null) {
 			editButton = new Button();
 			editButton.setCaption(MessageBundle.getMessage("angal.billbrowser.editbill")); //$NON-NLS-1$
-			editButton.setClickShortcut(KeyEvent.VK_E);
+			////editButton.setClickShortcut(KeyEvent.VK_E);
 			editButton.addClickListener(e->{
 				try {
 					if (billsTabs.getTabPosition(billsTabs.getTab(billsTabs.getSelectedTab()))==0) {
@@ -548,7 +548,7 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		if (newButton == null) {
 			newButton = new Button();
 			newButton.setCaption(MessageBundle.getMessage("angal.billbrowser.newbill")); //$NON-NLS-1$
-			newButton.setClickShortcut(KeyEvent.VK_N);
+			////newButton.setClickShortcut(KeyEvent.VK_N);
 			newButton.addClickListener(e->{
 				PatientBillEdit newBill = new PatientBillEdit(new Bill(), true);
 				newBill.addPatientBillListener(this);
@@ -563,7 +563,7 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		if (deleteButton == null) {
 			deleteButton = new Button();
 			deleteButton.setCaption(MessageBundle.getMessage("angal.billbrowser.deletebill")); //$NON-NLS-1$
-			deleteButton.setClickShortcut(KeyEvent.VK_D);
+			////deleteButton.setClickShortcut(KeyEvent.VK_D);
 			deleteButton.addClickListener(e->{
 				try {
 					int ok = JOptionPane.NO_OPTION;
@@ -655,7 +655,7 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		if (todayButton == null) {
 			todayButton = new Button();
 			todayButton.setCaption(MessageBundle.getMessage("angal.billbrowser.today")); //$NON-NLS-1$
-			todayButton.setClickShortcut(KeyEvent.VK_T);
+			////todayButton.setClickShortcut(KeyEvent.VK_T);
 			todayButton.addClickListener(e->{
 				dateFrom.setTime(dateToday0.getTime());
 				dateTo.setTime(dateToday24.getTime());

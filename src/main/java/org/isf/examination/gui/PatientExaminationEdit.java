@@ -607,7 +607,7 @@ public class PatientExaminationEdit extends ModalWindow {
 		if (okButton == null) {
 			okButton = new Button(MessageBundle.getMessage("angal.common.savem"));
 			okButton.setDescription(MessageBundle.getMessage("angal.examination.tooltip.savepatientexamination"));
-			okButton.setClickShortcut(KeyEvent.VK_O);
+			////okButton.setClickShortcut(KeyEvent.VK_O);
 			okButton.addClickListener(e->{				
 				ExaminationOperations ioOperations = new ExaminationOperations();
 				ioOperations.saveOrUpdate(patex);
@@ -620,7 +620,7 @@ public class PatientExaminationEdit extends ModalWindow {
 	private Button getCancelButton() {
 		if (jButtonCancel == null) {
 			jButtonCancel = new Button(MessageBundle.getMessage("angal.common.cancel")); //$NON-NLS-1$
-			jButtonCancel.setClickShortcut(KeyEvent.VK_C);
+			////jButtonCancel.setClickShortcut(KeyEvent.VK_C);
 			jButtonCancel.addClickListener(e->{
 				close();
 			});

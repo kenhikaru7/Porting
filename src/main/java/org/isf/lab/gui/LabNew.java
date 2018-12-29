@@ -228,7 +228,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		if (cancelButton == null) {
 			cancelButton = new Button();
 			cancelButton.setCaption(MessageBundle.getMessage("angal.common.cancel"));
-			cancelButton.setClickShortcut(KeyEvent.VK_C);
+			////cancelButton.setClickShortcut(KeyEvent.VK_C);
 			cancelButton.addClickListener(e->{
 				close();
 			});
@@ -240,7 +240,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		if (okButton == null) {
 			okButton = new Button();
 			okButton.setCaption(MessageBundle.getMessage("angal.common.ok"));
-			okButton.setClickShortcut(KeyEvent.VK_O);
+			////okButton.setClickShortcut(KeyEvent.VK_O);
 			okButton.addClickListener(e->{
 				//Check Results
 				if(examItems.size() == 0){
@@ -444,7 +444,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 	private Button getTrashPatientButton() {
 		if (trashPatientButton == null) {
 			trashPatientButton = new Button();
-			trashPatientButton.setClickShortcut(KeyEvent.VK_R);
+			////trashPatientButton.setClickShortcut(KeyEvent.VK_R);
 			// trashPatientButton.setPreferredSize(new Dimension(25,25));
 			trashPatientButton.setIcon(new FileResource(new File(resPath+"/WEB-INF/icons/remove_patient_button.png"))); //$NON-NLS-1$
 			trashPatientButton.setDescription(MessageBundle.getMessage("angal.labnew.tooltip.removepatientassociationwiththisexam")); //$NON-NLS-1$
@@ -465,7 +465,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		if (pickPatientButton == null) {
 			pickPatientButton = new Button();
 			pickPatientButton.setCaption(MessageBundle.getMessage("angal.labnew.pickpatient"));  //$NON-NLS-1$
-			pickPatientButton.setClickShortcut(KeyEvent.VK_P);
+			////pickPatientButton.setClickShortcut(KeyEvent.VK_P);
 			pickPatientButton.setIcon(new FileResource(new File(resPath+"/WEB-INF/icons/pick_patient_button.png"))); //$NON-NLS-1$
 			pickPatientButton.setDescription(MessageBundle.getMessage("angal.labnew.tooltip.associateapatientwiththisexam"));  //$NON-NLS-1$
 			pickPatientButton.addClickListener(e->{
@@ -631,7 +631,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		if (addExamButton == null) {
 			addExamButton = new Button();
 			addExamButton.setCaption(MessageBundle.getMessage("angal.labnew.exam")); //$NON-NLS-1$
-			addExamButton.setClickShortcut(KeyEvent.VK_E);
+			////addExamButton.setClickShortcut(KeyEvent.VK_E);
 			addExamButton.setIcon(new FileResource(new File(resPath+"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
 			addExamButton.addClickListener(e->{
 				Laboratory lab = new Laboratory();

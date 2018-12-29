@@ -260,7 +260,7 @@ public class SelectPatient extends ModalWindow {
 	private Button getSelectButton() {
 		if (buttonSelect == null) {
 			buttonSelect = new Button();
-			buttonSelect.setClickShortcut(KeyEvent.VK_S);
+			////buttonSelect.setClickShortcut(KeyEvent.VK_S);
 			buttonSelect.setCaption(MessageBundle.getMessage("angal.patient.select"));
 			buttonSelect.addClickListener(e->{
 				if (patient != null) {
@@ -278,7 +278,7 @@ public class SelectPatient extends ModalWindow {
 	private Button getCancelButton() {
 		if (cancelButton == null) {
 			cancelButton = new Button();
-			cancelButton.setClickShortcut(KeyEvent.VK_C);
+			////cancelButton.setClickShortcut(KeyEvent.VK_C);
 			cancelButton.setCaption(MessageBundle.getMessage("angal.common.cancel"));
 			cancelButton.addClickListener(e->{
 				//to free memory

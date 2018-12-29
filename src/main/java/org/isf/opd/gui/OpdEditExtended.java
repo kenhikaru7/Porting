@@ -1114,7 +1114,7 @@ public class OpdEditExtended extends ModalWindow implements PatientInsertExtende
 	private Button getExaminationButton(){
 		if(examinationButton == null){
 			examinationButton = new Button(MessageBundle.getMessage("angal.opd.examination"));
-			examinationButton.setClickShortcut(KeyEvent.VK_E);
+			////examinationButton.setClickShortcut(KeyEvent.VK_E);
 
 			examinationButton.addClickListener(e->{
 				if(opdPatient == null){
@@ -1154,7 +1154,7 @@ public class OpdEditExtended extends ModalWindow implements PatientInsertExtende
 	private Button getOkButton(){
 		if(okButton == null){
 			okButton = new Button(MessageBundle.getMessage("angal.common.ok"));
-			okButton.setClickShortcut(KeyEvent.VK_O);
+			////okButton.setClickShortcut(KeyEvent.VK_O);
 
 			okButton.addClickListener(e->{
 				if(!jOpdNumField.getValue().equals("") || !jOpdNumField.getValue().contains(" ")){
@@ -1334,7 +1334,7 @@ public class OpdEditExtended extends ModalWindow implements PatientInsertExtende
 	private Button getCancelButton(){
 		if(cancelButton == null){
 			cancelButton = new Button(MessageBundle.getMessage("angal.common.cancel"));
-			cancelButton.setClickShortcut(KeyEvent.VK_C);
+			////cancelButton.setClickShortcut(KeyEvent.VK_C);
 			cancelButton.addClickListener(e->{
 				// to free Memory
 				pat.clear();

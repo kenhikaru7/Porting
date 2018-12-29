@@ -501,7 +501,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 	private Button getTrashPatientButton() {
 		if (trashPatientButton == null) {
 			trashPatientButton = new Button();
-			trashPatientButton.setClickShortcut(KeyEvent.VK_R);
+			////trashPatientButton.setClickShortcut(KeyEvent.VK_R);
 			// trashPatientButton.setPreferredSize(new Dimension(25,25));
 			trashPatientButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/remove_patient_button.png"))); //$NON-NLS-1$
 			trashPatientButton.setDescription(MessageBundle.getMessage("angal.newbill.tooltip.removepatientassociationwiththisbill")); //$NON-NLS-1$
@@ -529,7 +529,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		if (pickPatientButton == null) {
 			pickPatientButton = new Button();
 			pickPatientButton.setCaption(MessageBundle.getMessage("angal.newbill.pickpatient")); //$NON-NLS-1$
-			pickPatientButton.setClickShortcut(KeyEvent.VK_P);
+			////pickPatientButton.setClickShortcut(KeyEvent.VK_P);
 			pickPatientButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/pick_patient_button.png"))); //$NON-NLS-1$
 			pickPatientButton.setDescription(MessageBundle.getMessage("angal.newbill.tooltip.associateapatientwiththisbill")); //$NON-NLS-1$
 			pickPatientButton.addClickListener(e->{
@@ -770,7 +770,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		if (balanceButton == null) {
 			balanceButton = new Button();
 			balanceButton.setCaption(MessageBundle.getMessage("angal.newbill.givechange") + "..."); //$NON-NLS-1$
-			balanceButton.setClickShortcut(KeyEvent.VK_B);
+			////balanceButton.setClickShortcut(KeyEvent.VK_B);
 			// balanceButton.setMaximumSize(new Dimension(ButtonWidth, ButtonHeight));
 			balanceButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/money_button.png"))); //$NON-NLS-1$
 			if(insert) balanceButton.setEnabled(false);
@@ -809,7 +809,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		if (saveButton == null) {
 			saveButton = new Button();
 			saveButton.setCaption(MessageBundle.getMessage("angal.common.save")); //$NON-NLS-1$
-			saveButton.setClickShortcut(KeyEvent.VK_S);
+			////saveButton.setClickShortcut(KeyEvent.VK_S);
 			// saveButton.setMaximumSize(new Dimension(ButtonWidth, ButtonHeight));
 			saveButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/save_button.png"))); //$NON-NLS-1$
 			saveButton.addClickListener(e->{
@@ -942,7 +942,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		if (paidButton == null) {
 			paidButton = new Button();
 			paidButton.setCaption(MessageBundle.getMessage("angal.newbill.paid")); //$NON-NLS-1$
-			paidButton.setClickShortcut(KeyEvent.VK_A);
+			////paidButton.setClickShortcut(KeyEvent.VK_A);
 			// paidButton.setMaximumSize(new Dimension(ButtonWidth, ButtonHeight));
 			paidButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/ok_button.png"))); //$NON-NLS-1$
 			if(insert) paidButton.setEnabled(false);
@@ -1010,7 +1010,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		if (closeButton == null) {
 			closeButton = new Button();
 			closeButton.setCaption(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
-			closeButton.setClickShortcut(KeyEvent.VK_C);
+			////closeButton.setClickShortcut(KeyEvent.VK_C);
 			// closeButton.setMaximumSize(new Dimension(ButtonWidth, ButtonHeight));
 			closeButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/close_button.png"))); //$NON-NLS-1$
 			closeButton.addClickListener(e->{
@@ -1092,7 +1092,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		if (addPaymentButton == null) {
 			addPaymentButton = new Button();
 			addPaymentButton.setCaption(MessageBundle.getMessage("angal.newbill.payment")); //$NON-NLS-1$
-			addPaymentButton.setClickShortcut(KeyEvent.VK_Y);
+			////addPaymentButton.setClickShortcut(KeyEvent.VK_Y);
 			// addPaymentButton.setMaximumSize(new Dimension(ButtonWidthPayment, ButtonHeight));
 			// addPaymentButton.setHorizontalAlignment(SwingConstants.LEFT);
 			addPaymentButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
@@ -1148,7 +1148,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		if (removePaymentButton == null) {
 			removePaymentButton = new Button();
 			removePaymentButton.setCaption(MessageBundle.getMessage("angal.newbill.removepayment")); //$NON-NLS-1$
-			removePaymentButton.setClickShortcut(KeyEvent.VK_Y);
+			////removePaymentButton.setClickShortcut(KeyEvent.VK_Y);
 			// removePaymentButton.setMaximumSize(new Dimension(ButtonWidthPayment, ButtonHeight));
 			// removePaymentButton.setHorizontalAlignment(SwingConstants.LEFT);
 			removePaymentButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/delete_button.png"))); //$NON-NLS-1$
@@ -1170,7 +1170,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		if (addOtherButton == null) {
 			addOtherButton = new Button();
 			addOtherButton.setCaption(MessageBundle.getMessage("angal.newbill.other")); //$NON-NLS-1$
-			addOtherButton.setClickShortcut(KeyEvent.VK_T);
+			////addOtherButton.setClickShortcut(KeyEvent.VK_T);
 			// addOtherButton.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			// addOtherButton.setHorizontalAlignment(SwingConstants.LEFT);
 			addOtherButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
@@ -1247,7 +1247,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		if (addExamButton == null) {
 			addExamButton = new Button();
 			addExamButton.setCaption(MessageBundle.getMessage("angal.newbill.exam")); //$NON-NLS-1$
-			addExamButton.setClickShortcut(KeyEvent.VK_E);
+			////addExamButton.setClickShortcut(KeyEvent.VK_E);
 			// addExamButton.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			// addExamButton.setHorizontalAlignment(SwingConstants.LEFT);
 			addExamButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
@@ -1275,7 +1275,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		if (addOperationButton == null) {
 			addOperationButton = new Button();
 			addOperationButton.setCaption(MessageBundle.getMessage("angal.newbill.operation")); //$NON-NLS-1$
-			addOperationButton.setClickShortcut(KeyEvent.VK_O);
+			////addOperationButton.setClickShortcut(KeyEvent.VK_O);
 			// addOperationButton.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			// addOperationButton.setHorizontalAlignment(SwingConstants.LEFT);
 			addOperationButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
@@ -1299,7 +1299,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		if (addMedicalButton == null) {
 			addMedicalButton = new Button();
 			addMedicalButton.setCaption(MessageBundle.getMessage("angal.newbill.medical")); //$NON-NLS-1$
-			addMedicalButton.setClickShortcut(KeyEvent.VK_M);
+			////addMedicalButton.setClickShortcut(KeyEvent.VK_M);
 			// addMedicalButton.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			// addMedicalButton.setHorizontalAlignment(SwingConstants.LEFT);
 			addMedicalButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
@@ -1345,7 +1345,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		if (customButton == null) {
 			customButton = new Button();
 			customButton.setCaption(MessageBundle.getMessage("angal.newbill.custom")); //$NON-NLS-1$
-			customButton.setClickShortcut(KeyEvent.VK_U);
+			////customButton.setClickShortcut(KeyEvent.VK_U);
 			// customButton.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			// customButton.setHorizontalAlignment(SwingConstants.LEFT);
 			customButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/plus_button.png"))); //$NON-NLS-1$
@@ -1391,7 +1391,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		if (removeItemButton == null) {
 			removeItemButton = new Button();
 			removeItemButton.setCaption(MessageBundle.getMessage("angal.newbill.removeitem")); //$NON-NLS-1$
-			removeItemButton.setClickShortcut(KeyEvent.VK_R);
+			////removeItemButton.setClickShortcut(KeyEvent.VK_R);
 			// removeItemButton.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			// removeItemButton.setHorizontalAlignment(SwingConstants.LEFT);
 			removeItemButton.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/delete_button.png"))); //$NON-NLS-1$

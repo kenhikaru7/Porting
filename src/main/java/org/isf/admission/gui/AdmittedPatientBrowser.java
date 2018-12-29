@@ -456,7 +456,7 @@ public class AdmittedPatientBrowser extends ModalWindow implements
 	// }
 	private Button getButtonNew() {
 		Button buttonNew = new Button(MessageBundle.getMessage("angal.admission.newpatient"));
-		buttonNew.setClickShortcut(KeyEvent.VK_N);
+		////buttonNew.setClickShortcut(KeyEvent.VK_N);
 		buttonNew.addClickListener(e -> {
 			if (GeneralData.PATIENTEXTENDED) {
 				PatientInsertExtended newrecord = new PatientInsertExtended(new Patient(), true, this);
@@ -473,7 +473,7 @@ public class AdmittedPatientBrowser extends ModalWindow implements
 
 	private Button getButtonEdit() {
 		Button buttonEdit = new Button(MessageBundle.getMessage("angal.admission.editpatient"));
-		buttonEdit.setClickShortcut(KeyEvent.VK_E);
+		////buttonEdit.setClickShortcut(KeyEvent.VK_E);
 		buttonEdit.addClickListener(e-> {
 			if (grid.getSelectedItems().isEmpty()) {
 				MessageBox.createInfo().withCaption(MessageBundle.getMessage("angal.admission.editpatient")).withMessage(MessageBundle.getMessage("angal.common.pleaseselectarow"))
@@ -499,7 +499,7 @@ public class AdmittedPatientBrowser extends ModalWindow implements
 
 	private Button getButtonDel() {
 		Button buttonDel = new Button(MessageBundle.getMessage("angal.admission.deletepatient"));
-		buttonDel.setClickShortcut(KeyEvent.VK_T);
+		////buttonDel.setClickShortcut(KeyEvent.VK_T);
 		buttonDel.addClickListener(e-> {
 			if (grid.getSelectedItems().isEmpty()) {
 				MessageBox.createInfo().withCaption(MessageBundle.getMessage("angal.admission.deletepatient")).withMessage(MessageBundle.getMessage("angal.common.pleaseselectarow"))

@@ -577,7 +577,7 @@ public class LabEditExtended extends ModalWindow {
 		if (cancelButton == null) {
 			cancelButton = new Button();
 			cancelButton.setCaption(MessageBundle.getMessage("angal.common.cancel"));
-			cancelButton.setClickShortcut(KeyEvent.VK_C);
+			////cancelButton.setClickShortcut(KeyEvent.VK_C);
 			cancelButton.addClickListener(e->{
 				close();
 			});
@@ -591,7 +591,7 @@ public class LabEditExtended extends ModalWindow {
 		if (okButton == null) {
 			okButton = new Button();
 			okButton.setCaption(MessageBundle.getMessage("angal.common.ok"));
-			okButton.setClickShortcut(KeyEvent.VK_O);
+			////okButton.setClickShortcut(KeyEvent.VK_O);
 			okButton.addClickListener(e->{
 				String matSelected=(String)matComboBox.getValue();
 				examSelected=(Exam)examComboBox.getValue();

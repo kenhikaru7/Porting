@@ -226,7 +226,7 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	private Button getButtonEdit() {
 		if (buttonEdit == null) {
 			buttonEdit = new Button(MessageBundle.getMessage("angal.common.edit"));
-			buttonEdit.setClickShortcut(KeyEvent.VK_E);
+			////buttonEdit.setClickShortcut(KeyEvent.VK_E);
 			buttonEdit.addClickListener(e->{
 				if(examGrid.getSelectedItems().isEmpty()){
 					MessageBox.create().withCaption(MessageBundle.getMessage("angal.hospital"))
@@ -256,7 +256,7 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	private Button getNewButton() {
 		if (newButton == null) {
 			newButton = new Button(MessageBundle.getMessage("angal.common.new"));
-			newButton.setClickShortcut(KeyEvent.VK_N);
+			////newButton.setClickShortcut(KeyEvent.VK_N);
 			newButton.addClickListener(e->{
 				laboratory = new Laboratory(0, new Exam("", "",
 						new ExamType("", ""), 0, "", 0),
@@ -289,7 +289,7 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	private Button getdeleteButton() {
 		if (deleteButton == null) {
 			deleteButton = new Button(MessageBundle.getMessage("angal.common.delete"));
-			deleteButton.setClickShortcut(KeyEvent.VK_D);
+			////deleteButton.setClickShortcut(KeyEvent.VK_D);
 			deleteButton.addClickListener(event->{
 				if (examGrid.getSelectedItems().isEmpty()) {
 					MessageBox.create().withCaption(MessageBundle.getMessage("angal.hospital"))
@@ -326,7 +326,7 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	private Button getCloseButton() {
 		if (closeButton == null) {
 			closeButton = new Button(MessageBundle.getMessage("angal.common.close"));
-			closeButton.setClickShortcut(KeyEvent.VK_C);
+			////closeButton.setClickShortcut(KeyEvent.VK_C);
 			closeButton.addClickListener(e->{
 				close();
 			});
@@ -531,7 +531,7 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	private Button getFilterButton(){
 		if (filterButton == null) {
 			filterButton = new Button(MessageBundle.getMessage("angal.lab.search"));
-			filterButton.setClickShortcut(KeyEvent.VK_S);
+			////filterButton.setClickShortcut(KeyEvent.VK_S);
 			filterButton.addClickListener(e->{
 				typeSelected = ((Exam) examsCombo.getSelectedItem().get()).toString();
 				if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.lab.all")))

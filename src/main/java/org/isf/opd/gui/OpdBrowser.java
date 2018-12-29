@@ -283,7 +283,7 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 		if(newButton == null){
 			newButton = new Button();
 			newButton.setCaption(MessageBundle.getMessage("angal.common.new"));
-			newButton.setClickShortcut(KeyEvent.VK_N);
+			////newButton.setClickShortcut(KeyEvent.VK_N);
 			newButton.addClickListener(e -> {
 				Opd newOpd = new Opd(0,' ',-1,"0",0);
 				if(GeneralData.OPDEXTENDED){
@@ -313,7 +313,7 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 		if(editButton == null){
 			editButton = new Button();
 			editButton.setCaption(MessageBundle.getMessage("angal.common.edit"));
-			editButton.setClickShortcut(KeyEvent.VK_E);
+			////editButton.setClickShortcut(KeyEvent.VK_E);
 			editButton.addClickListener(e->{
 				if(grid.getSelectedItems().isEmpty()){
 					MessageBox.createInfo().withCaption(MessageBundle.getMessage("angal.hospital")).withMessage(MessageBundle.getMessage("angal.common.pleaseselectarow"))
@@ -344,7 +344,7 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 	private Button getcloseButton(){
 		if(closeButton == null){
 			closeButton = new Button(MessageBundle.getMessage("angal.common.close"));
-            closeButton.setClickShortcut(KeyEvent.VK_C);
+            ////closeButton.setClickShortcut(KeyEvent.VK_C);
 			closeButton.addClickListener(e->{
 				this.close();
 			});
@@ -360,7 +360,7 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 	private Button getdeleteButton(){
 		if(deleteButton == null){
 			deleteButton = new Button(MessageBundle.getMessage("angal.common.delete"));
-			deleteButton.setClickShortcut(KeyEvent.VK_D);
+			////deleteButton.setClickShortcut(KeyEvent.VK_D);
 			deleteButton.addClickListener(e->{
 				if(grid.getSelectedItems().isEmpty()){
 					MessageBox.createInfo().withCaption(MessageBundle.getMessage("angal.hospital")).withMessage(MessageBundle.getMessage("angal.common.pleaseselectarow"))
@@ -922,7 +922,7 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 		if(filterButton == null){
 			filterButton = new Button();
 			filterButton.setCaption(MessageBundle.getMessage("angal.opd.search"));
-            filterButton.setClickShortcut(KeyEvent.VK_S);
+            ////filterButton.setClickShortcut(KeyEvent.VK_S);
 			filterButton.addClickListener(e -> {
 					String disease=((Disease)jDiseaseBox.getSelectedItem().get()).getCode();
 					String diseasetype=((DiseaseType)jDiseaseTypeBox.getSelectedItem().get()).getCode();
