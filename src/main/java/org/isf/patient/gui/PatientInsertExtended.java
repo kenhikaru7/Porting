@@ -430,15 +430,13 @@ public class PatientInsertExtended extends ModalWindow{
 			} else
 				patient.setParentTogether('U');
 		}
-
-		patient.setNote("");	// 	patient.setNote(jNoteTextArea.getValue().trim());
+		patient.setNote(jNoteTextArea.getValue().trim());
 		result = manager.newPatient(patient);
 
 		if (!result)
 			MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.patient.thedatacouldnotbesaved")).withOkButton().open();
 		else {
 			if (justSave) {
-				logger.info("masuk justsave");
 				insert = false;
 				justSave = false;
 				// PatientInsertExtended.this.requestFocus();
@@ -555,7 +553,7 @@ public class PatientInsertExtended extends ModalWindow{
 					patient.setParentTogether('U');
 			}
 			boolean result = false;
-			patient.setNote("");	// 	patient.setNote(jNoteTextArea.getValue().trim());
+			patient.setNote(jNoteTextArea.getValue().trim());
 			result = manager.updatePatient(patient);
 			if (!result)
 				MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.patient.thedatacouldnotbesaved")).withOkButton().open();
@@ -803,7 +801,7 @@ public class PatientInsertExtended extends ModalWindow{
 	private TextField getJFirstNameTextField() {
 		if (jFirstNameTextField == null) {
 			jFirstNameTextField = new TextField();
-			jFirstNameTextField.setMaxLength(15);
+			jFirstNameTextField.setWidth("15em");
 			jFirstNameTextField.setCaption(MessageBundle.getMessage("angal.patient.firstname"));
 			if (!insert)
 				jFirstNameTextField.setValue(patient.getFirstName());
@@ -819,7 +817,7 @@ public class PatientInsertExtended extends ModalWindow{
 	private TextField getJSecondNameTextField() {
 		if (jSecondNameTextField == null) {
 			jSecondNameTextField = new TextField();
-			jSecondNameTextField.setMaxLength(15);
+			jSecondNameTextField.setWidth("15em");
 			jSecondNameTextField.setCaption(MessageBundle.getMessage("angal.patient.secondname"));
 			if (!insert)
 				jSecondNameTextField.setValue(patient.getSecondName());
@@ -881,7 +879,7 @@ public class PatientInsertExtended extends ModalWindow{
 	private TextField getJAddressTextField() {
 		if (jAddressTextField == null) {
 			jAddressTextField = new TextField();
-			jAddressTextField.setMaxLength(15);
+			jAddressTextField.setWidth("15em");
 			jAddressTextField.setCaption(MessageBundle.getMessage("angal.patient.address"));
 			if (!insert)
 				jAddressTextField.setValue(patient.getAddress());
@@ -897,7 +895,7 @@ public class PatientInsertExtended extends ModalWindow{
 	private TextField getJTaxCodeTextField() {
 		if (jTaxCodeTextField == null) {
 			jTaxCodeTextField = new TextField();
-			jTaxCodeTextField.setMaxLength(15);
+			jTaxCodeTextField.setWidth("15em");
 			jTaxCodeTextField.setCaption(MessageBundle.getMessage("angal.patient.taxcode"));
 			if (!insert)
 				jTaxCodeTextField.setValue(patient.getTaxCode());
@@ -927,7 +925,7 @@ public class PatientInsertExtended extends ModalWindow{
 	private TextField getJCityTextField() {
 		if (jCityTextField == null) {
 			jCityTextField = new TextField();
-			jCityTextField.setMaxLength(15);
+			jCityTextField.setWidth("15em");
 			jCityTextField.setCaption(MessageBundle.getMessage("angal.patient.city"));
 			if (!insert)
 				jCityTextField.setValue(patient.getCity());
@@ -959,7 +957,7 @@ public class PatientInsertExtended extends ModalWindow{
 		SmsParameters.getSmsParameters();
 		if (jTelephoneTextField == null) {
 			jTelephoneTextField = new TextField();
-			jTelephoneTextField.setMaxLength(15);
+			jTelephoneTextField.setWidth("15em");
 			jTelephoneTextField.setValue(SmsParameters.ICC);
 			jTelephoneTextField.setCaption(MessageBundle.getMessage("angal.patient.telephone"));
 			if (!insert)
@@ -992,7 +990,7 @@ public class PatientInsertExtended extends ModalWindow{
 		if (jNextKinTextField == null) {
 			jNextKinTextField = new TextField();
 			jNextKinTextField.setCaption(MessageBundle.getMessage("angal.patient.nextkin"));
-			jNextKinTextField.setMaxLength(15);
+			jNextKinTextField.setWidth("15em");
 			if (!insert)
 				jNextKinTextField.setValue(patient.getNextKin());
 		}
@@ -1323,8 +1321,7 @@ public class PatientInsertExtended extends ModalWindow{
 		if (jAgeYears == null) {
 			jAgeYears = new TextField();
 			jAgeYears.setValue(""+0);
-			jAgeYears.setMaxLength(3);
-			jAgeYears.setWidthUndefined();
+			jAgeYears.setWidth("4em");
 			jAgeYears.addFocusListener(new FocusListener() {
 				@Override
 				public void focus(FocusEvent e) {//blocking the textfield value value
@@ -1341,8 +1338,7 @@ public class PatientInsertExtended extends ModalWindow{
 		if (jAgeMonths == null) {
 			jAgeMonths = new TextField();
 			jAgeMonths.setValue(""+0);
-			jAgeMonths.setMaxLength(3);
-			jAgeMonths.setWidthUndefined();
+			jAgeMonths.setWidth("3em");
 			jAgeMonths.addFocusListener(new FocusListener() {
 				@Override
 				public void focus(FocusEvent e) {//blocking the textfield value value
@@ -1359,8 +1355,7 @@ public class PatientInsertExtended extends ModalWindow{
 		if (jAgeDays == null) {
 			jAgeDays = new TextField();
 			jAgeDays.setValue(""+0);
-			jAgeDays.setMaxLength(3);
-			jAgeDays.setWidthUndefined();
+			jAgeDays.setWidth("3em");
 			jAgeDays.addFocusListener(new FocusListener() {
 				@Override
 				public void focus(FocusEvent e) {//blocking the textfield value value
@@ -1726,18 +1721,18 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	// private TextArea getCaptionArea() {
-	// 	if (jNoteTextArea == null) {
-	// 		jNoteTextArea = new TextArea();
-	// 		jNoteTextArea.setTabSize(4);
-	// 		jNoteTextArea.setAutoscrolls(true);
-	// 		jNoteTextArea.setLineWrap(true);
-	// 		if (!insert) {
-	// 			jNoteTextArea.setCaption(patient.getNote());
-	// 		}
-	// 	}
-	// 	return jNoteTextArea;
-	// }
+	private TextArea getCaptionArea() {
+		if (jNoteTextArea == null) {
+			jNoteTextArea = new TextArea();
+			// jNoteTextArea.setTabSize(4); //lebar field 4 tab
+			// jNoteTextArea.setAutoscrolls(true);
+			jNoteTextArea.setWordWrap(true);
+			if (!insert) {
+				jNoteTextArea.setValue(patient.getNote());
+			}
+		}
+		return jNoteTextArea;
+	}
 
 	/**
 	 * This method initializes jNotePanel
@@ -1751,7 +1746,6 @@ public class PatientInsertExtended extends ModalWindow{
 			// 	// photoPanel = new PatientPhotoPanel(this, patient.getCode(), patient.getPhoto());
 				
 			// } catch (IOException e) {
-			// 	logger.info("masuk ke catch photopanel");
 			// }
 			// if (photoPanel != null) jRightLayout.addComponent(photoPanel);
 			jRightLayout.addComponent(getjNotePanel());
@@ -1763,8 +1757,7 @@ public class PatientInsertExtended extends ModalWindow{
 	private Panel getjNotePanel() {
 		if (jNotePanel == null) {
 			jNotePanel = new Panel(MessageBundle.getMessage("angal.patient.note"));
-			jNoteTextArea = new TextArea();
-			jNotePanel.setContent(jNoteTextArea);
+			jNotePanel.setContent(getCaptionArea());
 		}
 		return jNotePanel;
 	}
@@ -1777,7 +1770,7 @@ public class PatientInsertExtended extends ModalWindow{
 	private TextField getJFatherNameTextField() {
 		if (jFatherNameTextField == null) {
 			jFatherNameTextField = new TextField();
-			jFatherNameTextField.setMaxLength(15);
+			jFatherNameTextField.setWidth("15em");
 			if (!insert)
 				jFatherNameTextField.setValue(patient.getFather_name());
 		}
@@ -1792,7 +1785,7 @@ public class PatientInsertExtended extends ModalWindow{
 	private TextField getJMotherNameTextField() {
 		if (jMotherNameTextField == null) {
 			jMotherNameTextField = new TextField();
-			jMotherNameTextField.setMaxLength(15);
+			jMotherNameTextField.setWidth("15em");
 			if (!insert)
 				jMotherNameTextField.setValue(patient.getMother_name());
 		}
