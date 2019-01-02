@@ -15,7 +15,10 @@ import java.awt.event.ActionListener;
 // import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
+
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -41,8 +44,8 @@ import java.util.List;
 // import javax.swing.TextField;
 // import javax.swing.event.EventListenerList;
 
-// import agetype.manager.AgeTypeBrowserManager;
-// import agetype.model.AgeType;
+import org.isf.agetype.manager.AgeTypeBrowserManager;
+import org.isf.agetype.model.AgeType;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.generaldata.SmsParameters;
@@ -60,12 +63,17 @@ import org.isf.utils.jobjects.BusyState;
 import org.isf.utils.jobjects.ModalWindow;
 import org.isf.utils.Logging;
 
-import com.vaadin.ui.Window;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.UI;
+import java.io.File;
+import com.vaadin.server.FileResource;
+import com.vaadin.server.VaadinService;
+
 import com.vaadin.ui.Button;
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
@@ -145,6 +153,7 @@ public class PatientInsertExtended extends ModalWindow{
 	final private Patient patient;
 	private int lock;
 	private PatientBrowserManager manager = new PatientBrowserManager();
+	private String resPath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
 
 	// COMPONENTS: Data
 	private Panel jDataPanel = null;
@@ -183,23 +192,24 @@ public class PatientInsertExtended extends ModalWindow{
 	private int days;
 
 	// BirthDate Components:
-	private Panel jBirthDate = null;
-	private Panel jBirthDateLabelPanel = null;
-	private Label jBirthDateLabel = null;
-	private Panel jBirthDateGroupPanel = null;
+	private DateField birthDateField = null;
+	private HorizontalLayout birthDateLayuot = null;
+	private Panel birthDateLayuotLabelPanel = null;
+	private Label birthDateLayuotLabel = null;
+	private Panel birthDateLayuotGroupPanel = null;
 	private Calendar cBirthDate = null;
-	private Button jBirthDateReset = null;
-	private Label jBirthDateAge = null;
+	private Button birthDateReset = null;
+	private Label birthDateLayuotAge = null;
 
 	// AgeDescription Components:
 	private int ageType;
 	private int ageTypeMonths;
-	private Panel jAgeDesc = null;
-	private Panel jAgeDescPanel = null;
-	private Panel jAgeMonthsPanel = null;
-	// private ComboBox jAgeDescComboBox = null;
-	// private ComboBox jAgeMonthsComboBox = null;
-	private Label jAgeMonthsLabel = null;
+	private Panel ageDesc = null;
+	private HorizontalLayout descAgeLayout = null;
+	private HorizontalLayout ageMonthsLayout = null;
+	private ComboBox ageDescComboBox = null;
+	private ComboBox ageMonthsComboBox = null;
+	private Label ageMonthsLabel = null;
 
 	// Sex Components:
 	private FormLayout jSexPanel = null;
@@ -597,7 +607,7 @@ public class PatientInsertExtended extends ModalWindow{
 		// 	}
 		// } else if (jAgeType_Description.isSelected()) {
 		// 	AgeTypeBrowserManager at = new AgeTypeBrowserManager();
-		// 	int index = jAgeDescComboBox.getSelectedIndex();
+		// 	int index = ageDescComboBox.getSelectedIndex();
 		// 	AgeType ageType = null;
 			
 		// 	if (index > 0) {
@@ -607,7 +617,7 @@ public class PatientInsertExtended extends ModalWindow{
 
 		// 	years = ageType.getFrom();
 		// 	if (index == 1) {
-		// 		months = jAgeMonthsComboBox.getSelectedIndex();
+		// 		months = ageMonthsComboBox.getSelectedIndex();
 		// 		patient.setAgetype(ageType.getCode() + "/" + months);
 		// 		bbdate = bbdate.minusYears(years).minusMonths(months);
 		// 	} else {
@@ -636,44 +646,26 @@ public class PatientInsertExtended extends ModalWindow{
 	}
 
 	/**
-	 * This method initializes jBirthDate
+	 * This method initializes birthDateLayuot
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private Panel getJBirthDate() {
-		if (jBirthDate == null) {
-			jBirthDate = new Panel();
-			GridBagLayout gbl_jBirthDate = new GridBagLayout();
-			gbl_jBirthDate.columnWidths = new int[]{0, 0};
-			gbl_jBirthDate.rowHeights = new int[]{0, 0};
-			gbl_jBirthDate.columnWeights = new double[]{0.0, 1.0};
-			gbl_jBirthDate.rowWeights = new double[]{0.0, 0.0};
-			// jBirthDate.setLayout(gbl_jBirthDate);
-			GridBagConstraints gbc_jBirthDateLabelPanel = new GridBagConstraints();
-			gbc_jBirthDateLabelPanel.anchor = GridBagConstraints.WEST;
-			gbc_jBirthDateLabelPanel.gridx = 0;
-			gbc_jBirthDateLabelPanel.gridy = 0;
-			// jBirthDate.addComponent(getJBirthDateLabelPanel(), gbc_jBirthDateLabelPanel);
-			GridBagConstraints gbc_jBirthDateGroupPanel = new GridBagConstraints();
-			gbc_jBirthDateGroupPanel.fill = GridBagConstraints.HORIZONTAL;
-			gbc_jBirthDateGroupPanel.anchor = GridBagConstraints.WEST;
-			gbc_jBirthDateGroupPanel.gridx = 1;
-			gbc_jBirthDateGroupPanel.gridy = 0;
-			// jBirthDate.addComponent(getJBirthDateGroupPanel(), gbc_jBirthDateGroupPanel);
-			GridBagConstraints gbc_jBirthDateAge = new GridBagConstraints();
-			gbc_jBirthDateAge.anchor = GridBagConstraints.WEST;
-			gbc_jBirthDateAge.gridx = 1;
-			gbc_jBirthDateAge.gridy = 1;
-			// jBirthDate.addComponent(getJBirthDateAge(), gbc_jBirthDateAge);
+	private HorizontalLayout getBirthDate() {
+		if (birthDateLayuot == null) {
+			birthDateLayuot = new HorizontalLayout();
+			birthDateLayuot.addComponent(getBirthDateLabel());
+			birthDateLayuot.addComponent(getBirthDateField());
+			birthDateLayuot.addComponent(getBirthDateReset());
+			// birthDateLayuot.addComponent(getBirthDateAge(), gbc_birthDateLayuotAge);
 		}
-		return jBirthDate;
+		return birthDateLayuot;
 	}
 
-	private Label getJBirthDateAge() {
-		if (jBirthDateAge == null) {
-			jBirthDateAge = new Label(" ");
+	private Label getBirthDateAge() {
+		if (birthDateLayuotAge == null) {
+			birthDateLayuotAge = new Label(" ");
 		}
-		return jBirthDateAge;
+		return birthDateLayuotAge;
 	}
 	
 	private String formatYearsMonthsDays(int years, int months, int days) {
@@ -681,25 +673,43 @@ public class PatientInsertExtended extends ModalWindow{
 	}
 
 	/**
-	 * This method initializes jBirthDateLabel
+	 * This method initializes birthDateLayuotLabel
 	 * 
 	 * @return javax.swing.Label
 	 */
-	private Label getJBirthDateLabel() {
-		if (jBirthDateLabel == null) {
-			jBirthDateLabel = new Label();
-			jBirthDateLabel.setCaption(MessageBundle.getMessage("angal.patient.birthdate"));
+	private Label getBirthDateLabel() {
+		if (birthDateLayuotLabel == null) {
+			birthDateLayuotLabel = new Label();
+			birthDateLayuotLabel.setValue(MessageBundle.getMessage("angal.patient.birthdate"));
 		}
-		return jBirthDateLabel;
+		return birthDateLayuotLabel;
 	}
 
 	/**
-	 * This method initializes jBirthDateGroupPanel
+	 * This method initializes birthDateLayuotGroupPanel
 	 * 
 	 * @return javax.swing.Panel
 	 */
 
-	private Panel getJBirthDateGroupPanel() {
+	private LocalDate dateToLocalDate(Date date){
+		LocalDate ldate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		return ldate;
+	}
+
+	private Button getBirthDateReset(){
+		if (birthDateReset == null) {
+			birthDateReset = new Button();
+			birthDateReset.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/trash_button.png")));
+			// birthDateReset.setPreferredSize(new Dimension(20, 20));
+			birthDateReset.addClickListener(e->{
+				birthDateField.setValue(null);
+				cBirthDate = null;
+			});
+		}
+		return birthDateReset;
+	}
+
+	private DateField getBirthDateField() {
 		class BirthDateChooser extends JDateChooser {
 
 			private static final long serialVersionUID = -78813689560070139L;
@@ -735,40 +745,17 @@ public class PatientInsertExtended extends ModalWindow{
 			}
 		}
 		
-		if (jBirthDateGroupPanel == null) {
-			jBirthDateGroupPanel = new Panel();
-			// jBirthDateGroupPanel.setLayout(new BorderLayout());
+		birthDateField = new DateField("",LocalDate.now());
+		if (!insert) {//qqqedit
+			Date sBirthDate = patient.getBirthDate();
 
-			if (!insert) {//qqqedit
-				Date sBirthDate = patient.getBirthDate();
-
-				if (sBirthDate != null) {
-					cBirthDate = Calendar.getInstance();
-					cBirthDate.setTimeInMillis(sBirthDate.getTime());
-				}
+			if (sBirthDate != null) {
+				birthDateField = new DateField("",dateToLocalDate(sBirthDate));
+				// cBirthDate = Calendar.getInstance();
+				// cBirthDate.setTimeInMillis(sBirthDate.getTime());
 			}
-
-			final BirthDateChooser jBirthDateChooser = new BirthDateChooser(cBirthDate);
-			// jBirthDateGroupPanel.addComponent(jBirthDateChooser, BorderLayout.CENTER);
-
-			// if (jBirthDateReset == null) {
-			// 	jBirthDateReset = new Button();
-			// 	jBirthDateReset.setIcon(new ImageIcon("rsc/icons/trash_button.png"));
-			// 	jBirthDateReset.setPreferredSize(new Dimension(20, 20));
-			// 	jBirthDateReset.addClickListener(new ActionListener() {
-			// 		public void actionPerformed(ActionEvent e) {
-			// 			jBirthDateChooser.getDateEditor().setDate(null);
-			// 			/*
-			// 			 * jAgeField.setCaption(""); jAgeField.setEditable(true);
-			// 			 */
-			// 			cBirthDate = null;
-			// 		}
-			// 	});
-
-			// 	jBirthDateGroupPanel.addComponent(jBirthDateReset, BorderLayout.EAST);
-			// }
 		}
-		return jBirthDateGroupPanel;
+		return birthDateField;
 	}
 
 	private void calcAge(DateTime bdate) {
@@ -776,22 +763,15 @@ public class PatientInsertExtended extends ModalWindow{
 		years = p.getYears();
 		months = p.getMonths();
 		days = p.getDays();
-		getJBirthDateAge();
-		jBirthDateAge.setCaption(formatYearsMonthsDays(years, months, days));
+		getBirthDateAge();
+		birthDateLayuotAge.setCaption(formatYearsMonthsDays(years, months, days));
 	}
 	
 	/**
-	 * This method initializes jBirthDateLabelPanel
+	 * This method initializes birthDateLayuotLabelPanel
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private Panel getJBirthDateLabelPanel() {
-		if (jBirthDateLabelPanel == null) {
-			jBirthDateLabelPanel = new Panel();
-			// jBirthDateLabelPanel.addComponent(getJBirthDateLabel(), BorderLayout.EAST);
-		}
-		return jBirthDateLabelPanel;
-	}
 
 	/**
 	 * This method initializes jFirstNameTextField
@@ -1092,24 +1072,33 @@ public class PatientInsertExtended extends ModalWindow{
 		if (jAgeTypeButtonGroup == null) {
 			jAgeTypeButtonGroup = new RadioButtonGroup<>();
 			jAgeTypeButtonGroup.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
-			jAgeTypeButtonGroup.setItems(MessageBundle.getMessage("angal.patient.modeage"), MessageBundle.getMessage("angal.patient.modedescription"), MessageBundle.getMessage("angal.patient.modebdate"));
+			jAgeTypeButtonGroup.setItems(MessageBundle.getMessage("angal.patient.modeage"), MessageBundle.getMessage("angal.patient.modebdate"), MessageBundle.getMessage("angal.patient.modedescription"));
 			jAgeTypeButtonGroup.addValueChangeListener(e -> {
-				if(e.getValue()==MessageBundle.getMessage("angal.patient.modeage")){
-					// layout.removeComponent();
+				if(e.getOldValue()==MessageBundle.getMessage("angal.patient.modeage")){
+					layout.removeComponent(getJAge());
 				}
-				else if(e.getValue()==MessageBundle.getMessage("angal.patient.modedescription")){
-					logger.info("sb");
+				else if(e.getOldValue()==MessageBundle.getMessage("angal.patient.modedescription")){
+					logger.info("sc");
 				}
 				else{
+					layout.removeComponent(getBirthDate());
+				}
+				if(e.getValue()==MessageBundle.getMessage("angal.patient.modeage")){
+					layout.addComponent(getJAge());
+				}
+				else if(e.getValue()==MessageBundle.getMessage("angal.patient.modedescription")){
 					logger.info("sc");
+				}
+				else{
+					layout.addComponent(getBirthDate());
 				}
 			});
 			jAgeTypeButtonGroup.setValue(MessageBundle.getMessage("angal.patient.modeage"));//click action unimplemented yet
 		// 	getJAge();
 		// else if (jAgeTypeButtonGroup.getValue()==MessageBundle.getMessage("angal.patient.modedescription"))
-		// 	jAgeTypeSelection = null;//getJBirthDate();
+		// 	jAgeTypeSelection = null;//getBirthDate();
 		// else
-		// 	jAgeTypeSelection = null;//getJAgeDescription();
+		// 	jAgeTypeSelection = null;//getDescriptionAge();
 		// return jAgeTypeSelection;
 		// 	ActionListener sliceActionListener = new ActionListener() {
 		// 		public void actionPerformed(ActionEvent actionEvent) {
@@ -1179,9 +1168,9 @@ public class PatientInsertExtended extends ModalWindow{
 		if (jAgeTypeButtonGroup.getValue()==MessageBundle.getMessage("angal.patient.modeage"))
 			jAgeTypeSelection = getJAge();
 		else if (jAgeTypeButtonGroup.getValue()==MessageBundle.getMessage("angal.patient.modedescription"))
-			jAgeTypeSelection = null;//getJBirthDate();
-		else
-			jAgeTypeSelection = null;//getJAgeDescription();
+			jAgeTypeSelection = getBirthDate();
+		// else
+			// jAgeTypeSelection = getDescriptionAge();
 		return jAgeTypeSelection;
 	}
 
@@ -1199,91 +1188,83 @@ public class PatientInsertExtended extends ModalWindow{
 	// }
 
 	/**
-	 * This method initializes jAgeDesc
+	 * This method initializes ageDesc
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	// private Panel getJAgeDescription() {
-	// 	if (jAgeDesc == null) {
-	// 		jAgeDesc = new Panel();
-	// 		jAgeDesc.addComponent(getJAgeDescPanel());// , java.awt.BorderLayout.WEST);
-
-	// 	}
-	// 	return jAgeDesc;
-	// }
 
 	/**
-	 * This method initializes jAgeMonthsPanel
+	 * This method initializes ageMonthsLayout
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private Panel getJAgeMonthsPanel() {
-		if (jAgeMonthsPanel == null) {
-			jAgeMonthsPanel = new Panel();
-			jAgeMonthsLabel = new Label("months");
+	private HorizontalLayout getAgeMonthsLayout() {
+		if (ageMonthsLayout == null) {
+			ageMonthsLayout = new HorizontalLayout();
+			ageMonthsLabel = new Label("months");
 
 			String[] months = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" };
-			// jAgeMonthsComboBox = new ComboBox(months);
+			// ageMonthsComboBox = new ComboBox(months);
+			ageMonthsComboBox.setEmptySelectionAllowed(false);
 		}
 
-		// jAgeMonthsPanel.addComponent(jAgeMonthsComboBox);
-		// jAgeMonthsPanel.addComponent(jAgeMonthsLabel);
+		ageMonthsLayout.addComponent(ageMonthsComboBox);
+		ageMonthsLayout.addComponent(ageMonthsLabel);
 
-		// if (!insert && ageType == 1) {
-
-		// 	jAgeMonthsComboBox.setSelectedIndex(ageTypeMonths);
-
-		// }
-		return jAgeMonthsPanel;
+		if (!insert && ageType == 1) {
+			// ageMonthsComboBox.setSelectedIndex(ageTypeMonths);
+		}
+		return ageMonthsLayout;
 	}
 
 	/**
-	 * This method initializes jAgeDescPanel
+	 * This method initializes descAgeLayout
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private Panel getJAgeDescPanel() {
-		// if (jAgeDescPanel == null) {
-		// 	jAgeDescPanel = new Panel();
+	private HorizontalLayout getDescAgeLayout() {
+		if (descAgeLayout == null) {
+			descAgeLayout = new HorizontalLayout();
 
-		// 	jAgeDescComboBox = new ComboBox();
+			ageDescComboBox = new ComboBox();
 
-		// 	AgeTypeBrowserManager at = new AgeTypeBrowserManager();
-		// 	ArrayList<AgeType> ageList = at.getAgeType();
-		// 	jAgeDescComboBox.addItem("");
-		// 	for (AgeType ag : ageList) {
-		// 		jAgeDescComboBox.addItem(MessageBundle.getMessage(ag.getDescription()));
-		// 	}
+			AgeTypeBrowserManager at = new AgeTypeBrowserManager();
+			ArrayList<AgeType> ageList = at.getAgeType();
+			ArrayList ageDescList = new ArrayList();
+			for (AgeType ag : ageList) {
+				ageDescList.add(MessageBundle.getMessage(ag.getDescription()));
+			}
+			ageDescComboBox.setItems(ageDescList.toArray());
 
-		// 	jAgeDescPanel.addComponent(jAgeDescComboBox);
-		// 	jAgeDescPanel.addComponent(getJAgeMonthsPanel());
-		// 	jAgeMonthsComboBox.setEnabled(false);
+			descAgeLayout.addComponent(ageDescComboBox);
+			descAgeLayout.addComponent(getAgeMonthsLayout());
+			ageMonthsComboBox.setEnabled(false);
 
-		// 	jAgeDescComboBox.addClickListener(new ActionListener() {
-		// 		public void actionPerformed(ActionEvent e) {
-		// 			if (jAgeDescComboBox.getSelectedItem().toString().compareTo(MessageBundle.getMessage("angal.agetype.newborn")) == 0) {
-		// 				jAgeMonthsComboBox.setEnabled(true);
+			// ageDescComboBox.addClickListener(new ActionListener() {
+			// 	public void actionPerformed(ActionEvent e) {
+			// 		if (ageDescComboBox.getSelectedItem().toString().compareTo(MessageBundle.getMessage("angal.agetype.newborn")) == 0) {
+			// 			ageMonthsComboBox.setEnabled(true);
 
-		// 			} else {
-		// 				jAgeMonthsComboBox.setEnabled(false);
+			// 		} else {
+			// 			ageMonthsComboBox.setEnabled(false);
 
-		// 			}
-		// 		}
-		// 	});
+			// 		}
+			// 	}
+			// });
 
-		// 	if (!insert) {
+			if (!insert) {
 
-		// 		parseAgeType();
-		// 		jAgeDescComboBox.setSelectedIndex(ageType + 1);
+				parseAgeType();
+				// ageDescComboBox.setSelectedIndex(ageType + 1);
 
-		// 		if (ageType == 0) {
-		// 			jAgeMonthsComboBox.setEnabled(true);
-		// 			jAgeMonthsComboBox.setSelectedIndex(ageTypeMonths);
-		// 		}
-		// 	}
+				if (ageType == 0) {
+					ageMonthsComboBox.setEnabled(true);
+					// ageMonthsComboBox.setSelectedIndex(ageTypeMonths);
+				}
+			}
 
-		// }
-		return jAgeDescPanel;
+		}
+		return descAgeLayout;
 	}
 
 	/**
