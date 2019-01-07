@@ -746,7 +746,9 @@ public class PatientInsertExtended extends ModalWindow{
 		birthDateField.setLocale(new Locale(GeneralData.LANGUAGE));
 		birthDateField.setDateFormat("dd/MM/yyyy");
 		birthDateField.addValueChangeListener(e->{
-			cBirthDate.setTime(localDateToDate(e.getValue()));
+			cBirthDate = Calendar.getInstance();
+			if(e.getValue()!=null)
+				cBirthDate.setTime(localDateToDate(e.getValue()));
 			DateTime bdate = new DateTime(cBirthDate);
 			if (bdate.isAfter(new DateTime())) birthDateField.setValue(LocalDate.now());
 			else calcAge(bdate);
