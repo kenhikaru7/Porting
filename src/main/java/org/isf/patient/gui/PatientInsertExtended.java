@@ -115,13 +115,13 @@ public class PatientInsertExtended extends ModalWindow{
 		public void patientInserted(Patient aPatient);
 	}
 
-	public void addPatientListener(PatientListener l) {
+	public void addPatientListener(PatientListener l){
 		if(patientListeners==null)
 			patientListeners = new ArrayList<PatientListener>();
 		patientListeners.add(l);
 	}
 
-	public void removePatientListener(PatientListener l) {
+	public void removePatientListener(PatientListener l){
 		if(patientListeners==null){
 			patientListeners = new ArrayList<PatientListener>();
 			return;
@@ -129,7 +129,7 @@ public class PatientInsertExtended extends ModalWindow{
 		patientListeners.remove(l);
 	}
 
-	private void firePatientInserted(Patient aPatient) {
+	private void firePatientInserted(Patient aPatient){
 		if(patientListeners != null){
 			for(PatientListener patientListener : patientListeners){
 				patientListener.patientInserted(aPatient);
@@ -137,7 +137,7 @@ public class PatientInsertExtended extends ModalWindow{
 		}
 	}
 
-	private void firePatientUpdated(Patient aPatient) {
+	private void firePatientUpdated(Patient aPatient){
 		if(patientListeners != null){
 			for(PatientListener patientListener : patientListeners){
 				patientListener.patientUpdated(aPatient);
@@ -316,14 +316,14 @@ public class PatientInsertExtended extends ModalWindow{
 		patient = old;
 		insert = inserting;
 
-		if (!insert) {
+		if (!insert){
 			lock = patient.getLock();
 		}
 
 		initialize(this);
 	}
 
-	public PatientInsertExtended(Patient old, boolean inserting, AdmittedPatientBrowser browser) {//change argument browser to dinamically type one
+	public PatientInsertExtended(Patient old, boolean inserting, AdmittedPatientBrowser browser){//change argument browser to dinamically type one
 		this(old, inserting);
 		this.browser = browser;
 	}
@@ -332,7 +332,7 @@ public class PatientInsertExtended extends ModalWindow{
 	 * This method initializes this
 	 * 
 	 */
-	private void initialize(Window window) {
+	private void initialize(Window window){
 		getWindowContent();
 		if (insert)
 			window.setCaption(MessageBundle.getMessage("angal.patient.title"));
@@ -349,7 +349,7 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private void getWindowContent() {
+	private void getWindowContent(){
 		getDataLayout();
 		getButtonLayout();
 	}
@@ -359,8 +359,9 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private void getDataLayout() {
+	private void getDataLayout(){
 		HorizontalLayout topWindow = new HorizontalLayout();
+		topWindow.setMargin(false);
 		windowContent.addComponent(topWindow);
 		getJDataContainPanel(topWindow);//qqq
 		getjRightLayout(topWindow);
@@ -371,8 +372,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private void getButtonLayout() {
-		if (ButtonLayout == null) {
+	private void getButtonLayout(){
+		if (ButtonLayout == null){
 			ButtonLayout = new HorizontalLayout();
 			ButtonLayout.addComponent(getOkButton());
 			ButtonLayout.addComponent(getJCancelButton());
@@ -391,9 +392,9 @@ public class PatientInsertExtended extends ModalWindow{
 		String secondName = jSecondNameTextField.getValue().trim();
 		patient.setFirstName(firstName);
 		patient.setSecondName(secondName);
-		if (sexGroup.getValue()==MessageBundle.getMessage("angal.patient.female")) {
+		if (sexGroup.getValue()==MessageBundle.getMessage("angal.patient.female")){
 			patient.setSex('F');
-		} else if (sexGroup.getValue()==MessageBundle.getMessage("angal.patient.male")) {
+		} else if (sexGroup.getValue()==MessageBundle.getMessage("angal.patient.male")){
 			patient.setSex('M');
 		} else {
 			MessageBox.createInfo().withCaption("Message").withMessage("Please select a sex").withOkButton().open();
@@ -405,37 +406,37 @@ public class PatientInsertExtended extends ModalWindow{
 		patient.setNextKin(jNextKinTextField.getValue().trim());
 		patient.setTelephone(jTelephoneTextField.getValue().replaceAll(" ", ""));
 		patient.setMother_name(jMotherNameTextField.getValue().trim());//insert
-		if (motherGroup.getValue()==MessageBundle.getMessage("angal.patient.alive")) {
+		if (motherGroup.getValue()==MessageBundle.getMessage("angal.patient.alive")){
 			patient.setMother('A');
 		} else {
-			if (motherGroup.getValue()==MessageBundle.getMessage("angal.patient.dead")) {
+			if (motherGroup.getValue()==MessageBundle.getMessage("angal.patient.dead")){
 				patient.setMother('D');
 			} else
 				patient.setMother('U');
 		}
 		patient.setFather_name(jFatherNameTextField.getValue().trim());
-		if (fatherGroup.getValue()==MessageBundle.getMessage("angal.patient.alive")) {
+		if (fatherGroup.getValue()==MessageBundle.getMessage("angal.patient.alive")){
 			patient.setFather('A');
 		} else {
-			if (fatherGroup.getValue()==MessageBundle.getMessage("angal.patient.dead")) {
+			if (fatherGroup.getValue()==MessageBundle.getMessage("angal.patient.dead")){
 				patient.setFather('D');
 			} else
 				patient.setFather('U');
 		}
 		patient.setBloodType(jBloodTypeComboBox.getValue().toString());
-		if (insuranceGroup.getValue()==MessageBundle.getMessage("angal.patient.yes")) {
+		if (insuranceGroup.getValue()==MessageBundle.getMessage("angal.patient.yes")){
 			patient.setHasInsurance('Y');
 		} else {
-			if (insuranceGroup.getValue()==MessageBundle.getMessage("angal.patient.no")) {
+			if (insuranceGroup.getValue()==MessageBundle.getMessage("angal.patient.no")){
 				patient.setHasInsurance('N');
 			} else
 				patient.setHasInsurance('U');
 		}
 
-		if (parentGroup.getValue()==MessageBundle.getMessage("angal.patient.yes")) {
+		if (parentGroup.getValue()==MessageBundle.getMessage("angal.patient.yes")){
 			patient.setParentTogether('Y');
 		} else {
-			if (parentGroup.getValue()==MessageBundle.getMessage("angal.patient.no")) {
+			if (parentGroup.getValue()==MessageBundle.getMessage("angal.patient.no")){
 				patient.setParentTogether('N');
 			} else
 				patient.setParentTogether('U');
@@ -446,7 +447,7 @@ public class PatientInsertExtended extends ModalWindow{
 		if (!result)
 			MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.patient.thedatacouldnotbesaved")).withOkButton().open();
 		else {
-			if (justSave) {
+			if (justSave){
 				insert = false;
 				justSave = false;
 				// PatientInsertExtended.this.requestFocus();
@@ -460,18 +461,18 @@ public class PatientInsertExtended extends ModalWindow{
 
 	boolean ok;
 	private Button getOkButton(){
-		if (jOkButton == null) {
+		if (jOkButton == null){
 			jOkButton = new Button();
 			jOkButton.setCaption(MessageBundle.getMessage("angal.common.ok"));
 			////jOkButton.setClickShortcut(KeyEvent.VK_A + ('O' - 'A'));
 			jOkButton.addClickListener(e -> {
 				String firstName = jFirstNameTextField.getValue().trim();
 				String secondName = jSecondNameTextField.getValue().trim();
-				if (firstName.equals("")) {
+				if (firstName.equals("")){
 					MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.patient.insertfirstname")).withOkButton().open();
 					return;
 				}
-				if (secondName.equals("")) {
+				if (secondName.equals("")){
 					MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.patient.insertsecondname")).withOkButton().open();
 					return;
 				}
@@ -496,7 +497,7 @@ public class PatientInsertExtended extends ModalWindow{
 		patient.setAge(years);
 		patient.setBirthDate(bbdate.toDate());
 		patient.setAgetype("");
-		if (insert) {
+		if (insert){
 			String name = firstName + " " + secondName;
 			if(manager.isPatientPresent(name)){
 				MessageBox.createQuestion().withCaption(MessageBundle.getMessage("angal.patient.select"))
@@ -513,9 +514,9 @@ public class PatientInsertExtended extends ModalWindow{
 		} else { //update
 			patient.setFirstName(firstName);
 			patient.setSecondName(secondName);
-			if (sexGroup.getValue()==MessageBundle.getMessage("angal.patient.female")) {
+			if (sexGroup.getValue()==MessageBundle.getMessage("angal.patient.female")){
 				patient.setSex('F');
-			} else if (sexGroup.getValue()==MessageBundle.getMessage("angal.patient.male")) {
+			} else if (sexGroup.getValue()==MessageBundle.getMessage("angal.patient.male")){
 				patient.setSex('M');
 			} else {
 				MessageBox.createInfo().withCaption("Message").withMessage("Please select a sex").withOkButton().open();
@@ -527,37 +528,37 @@ public class PatientInsertExtended extends ModalWindow{
 			patient.setNextKin(jNextKinTextField.getValue().trim());
 			patient.setTelephone(jTelephoneTextField.getValue().replaceAll(" ", ""));
 			patient.setMother_name(jMotherNameTextField.getValue().trim());
-			if (motherGroup.getValue()==MessageBundle.getMessage("angal.patient.alive")) {
+			if (motherGroup.getValue()==MessageBundle.getMessage("angal.patient.alive")){
 				patient.setMother('A');
 			} else {
-				if (motherGroup.getValue()==MessageBundle.getMessage("angal.patient.dead")) {
+				if (motherGroup.getValue()==MessageBundle.getMessage("angal.patient.dead")){
 					patient.setMother('D');
 				} else
 					patient.setMother('U');
 			}
 			patient.setFather_name(jFatherNameTextField.getValue().trim());
-			if (fatherGroup.getValue()==MessageBundle.getMessage("angal.patient.alive")) {
+			if (fatherGroup.getValue()==MessageBundle.getMessage("angal.patient.alive")){
 				patient.setFather('A');
 			} else {
-				if (fatherGroup.getValue()==MessageBundle.getMessage("angal.patient.dead")) {
+				if (fatherGroup.getValue()==MessageBundle.getMessage("angal.patient.dead")){
 					patient.setFather('D');
 				} else
 					patient.setFather('U');
 			}
 			patient.setBloodType(jBloodTypeComboBox.getValue().toString());
-			if (insuranceGroup.getValue()==MessageBundle.getMessage("angal.patient.yes")) {
+			if (insuranceGroup.getValue()==MessageBundle.getMessage("angal.patient.yes")){
 				patient.setHasInsurance('Y');
 			} else {
-				if (insuranceGroup.getValue()==MessageBundle.getMessage("angal.patient.no")) {
+				if (insuranceGroup.getValue()==MessageBundle.getMessage("angal.patient.no")){
 					patient.setHasInsurance('N');
 				} else
 					patient.setHasInsurance('U');
 			}
 
-			if (parentGroup.getValue()==MessageBundle.getMessage("angal.patient.yes")) {
+			if (parentGroup.getValue()==MessageBundle.getMessage("angal.patient.yes")){
 				patient.setParentTogether('Y');
 			} else {
-				if (parentGroup.getValue()==MessageBundle.getMessage("angal.patient.no")) {
+				if (parentGroup.getValue()==MessageBundle.getMessage("angal.patient.no")){
 					patient.setParentTogether('N');
 				} else
 					patient.setParentTogether('U');
@@ -574,21 +575,21 @@ public class PatientInsertExtended extends ModalWindow{
 		}
 	}
 	DateTime bbdate = new DateTime();
-	private void checkAge() {
-		if (jAgeTypeButtonGroup.getValue()==MessageBundle.getMessage("angal.patient.modeage")) {
+	private void checkAge(){
+		if (jAgeTypeButtonGroup.getValue()==MessageBundle.getMessage("angal.patient.modeage")){
 			try {
 				years = Integer.parseInt(jAgeYears.getValue());
 				months = Integer.parseInt(jAgeMonths.getValue());
 				days = Integer.parseInt(jAgeDays.getValue());
 				if (years == 0 && months == 0 && days == 0) throw new NumberFormatException();
 				bbdate = bbdate.minusYears(years).minusMonths(months).minusDays(days);
-			} catch (NumberFormatException ex1) {
+			} catch (NumberFormatException ex1){
 				MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.patient.insertvalidage")).withOkButton().open();
 				ageFalse();
 			}
 			if (years < 0 || years > 200)
 				ageFalse();
-			else if (years > 100) {
+			else if (years > 100){
 				MessageBox.createQuestion().withCaption(MessageBundle.getMessage("angal.patient.veryoldpatient"))
 				.withMessage(MessageBundle.getMessage("angal.patient.confirmage"))
 				.withYesButton(()-> {
@@ -599,31 +600,53 @@ public class PatientInsertExtended extends ModalWindow{
 				}).open();
 			}else
 				ageChecked();
-		}// else if (jAgeType_BirthDate.isSelected()) {
-		// 	if (cBirthDate == null) return false;
-		// 	else {
-		// 		bdate = new DateTime(cBirthDate);
-		// 		calcAge(bdate);
-		// 	}
-		// } else if (jAgeType_Description.isSelected()) {
-		// 	AgeTypeBrowserManager at = new AgeTypeBrowserManager();
-		// 	int index = ageDescComboBox.getSelectedIndex();
-		// 	AgeType ageType = null;
-			
-		// 	if (index > 0) {
-		// 		ageType = at.getTypeByCode(index);
-		// 	} else
-		// 		return false;
+		} else if (jAgeTypeButtonGroup.getValue()==MessageBundle.getMessage("angal.patient.modedescription")){
+			AgeTypeBrowserManager at = new AgeTypeBrowserManager();
+			int index = 0;
+			ArrayList<AgeType> ageList = at.getAgeType();
+			int i=0;
+			if(ageDescComboBox.getSelectedItem().isPresent()){
+				String selectedAge = (String) ageDescComboBox.getSelectedItem().get();
+				for (AgeType ag : ageList){
+					i+=1;
+					if(selectedAge.equals(MessageBundle.getMessage(ag.getDescription()))){
+						index=i;
+						break;
+					}
+				}
+			}
 
-		// 	years = ageType.getFrom();
-		// 	if (index == 1) {
-		// 		months = ageMonthsComboBox.getSelectedIndex();
-		// 		patient.setAgetype(ageType.getCode() + "/" + months);
-		// 		bbdate = bbdate.minusYears(years).minusMonths(months);
-		// 	} else {
-		// 		bbdate = bbdate.minusYears(years);
-		// 	}
-		// }
+			AgeType ageType = null;
+			
+			if (index > 0){
+				ageType = at.getTypeByCode(index);
+			} else
+				ageFalse();
+
+			years = ageType.getFrom();
+			if (index == 1){
+				String[] monthsArray = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" };
+				i=0;
+				String selectedMonth = (String) ageDescComboBox.getSelectedItem().get();
+				for(String month : monthsArray){
+					i+=1;
+					if(selectedMonth.equals(month)){
+						months=i;
+						break;
+					}
+				}
+				patient.setAgetype(ageType.getCode() + "/" + months);
+				bbdate = bbdate.minusYears(years).minusMonths(months);
+			} else {
+				bbdate = bbdate.minusYears(years);
+			}
+		} else{
+			if (cBirthDate == null) ageFalse();
+			else {
+				bbdate = new DateTime(cBirthDate);
+				calcAge(bbdate);
+			}
+		}
 	}
 
 	/**
@@ -631,16 +654,14 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Button
 	 */
-	private Button getJCancelButton() {
-		if (jCancelButton == null) {
+	private Button getJCancelButton(){
+		if (jCancelButton == null){
 			jCancelButton = new Button();
 			jCancelButton.setCaption("Cancel");
 			////jCancelButton.setClickShortcut(KeyEvent.VK_A + ('C' - 'A'));
-			// jCancelButton.addClickListener(new java.awt.event.ActionListener() {
-			// 	public void actionPerformed(java.awt.event.ActionEvent e) {
-			// 		// dispose();
-			// 	}
-			// });
+			jCancelButton.addClickListener(e->{
+				close();
+			});
 		}
 		return jCancelButton;
 	}
@@ -650,25 +671,24 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private HorizontalLayout getBirthDate() {
-		if (birthDateLayuot == null) {
+	private HorizontalLayout getBirthDate(){
+		if (birthDateLayuot == null){
 			birthDateLayuot = new HorizontalLayout();
 			birthDateLayuot.addComponent(getBirthDateLabel());
 			birthDateLayuot.addComponent(getBirthDateField());
 			birthDateLayuot.addComponent(getBirthDateReset());
-			// birthDateLayuot.addComponent(getBirthDateAge(), gbc_birthDateLayuotAge);
 		}
 		return birthDateLayuot;
 	}
 
-	private Label getBirthDateAge() {
-		if (birthDateLayuotAge == null) {
+	private Label getBirthDateAge(){
+		if (birthDateLayuotAge == null){
 			birthDateLayuotAge = new Label(" ");
 		}
 		return birthDateLayuotAge;
 	}
 	
-	private String formatYearsMonthsDays(int years, int months, int days) {
+	private String formatYearsMonthsDays(int years, int months, int days){
 		return years+"y "+months+"m "+days+"d";
 	}
 
@@ -677,8 +697,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Label
 	 */
-	private Label getBirthDateLabel() {
-		if (birthDateLayuotLabel == null) {
+	private Label getBirthDateLabel(){
+		if (birthDateLayuotLabel == null){
 			birthDateLayuotLabel = new Label();
 			birthDateLayuotLabel.setValue(MessageBundle.getMessage("angal.patient.birthdate"));
 		}
@@ -696,8 +716,13 @@ public class PatientInsertExtended extends ModalWindow{
 		return ldate;
 	}
 
+	private Date localDateToDate(LocalDate ldate){
+		Date date = Date.from(ldate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		return date;
+	}
+
 	private Button getBirthDateReset(){
-		if (birthDateReset == null) {
+		if (birthDateReset == null){
 			birthDateReset = new Button();
 			birthDateReset.setIcon(new FileResource(new File(resPath +"/WEB-INF/icons/trash_button.png")));
 			// birthDateReset.setPreferredSize(new Dimension(20, 20));
@@ -709,56 +734,31 @@ public class PatientInsertExtended extends ModalWindow{
 		return birthDateReset;
 	}
 
-	private DateField getBirthDateField() {
-		class BirthDateChooser extends JDateChooser {
-
-			private static final long serialVersionUID = -78813689560070139L;
-
-			public BirthDateChooser(Calendar cBirthDate) {
-				super();
-				super.setLocale(new Locale(GeneralData.LANGUAGE));
-				super.setDateFormatString("dd/MM/yyyy");
-				super.setPreferredSize(new Dimension(150, 20));
-				// super.dateEditor.setEnabled(false);
-
-				if (cBirthDate != null) {
-					super.setCalendar(cBirthDate);
-				}
-			}
-
-			public void propertyChange(PropertyChangeEvent e) {
-				super.propertyChange(e);
-
-				if (super.dateSelected) {
-					cBirthDate = super.jcalendar.getCalendar();
-					DateTime bdate = new DateTime(cBirthDate);
-					if (bdate.isAfter(new DateTime())) super.setCalendar(new DateTime().toGregorianCalendar());
-					else calcAge(bdate);
-				}
-
-				if (super.dateEditor.getDate() != null) {
-					cBirthDate = super.getCalendar();
-					DateTime bdate = new DateTime(cBirthDate);
-					if (bdate.isAfter(new DateTime())) super.setCalendar(new DateTime().toGregorianCalendar());
-					else calcAge(bdate);
-				}
-			}
-		}
-		
-		birthDateField = new DateField("",LocalDate.now());
-		if (!insert) {//qqqedit
+	private DateField getBirthDateField(){
+		if (!insert){//qqqedit
 			Date sBirthDate = patient.getBirthDate();
-
-			if (sBirthDate != null) {
-				birthDateField = new DateField("",dateToLocalDate(sBirthDate));
-				// cBirthDate = Calendar.getInstance();
-				// cBirthDate.setTimeInMillis(sBirthDate.getTime());
+			if (sBirthDate != null){
+				cBirthDate = Calendar.getInstance();
+				cBirthDate.setTimeInMillis(sBirthDate.getTime());
 			}
 		}
+		birthDateField = new DateField();
+		birthDateField.setLocale(new Locale(GeneralData.LANGUAGE));
+		birthDateField.setDateFormat("dd/MM/yyyy");
+		birthDateField.addValueChangeListener(e->{
+			cBirthDate.setTime(localDateToDate(e.getValue()));
+			DateTime bdate = new DateTime(cBirthDate);
+			if (bdate.isAfter(new DateTime())) birthDateField.setValue(LocalDate.now());
+			else calcAge(bdate);
+		});
+		if (cBirthDate != null){
+			birthDateField.setValue(dateToLocalDate(cBirthDate.getTime()));
+		}
+
 		return birthDateField;
 	}
 
-	private void calcAge(DateTime bdate) {
+	private void calcAge(DateTime bdate){
 		Period p = new Period(bdate, new DateTime(), PeriodType.yearMonthDay());
 		years = p.getYears();
 		months = p.getMonths();
@@ -778,8 +778,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.TextField
 	 */
-	private TextField getJFirstNameTextField() {
-		if (jFirstNameTextField == null) {
+	private TextField getJFirstNameTextField(){
+		if (jFirstNameTextField == null){
 			jFirstNameTextField = new TextField();
 			jFirstNameTextField.setWidth("15em");
 			jFirstNameTextField.setCaption(MessageBundle.getMessage("angal.patient.firstname"));
@@ -794,8 +794,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.TextField
 	 */
-	private TextField getJSecondNameTextField() {
-		if (jSecondNameTextField == null) {
+	private TextField getJSecondNameTextField(){
+		if (jSecondNameTextField == null){
 			jSecondNameTextField = new TextField();
 			jSecondNameTextField.setWidth("15em");
 			jSecondNameTextField.setCaption(MessageBundle.getMessage("angal.patient.secondname"));
@@ -811,8 +811,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private RadioButtonGroup getSexPanel() {
-		// if (jSexPanel == null) {
+	private RadioButtonGroup getSexPanel(){
+		// if (jSexPanel == null){
 			// jSexPanel = new FormLayout();
 			sexGroup = new RadioButtonGroup<>();
 			sexGroup.setCaption(MessageBundle.getMessage("angal.patient.sexstar"));
@@ -821,7 +821,7 @@ public class PatientInsertExtended extends ModalWindow{
 		// 	////radiom.setClickShortcut(KeyEvent.VK_A + ('M' - 'A'));//unimplemented
 		// 	////radiof.setClickShortcut(KeyEvent.VK_A + ('F' - 'A'));
 			// jSexPanel.addComponent(getJSexLabelPanel());
-			if (!insert) {
+			if (!insert){
 				if (patient.getSex() == 'F')
 					sexGroup.setValue(MessageBundle.getMessage("angal.patient.female"));
 				else
@@ -841,8 +841,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private Label getJAddressLabelPanel() {
-		// if (jAddressLabelPanel == null) {
+	private Label getJAddressLabelPanel(){
+		// if (jAddressLabelPanel == null){
 			jAddressLabel = new Label(MessageBundle.getMessage("angal.patient.address"));
 			// jAddressLabel.setCaption();
 			// jAddressLabelPanel = new Panel();
@@ -856,8 +856,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.TextField
 	 */
-	private TextField getJAddressTextField() {
-		if (jAddressTextField == null) {
+	private TextField getJAddressTextField(){
+		if (jAddressTextField == null){
 			jAddressTextField = new TextField();
 			jAddressTextField.setWidth("15em");
 			jAddressTextField.setCaption(MessageBundle.getMessage("angal.patient.address"));
@@ -872,8 +872,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.TextField
 	 */
-	private TextField getJTaxCodeTextField() {
-		if (jTaxCodeTextField == null) {
+	private TextField getJTaxCodeTextField(){
+		if (jTaxCodeTextField == null){
 			jTaxCodeTextField = new TextField();
 			jTaxCodeTextField.setWidth("15em");
 			jTaxCodeTextField.setCaption(MessageBundle.getMessage("angal.patient.taxcode"));
@@ -888,8 +888,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private Label getJCityLabelPanel() {
-		// if (jCityLabelPanel == null) {
+	private Label getJCityLabelPanel(){
+		// if (jCityLabelPanel == null){
 			jCityLabel = new Label(MessageBundle.getMessage("angal.patient.city"));
 			// jCityLabelPanel = new Panel();
 			// jCityLabelPanel.addComponent(jCityLabel, BorderLayout.EAST);
@@ -902,8 +902,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.TextField
 	 */
-	private TextField getJCityTextField() {
-		if (jCityTextField == null) {
+	private TextField getJCityTextField(){
+		if (jCityTextField == null){
 			jCityTextField = new TextField();
 			jCityTextField.setWidth("15em");
 			jCityTextField.setCaption(MessageBundle.getMessage("angal.patient.city"));
@@ -918,8 +918,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private Panel getJTelPanel() {
-		if (jTelephoneLabelPanel == null) {
+	private Panel getJTelPanel(){
+		if (jTelephoneLabelPanel == null){
 			jTelephoneLabel = new Label();
 			jTelephoneLabel.setCaption(MessageBundle.getMessage("angal.patient.telephone"));
 			jTelephoneLabelPanel = new Panel();
@@ -933,9 +933,9 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.TextField
 	 */
-	private TextField getJTelephoneTextField() {
+	private TextField getJTelephoneTextField(){
 		SmsParameters.getSmsParameters();
-		if (jTelephoneTextField == null) {
+		if (jTelephoneTextField == null){
 			jTelephoneTextField = new TextField();
 			jTelephoneTextField.setWidth("15em");
 			jTelephoneTextField.setValue(SmsParameters.ICC);
@@ -951,8 +951,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private Panel getJNextKinLabelPanel() {
-		if (jNextKinLabelPanel == null) {
+	private Panel getJNextKinLabelPanel(){
+		if (jNextKinLabelPanel == null){
 			jNextKinLabel = new Label();
 			jNextKinLabel.setCaption(MessageBundle.getMessage("angal.patient.nextkin"));
 			jNextKinLabelPanel = new Panel();
@@ -966,8 +966,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.TextField
 	 */
-	private TextField getJNextKinTextField() {
-		if (jNextKinTextField == null) {
+	private TextField getJNextKinTextField(){
+		if (jNextKinTextField == null){
 			jNextKinTextField = new TextField();
 			jNextKinTextField.setCaption(MessageBundle.getMessage("angal.patient.nextkin"));
 			jNextKinTextField.setWidth("15em");
@@ -982,8 +982,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private Panel getJBloodTypePanel() {
-		if (jBloodTypePanel == null) {
+	private Panel getJBloodTypePanel(){
+		if (jBloodTypePanel == null){
 			jBloodTypePanel = new Panel();
 			jBloodTypePanel.setCaption(MessageBundle.getMessage("angal.patient.bloodtype"));
 			String[] bloodTypes = { MessageBundle.getMessage("angal.patient.bloodtype.unknown"), "0+", "A+", "B+", "AB+", "0-", "A-", "B-", "AB-" };
@@ -993,7 +993,7 @@ public class PatientInsertExtended extends ModalWindow{
 			jBloodTypeComboBox.setSelectedItem(MessageBundle.getMessage("angal.patient.bloodtype.unknown"));
 			jBloodTypePanel.setContent(jBloodTypeComboBox);
 
-			if (!insert) {
+			if (!insert){
 				jBloodTypeComboBox.setSelectedItem(patient.getBloodType());
 			} 
 		}
@@ -1005,27 +1005,35 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private Panel getJAnagraphPanel() {
-		if (jAnagraphPanel == null) {
+	private Panel getJAnagraphPanel(){
+		if (jAnagraphPanel == null){
 			jAnagraphPanel = new Panel();
-			FormLayout form = new FormLayout();
-			jAnagraphPanel.setContent(form);
-			form.addComponent(getJFirstNameTextField());
-			form.addComponent(getJSecondNameTextField());
-			form.addComponent(getJTaxCodeTextField());
-			form.addComponent(getJAgeType());
-			form.addComponent(getSexPanel());
-			form.addComponent(getJAddressPanel());
-			form.addComponent(getJCity());
-			form.addComponent(getJNextKin());
-			form.addComponent(getJTelephone());
-			form.addComponent(getLabelRequiredFields());
+			FormLayout form1 = new FormLayout();
+			FormLayout form2 = new FormLayout();
+			form1.setMargin(false);
+			form2.setMargin(false);
+			form1.addComponent(getJFirstNameTextField());
+			form1.addComponent(getJSecondNameTextField());
+			form1.addComponent(getJTaxCodeTextField());
+			form2.addComponent(getSexPanel());
+			form2.addComponent(getJAddressPanel());
+			form2.addComponent(getJCity());
+			form2.addComponent(getJNextKin());
+			form2.addComponent(getJTelephone());
+			form2.addComponent(getLabelRequiredFields());
+
+			VerticalLayout vLayout = new VerticalLayout();
+			vLayout.setMargin(false);
+			vLayout.addComponent(form1);
+			vLayout.addComponent(getJAgeType());
+			vLayout.addComponent(form2);
+			jAnagraphPanel.setContent(vLayout);
 		}
 		return jAnagraphPanel;
 	}
 	
-	private Label getLabelRequiredFields() {
-		if (labelRequiredFields == null) {
+	private Label getLabelRequiredFields(){
+		if (labelRequiredFields == null){
 			labelRequiredFields = new Label(MessageBundle.getMessage("angal.patient.indicatesrequiredfields"));
 			// labelRequiredFields.setAlignmentX(CENTER_ALIGNMENT);
 		}
@@ -1037,8 +1045,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private Label getJSexLabelPanel() {
-		if (jSexLabel == null) {
+	private Label getJSexLabelPanel(){
+		if (jSexLabel == null){
 			jSexLabel = new Label();
 			jSexLabel.setCaption(MessageBundle.getMessage("angal.patient.sexstar"));
 		}
@@ -1050,8 +1058,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private Panel getJAgeType() {///fix
-		if (jAgeType == null) {
+	private Panel getJAgeType(){///fix
+		if (jAgeType == null){
 			jAgeType = new Panel();
 			jAgeType.setCaption(MessageBundle.getMessage("angal.patient.agestar"));
 			VerticalLayout layout = new VerticalLayout();
@@ -1068,8 +1076,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private RadioButtonGroup getJAgeTypeButtonGroup(VerticalLayout layout) {//qqq
-		if (jAgeTypeButtonGroup == null) {
+	private RadioButtonGroup getJAgeTypeButtonGroup(VerticalLayout layout){//qqq
+		if (jAgeTypeButtonGroup == null){
 			jAgeTypeButtonGroup = new RadioButtonGroup<>();
 			jAgeTypeButtonGroup.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
 			jAgeTypeButtonGroup.setItems(MessageBundle.getMessage("angal.patient.modeage"), MessageBundle.getMessage("angal.patient.modebdate"), MessageBundle.getMessage("angal.patient.modedescription"));
@@ -1078,7 +1086,7 @@ public class PatientInsertExtended extends ModalWindow{
 					layout.removeComponent(getJAge());
 				}
 				else if(e.getOldValue()==MessageBundle.getMessage("angal.patient.modedescription")){
-					logger.info("sc");
+					layout.removeComponent(getDescAgeLayout());
 				}
 				else{
 					layout.removeComponent(getBirthDate());
@@ -1087,49 +1095,27 @@ public class PatientInsertExtended extends ModalWindow{
 					layout.addComponent(getJAge());
 				}
 				else if(e.getValue()==MessageBundle.getMessage("angal.patient.modedescription")){
-					logger.info("sc");
+					layout.addComponent(getDescAgeLayout());
 				}
 				else{
 					layout.addComponent(getBirthDate());
 				}
 			});
-			jAgeTypeButtonGroup.setValue(MessageBundle.getMessage("angal.patient.modeage"));//click action unimplemented yet
-		// 	getJAge();
-		// else if (jAgeTypeButtonGroup.getValue()==MessageBundle.getMessage("angal.patient.modedescription"))
-		// 	jAgeTypeSelection = null;//getBirthDate();
-		// else
-		// 	jAgeTypeSelection = null;//getDescriptionAge();
-		// return jAgeTypeSelection;
-		// 	ActionListener sliceActionListener = new ActionListener() {
-		// 		public void actionPerformed(ActionEvent actionEvent) {
-		// 			jAgeType.remove(jAgeTypeSelection);
-		// 			jAgeType.addComponent(getJAgeTypeSelection());
-		// 			jAgeType.validate();
-		// 			jAgeType.repaint();
-
-		// 		}
-		// 	};
-
-			if (!insert) {//qqqedit
-			// 	if (patient.getBirthDate() != null) {
-			// 		jAgeType_BirthDate.setSelected(true);
+		
+			if (!insert){//qqqedit
+				if (patient.getBirthDate() != null){
+					jAgeTypeButtonGroup.setValue(MessageBundle.getMessage("angal.patient.modebdate"));
 					calcAge(new DateTime(patient.getBirthDate()));
-			// 	} else if (patient.getAgetype() != null && patient.getAgetype().compareTo("") != 0) {
-			// 		parseAgeType();
-			// 		jAgeType_Description.setSelected(true);
-			// 	} else {
-			// 		jAgeType_Age.setSelected(true);
+				} else if (patient.getAgetype() != null && patient.getAgetype().compareTo("") != 0){
+					parseAgeType();
+					jAgeTypeButtonGroup.setValue(MessageBundle.getMessage("angal.patient.modedescription"));
+				} else {
+					jAgeTypeButtonGroup.setValue(MessageBundle.getMessage("angal.patient.modeage"));
 					years = patient.getAge();
-					
-			// 	}
-			} //else {
-			// 	jAgeType_Age.setSelected(true);
-			// }
-
-		// 	jAgeType_Age.addClickListener(sliceActionListener);
-		// 	jAgeType_Description.addClickListener(sliceActionListener);
-		// 	jAgeType_BirthDate.addClickListener(sliceActionListener);
-
+				}
+			} else {
+				jAgeTypeButtonGroup.setValue(MessageBundle.getMessage("angal.patient.modeage"));
+			}
 		}
 		return jAgeTypeButtonGroup;
 	}
@@ -1139,24 +1125,24 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private void parseAgeType() {
+	private void parseAgeType(){
 
-		// if (patient.getAgetype().compareTo("") != 0) {
-		// 	StringTokenizer token = new StringTokenizer(patient.getAgetype(), "/");
-		// 	String token1 = token.nextToken();
-		// 	String t1 = token1.substring(1, 2);
-		// 	ageType = Integer.parseInt(t1);
+		if (patient.getAgetype().compareTo("") != 0){
+			StringTokenizer token = new StringTokenizer(patient.getAgetype(), "/");
+			String token1 = token.nextToken();
+			String t1 = token1.substring(1, 2);
+			ageType = Integer.parseInt(t1);
 
-		// 	if (token.hasMoreTokens()) {
+			if (token.hasMoreTokens()){
 
-		// 		String token2 = token.nextToken();
-		// 		int t2 = Integer.parseInt(token2);
-		// 		ageTypeMonths = t2;
-		// 	} else
-		// 		ageTypeMonths = 0;
-		// } else {
-		// 	ageType = -1;
-		// }
+				String token2 = token.nextToken();
+				int t2 = Integer.parseInt(token2);
+				ageTypeMonths = t2;
+			} else
+				ageTypeMonths = 0;
+		} else {
+			ageType = -1;
+		}
 	}
 
 	/**
@@ -1164,28 +1150,15 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private HorizontalLayout getJAgeTypeSelection() {
+	private HorizontalLayout getJAgeTypeSelection(){
 		if (jAgeTypeButtonGroup.getValue()==MessageBundle.getMessage("angal.patient.modeage"))
 			jAgeTypeSelection = getJAge();
 		else if (jAgeTypeButtonGroup.getValue()==MessageBundle.getMessage("angal.patient.modedescription"))
+			jAgeTypeSelection = getDescAgeLayout();
+		else
 			jAgeTypeSelection = getBirthDate();
-		// else
-			// jAgeTypeSelection = getDescriptionAge();
 		return jAgeTypeSelection;
 	}
-
-	/**
-	 * This method initializes jAgeType_BirthDatePanel
-	 * 
-	 * @return javax.swing.Panel
-	 */
-	// private Panel getJAgeType_BirthDatePanel() {
-	// 	// if (jAgeType_BirthDatePanel == null) {
-	// 	// 	jAgeType_BirthDatePanel = new Panel();
-	// 	// 	jAgeType_BirthDatePanel.addComponent(getJAgeType_BirthDate(), null);
-	// 	// }
-	// 	// return jAgeType_BirthDatePanel;
-	// }
 
 	/**
 	 * This method initializes ageDesc
@@ -1198,21 +1171,22 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private HorizontalLayout getAgeMonthsLayout() {
-		if (ageMonthsLayout == null) {
+	private HorizontalLayout getAgeMonthsLayout(){
+		if (ageMonthsLayout == null){
 			ageMonthsLayout = new HorizontalLayout();
 			ageMonthsLabel = new Label("months");
 
 			String[] months = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" };
-			// ageMonthsComboBox = new ComboBox(months);
+			ageMonthsComboBox = new ComboBox();
 			ageMonthsComboBox.setEmptySelectionAllowed(false);
+			ageMonthsComboBox.setItems(months);
 		}
 
 		ageMonthsLayout.addComponent(ageMonthsComboBox);
 		ageMonthsLayout.addComponent(ageMonthsLabel);
 
-		if (!insert && ageType == 1) {
-			// ageMonthsComboBox.setSelectedIndex(ageTypeMonths);
+		if (!insert && ageType == 1){
+			ageMonthsComboBox.setValue(""+ageTypeMonths);
 		}
 		return ageMonthsLayout;
 	}
@@ -1222,8 +1196,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private HorizontalLayout getDescAgeLayout() {
-		if (descAgeLayout == null) {
+	private HorizontalLayout getDescAgeLayout(){
+		if (descAgeLayout == null){
 			descAgeLayout = new HorizontalLayout();
 
 			ageDescComboBox = new ComboBox();
@@ -1231,7 +1205,7 @@ public class PatientInsertExtended extends ModalWindow{
 			AgeTypeBrowserManager at = new AgeTypeBrowserManager();
 			ArrayList<AgeType> ageList = at.getAgeType();
 			ArrayList ageDescList = new ArrayList();
-			for (AgeType ag : ageList) {
+			for (AgeType ag : ageList){
 				ageDescList.add(MessageBundle.getMessage(ag.getDescription()));
 			}
 			ageDescComboBox.setItems(ageDescList.toArray());
@@ -1240,26 +1214,20 @@ public class PatientInsertExtended extends ModalWindow{
 			descAgeLayout.addComponent(getAgeMonthsLayout());
 			ageMonthsComboBox.setEnabled(false);
 
-			// ageDescComboBox.addClickListener(new ActionListener() {
-			// 	public void actionPerformed(ActionEvent e) {
-			// 		if (ageDescComboBox.getSelectedItem().toString().compareTo(MessageBundle.getMessage("angal.agetype.newborn")) == 0) {
-			// 			ageMonthsComboBox.setEnabled(true);
-
-			// 		} else {
-			// 			ageMonthsComboBox.setEnabled(false);
-
-			// 		}
-			// 	}
-			// });
-
-			if (!insert) {
-
-				parseAgeType();
-				// ageDescComboBox.setSelectedIndex(ageType + 1);
-
-				if (ageType == 0) {
+			ageDescComboBox.addValueChangeListener(e->{
+				if (e.getValue().equals(MessageBundle.getMessage("angal.agetype.newborn"))){
 					ageMonthsComboBox.setEnabled(true);
-					// ageMonthsComboBox.setSelectedIndex(ageTypeMonths);
+				} else {
+					ageMonthsComboBox.setEnabled(false);
+				}
+			});
+
+			if (!insert){
+				parseAgeType();
+				ageDescComboBox.setValue(MessageBundle.getMessage(ageList.get(ageType + 1).getDescription()));
+				if (ageType == 0){
+					ageMonthsComboBox.setEnabled(true);
+					ageMonthsComboBox.setValue(""+ageTypeMonths);
 				}
 			}
 
@@ -1272,8 +1240,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private HorizontalLayout getJAge() {
-		if (jAge == null) {//fix
+	private HorizontalLayout getJAge(){
+		if (jAge == null){//fix
 			jAge = new HorizontalLayout();
 			jAge.addComponent(new Label("Years"));
 			jAge.addComponent(getJAgeFieldYears());
@@ -1290,22 +1258,22 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	// private Panel getJAddressFieldPanel() {
-	// 	if (jAddressFieldPanel == null) {
+	// private Panel getJAddressFieldPanel(){
+	// 	if (jAddressFieldPanel == null){
 	// 		jAddressFieldPanel = new Panel();
 	// 		jAddressFieldPanel.addComponent(getJAdressTextField(), null);
 	// 	}
 	// 	return jAddressFieldPanel;
 	// }
 
-	private TextField getJAgeFieldYears() {
-		if (jAgeYears == null) {
+	private TextField getJAgeFieldYears(){
+		if (jAgeYears == null){
 			jAgeYears = new TextField();
 			jAgeYears.setValue(""+0);
 			jAgeYears.setWidth("4em");
-			jAgeYears.addFocusListener(new FocusListener() {
+			jAgeYears.addFocusListener(new FocusListener(){
 				@Override
-				public void focus(FocusEvent e) {//blocking the textfield value value
+				public void focus(FocusEvent e){//blocking the textfield value value
 					TextField thisField = (TextField) e.getSource();
 					thisField.setSelection(0,thisField.getValue().length());
 				}
@@ -1315,14 +1283,14 @@ public class PatientInsertExtended extends ModalWindow{
 		return jAgeYears;
 	}
 	
-	private TextField getJAgeFieldMonths() {
-		if (jAgeMonths == null) {
+	private TextField getJAgeFieldMonths(){
+		if (jAgeMonths == null){
 			jAgeMonths = new TextField();
 			jAgeMonths.setValue(""+0);
 			jAgeMonths.setWidth("3em");
-			jAgeMonths.addFocusListener(new FocusListener() {
+			jAgeMonths.addFocusListener(new FocusListener(){
 				@Override
-				public void focus(FocusEvent e) {//blocking the textfield value value
+				public void focus(FocusEvent e){//blocking the textfield value value
 					TextField thisField = (TextField) e.getSource();
 					thisField.setSelection(0,thisField.getValue().length());
 				}
@@ -1332,14 +1300,14 @@ public class PatientInsertExtended extends ModalWindow{
 		return jAgeMonths;
 	}
 	
-	private TextField getJAgeFieldDays() {
-		if (jAgeDays == null) {
+	private TextField getJAgeFieldDays(){
+		if (jAgeDays == null){
 			jAgeDays = new TextField();
 			jAgeDays.setValue(""+0);
 			jAgeDays.setWidth("3em");
-			jAgeDays.addFocusListener(new FocusListener() {
+			jAgeDays.addFocusListener(new FocusListener(){
 				@Override
-				public void focus(FocusEvent e) {//blocking the textfield value value
+				public void focus(FocusEvent e){//blocking the textfield value value
 					TextField thisField = (TextField) e.getSource();
 					thisField.setSelection(0,thisField.getValue().length());
 				}
@@ -1355,8 +1323,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	// private Panel getJCityFieldPanel() {
-	// 	if (jCityFieldPanel == null) {
+	// private Panel getJCityFieldPanel(){
+	// 	if (jCityFieldPanel == null){
 	// 		jCityFieldPanel = new Panel();
 	// 		jCityFieldPanel.addComponent(getJCityTextField(), null);
 	// 	}
@@ -1368,8 +1336,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private TextField getJNextKinFieldPanel() {
-		// if (jNextKinFieldPanel == null) {
+	private TextField getJNextKinFieldPanel(){
+		// if (jNextKinFieldPanel == null){
 		// 	jNextKinFieldPanel = new Panel();
 		// 	jNextKinFieldPanel.addComponent(getJNextKinTextField(), null);
 		// }
@@ -1381,8 +1349,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private TextField getJTelephoneFieldPanel() {
-		// if (jTelephoneFieldPanel == null) {
+	private TextField getJTelephoneFieldPanel(){
+		// if (jTelephoneFieldPanel == null){
 		// 	jTelephoneFieldPanel = new Panel();
 		// 	jTelephoneFieldPanel.addComponent(getJTelephoneTextField(), null);
 		// }
@@ -1394,8 +1362,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private TextField getJAddressPanel() {
-		// if (jAddress == null) {
+	private TextField getJAddressPanel(){
+		// if (jAddress == null){
 			// jAddress = new FormLayout();
 			// jAddress.setLayout(new BorderLayout());
 			// jAddress.addComponent(getJAddressLabelPanel());
@@ -1410,8 +1378,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private TextField getJCity() {
-		// if (jCity == null) {
+	private TextField getJCity(){
+		// if (jCity == null){
 		// 	jCity = new FormLayout();
 		// 	// jCity.setLayout(new BorderLayout());
 		// 	jCity.addComponent(getJCityLabelPanel());
@@ -1425,8 +1393,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private TextField getJNextKin() {
-		// if (jNextKin == null) {
+	private TextField getJNextKin(){
+		// if (jNextKin == null){
 			// jNextKin = new Panel();
 			// jNextKin.setLayout(new BorderLayout());
 			// jNextKin.addComponent(getJNextKinLabelPanel(), java.awt.BorderLayout.WEST);
@@ -1440,8 +1408,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private TextField getJTelephone() {
-		// if (jTelephone == null) {
+	private TextField getJTelephone(){
+		// if (jTelephone == null){
 		// 	jTelephone = new Panel();
 		// 	jTelephone.setLayout(new BorderLayout());
 		// 	jTelephone.addComponent(getJTelPanel(), java.awt.BorderLayout.WEST);
@@ -1455,9 +1423,9 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private void getJDataContainPanel(HorizontalLayout layout) {
+	private void getJDataContainPanel(HorizontalLayout layout){
 		jDataContainPanel = new Panel();
-		if (!insert) {
+		if (!insert){
 			jDataContainPanel.setCaption(patient.getName() + " (" + MessageBundle.getMessage("angal.common.code") + ": " + patient.getCode() + ")");
 		} else {
 			int nextcode = manager.getNextPatientCode();
@@ -1466,6 +1434,7 @@ public class PatientInsertExtended extends ModalWindow{
 		}
 		layout.addComponent(jDataContainPanel);
 		HorizontalLayout dataWindow = new HorizontalLayout();
+		dataWindow.setMargin(false);
 		jDataContainPanel.setContent(dataWindow);
 		dataWindow.addComponent(getJAnagraphPanel());
 		dataWindow.addComponent(getJExtensionContent());
@@ -1476,8 +1445,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private Panel getJFatherPanel() {
-		if (jFatherPanel == null) {
+	private Panel getJFatherPanel(){
+		if (jFatherPanel == null){
 			jFatherPanel = new Panel();
 			jFatherPanel.setCaption(MessageBundle.getMessage("angal.patient.fathername"));
 			jFatherLayout = new VerticalLayout();
@@ -1488,8 +1457,8 @@ public class PatientInsertExtended extends ModalWindow{
 			fatherGroup.setItems(MessageBundle.getMessage("angal.patient.dead"),MessageBundle.getMessage("angal.patient.alive"),MessageBundle.getMessage("angal.patient.unknown"));
 			fatherGroup.setValue(MessageBundle.getMessage("angal.patient.unknown"));
 			jFatherLayout.addComponent(fatherGroup);
-			if (!insert) {
-				switch (patient.getFather()) {
+			if (!insert){
+				switch (patient.getFather()){
 				case 'D':
 					fatherGroup.setValue(MessageBundle.getMessage("angal.patient.dead"));
 					break;
@@ -1510,8 +1479,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private Panel getJMotherPanel() {
-		if (jMotherPanel == null) {
+	private Panel getJMotherPanel(){
+		if (jMotherPanel == null){
 			jMotherPanel = new Panel();
 			jMotherPanel.setCaption(MessageBundle.getMessage("angal.patient.mothername"));
 			jMotherNameLayout = new VerticalLayout();
@@ -1522,8 +1491,8 @@ public class PatientInsertExtended extends ModalWindow{
 			motherGroup.setValue(MessageBundle.getMessage("angal.patient.unknown"));
 			motherGroup.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
 			jMotherNameLayout.addComponent(motherGroup);
-			if (!insert) {
-				switch (patient.getMother()) {
+			if (!insert){
+				switch (patient.getMother()){
 				case 'D':
 					motherGroup.setValue(MessageBundle.getMessage("angal.patient.dead"));
 					break;
@@ -1543,16 +1512,16 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private Panel getJInsurancePanel() {
-		if (jInsurancePanel == null) {
+	private Panel getJInsurancePanel(){
+		if (jInsurancePanel == null){
 			jInsurancePanel = new Panel(MessageBundle.getMessage("angal.patient.hasinsurance"));
 			insuranceGroup = new RadioButtonGroup();
 			jInsurancePanel.setContent(insuranceGroup);
 			insuranceGroup.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
 			insuranceGroup.setItems(MessageBundle.getMessage("angal.patient.yes"),MessageBundle.getMessage("angal.patient.no"),MessageBundle.getMessage("angal.patient.unknown"));
 			insuranceGroup.setValue(MessageBundle.getMessage("angal.patient.unknown"));
-			if (!insert) {
-				switch (patient.getHasInsurance()) {
+			if (!insert){
+				switch (patient.getHasInsurance()){
 				case 'Y':
 					insuranceGroup.setValue(MessageBundle.getMessage("angal.patient.yes"));
 					break;
@@ -1572,8 +1541,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.RadioButton
 	 */
-	// private RadioButton getJInsurance_Yes() {
-	// 	if (jInsurance_Yes == null) {
+	// private RadioButton getJInsurance_Yes(){
+	// 	if (jInsurance_Yes == null){
 	// 		jInsurance_Yes = new RadioButton();
 	// 		jInsurance_////Yes.setClickShortcut(KeyEvent.VK_A + ('R' - 'A'));
 	// 		jInsurance_Yes.setCaption(MessageBundle.getMessage("angal.patient.hasinsuranceyes"));
@@ -1586,8 +1555,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.RadioButton
 	 */
-	// private RadioButton getJInsurance_No() {
-	// 	if (jInsurance_No == null) {
+	// private RadioButton getJInsurance_No(){
+	// 	if (jInsurance_No == null){
 	// 		jInsurance_No = new RadioButton();
 	// 		jInsurance_////No.setClickShortcut(KeyEvent.VK_A + ('P' - 'A'));
 	// 		jInsurance_No.setCaption(MessageBundle.getMessage("angal.patient.hasinsuranceno"));
@@ -1600,8 +1569,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.RadioButton
 	 */
-	// private RadioButton getJInsurance_Unknown() {
-	// 	if (jInsurance_Unknown == null) {
+	// private RadioButton getJInsurance_Unknown(){
+	// 	if (jInsurance_Unknown == null){
 	// 		jInsurance_Unknown = new RadioButton();
 	// 		jInsurance_Unknown.setCaption(MessageBundle.getMessage("angal.patient.unknown"));
 	// 		jInsurance_////Unknown.setClickShortcut(KeyEvent.VK_A + ('U' - 'A'));
@@ -1615,8 +1584,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private Panel getJParentPanel() {
-		if (jParentPanel == null) {
+	private Panel getJParentPanel(){
+		if (jParentPanel == null){
 			jParentPanel = new Panel();
 			jParentPanel.setCaption(MessageBundle.getMessage("angal.patient.parenttogether"));
 			parentGroup = new RadioButtonGroup();
@@ -1624,8 +1593,8 @@ public class PatientInsertExtended extends ModalWindow{
 			jParentPanel.setContent(parentGroup);
 			parentGroup.setItems(MessageBundle.getMessage("angal.patient.yes"),MessageBundle.getMessage("angal.patient.no"),MessageBundle.getMessage("angal.patient.unknown"));
 			parentGroup.setValue(MessageBundle.getMessage("angal.patient.unknown"));
-			if (!insert) {
-				switch (patient.getParentTogether()) {
+			if (!insert){
+				switch (patient.getParentTogether()){
 				case 'Y':
 					parentGroup.setValue(MessageBundle.getMessage("angal.patient.yes"));
 					break;
@@ -1645,9 +1614,10 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private VerticalLayout getJExtensionContent() {
-		if (jExtensionContent == null) {
+	private VerticalLayout getJExtensionContent(){
+		if (jExtensionContent == null){
 			jExtensionContent = new VerticalLayout();
+			jExtensionContent.setMargin(false);
 			jExtensionContent.addComponent(getJBloodTypePanel());
 			jExtensionContent.addComponent(getJFatherPanel());
 			jExtensionContent.addComponent(getJMotherPanel());
@@ -1660,7 +1630,7 @@ public class PatientInsertExtended extends ModalWindow{
 	/**
 	 * set a specific border+title to a panel
 	 */
-	// private Panel setMyBorder(Panel c, String title) {
+	// private Panel setMyBorder(Panel c, String title){
 	// 	javax.swing.border.Border b1 = BorderFactory.createLineBorder(Color.lightGray);
 		
 	// 	 * javax.swing.border.Border b2 = BorderFactory.createCompoundBorder(
@@ -1672,7 +1642,7 @@ public class PatientInsertExtended extends ModalWindow{
 	// 	return c;
 	// }
 
-	// private Panel setMyBorderCenter(Panel c, String title) {
+	// private Panel setMyBorderCenter(Panel c, String title){
 	// 	javax.swing.border.Border b1 = BorderFactory.createLineBorder(Color.lightGray);
 		
 	// 	 * javax.swing.border.Border b2 = BorderFactory.createCompoundBorder(
@@ -1689,8 +1659,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	// private Panel getJFatherAlivePanel() {
-	// 	if (jFatherAlivePanel == null) {
+	// private Panel getJFatherAlivePanel(){
+	// 	if (jFatherAlivePanel == null){
 	// 		jFatherAlivePanel = new Panel();
 	// 		jFatherAlivePanel.addComponent(getJFather_Alive(), null);
 	// 	}
@@ -1702,13 +1672,14 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private TextArea getCaptionArea() {
-		if (jNoteTextArea == null) {
+	private TextArea getCaptionArea(){
+		if (jNoteTextArea == null){
 			jNoteTextArea = new TextArea();
+			jNoteTextArea.setHeight("100%");
 			// jNoteTextArea.setTabSize(4); //lebar field 4 tab
 			// jNoteTextArea.setAutoscrolls(true);
 			jNoteTextArea.setWordWrap(true);
-			if (!insert) {
+			if (!insert){
 				jNoteTextArea.setValue(patient.getNote());
 			}
 		}
@@ -1720,13 +1691,15 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.Panel
 	 */
-	private void getjRightLayout(HorizontalLayout layout) {
-		if (jRightLayout == null) {
+	private void getjRightLayout(HorizontalLayout layout){
+		if (jRightLayout == null){
 			jRightLayout = new VerticalLayout();
+			jRightLayout.setMargin(false);
+			jRightLayout.setHeight("500px");
 			// try {
 			// 	// photoPanel = new PatientPhotoPanel(this, patient.getCode(), patient.getPhoto());
 				
-			// } catch (IOException e) {
+			// } catch (IOException e){
 			// }
 			// if (photoPanel != null) jRightLayout.addComponent(photoPanel);
 			jRightLayout.addComponent(getjNotePanel());
@@ -1735,9 +1708,10 @@ public class PatientInsertExtended extends ModalWindow{
 		layout.addComponent(jRightLayout);
 	}
 
-	private Panel getjNotePanel() {
-		if (jNotePanel == null) {
+	private Panel getjNotePanel(){
+		if (jNotePanel == null){
 			jNotePanel = new Panel(MessageBundle.getMessage("angal.patient.note"));
+			jNotePanel.setHeight("100%");
 			jNotePanel.setContent(getCaptionArea());
 		}
 		return jNotePanel;
@@ -1748,8 +1722,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.TextField
 	 */
-	private TextField getJFatherNameTextField() {
-		if (jFatherNameTextField == null) {
+	private TextField getJFatherNameTextField(){
+		if (jFatherNameTextField == null){
 			jFatherNameTextField = new TextField();
 			jFatherNameTextField.setWidth("15em");
 			if (!insert)
@@ -1763,8 +1737,8 @@ public class PatientInsertExtended extends ModalWindow{
 	 * 
 	 * @return javax.swing.TextField
 	 */
-	private TextField getJMotherNameTextField() {
-		if (jMotherNameTextField == null) {
+	private TextField getJMotherNameTextField(){
+		if (jMotherNameTextField == null){
 			jMotherNameTextField = new TextField();
 			jMotherNameTextField.setWidth("15em");
 			if (!insert)
@@ -1773,7 +1747,7 @@ public class PatientInsertExtended extends ModalWindow{
 		return jMotherNameTextField;
 	}
 	
-	// public void setPatientPhoto(Image photo) {
+	// public void setPatientPhoto(Image photo){
 	// 	patient.setPhoto(photo);
 	// }
 }

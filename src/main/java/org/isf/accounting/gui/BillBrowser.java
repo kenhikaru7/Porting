@@ -208,6 +208,7 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 	private HorizontalLayout getSouthLayout() {
 		if (southLayout == null) {
 			southLayout = new HorizontalLayout();
+			southLayout.setMargin(false);
 			southLayout.addComponent(getTotalsLayout());
 			southLayout.addComponent(getButtonsLayout());
 		}
@@ -218,6 +219,7 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 	private VerticalLayout getTotalsLayout() {
 		if (totalsLayout == null) {
 			totalsLayout = new VerticalLayout();
+			totalsLayout.setMargin(false);
 			balanceTodayLabel = new Label();
 			balanceTodayLabel.setValue("<html><b>"+MessageBundle.getMessage("angal.billbrowser.todaym")+ "</b></html>"+
 								currencyCod+
@@ -266,7 +268,7 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 			dateFrom.set(GregorianCalendar.MINUTE, 0);
 			dateFrom.set(GregorianCalendar.SECOND, 0);
 			dateToday0.setTime(dateFrom.getTime());
-			fromDate = new DateField("",dateToLocalDate(dateFrom.getTime())); // Calendar
+			fromDate = new DateField(null,dateToLocalDate(dateFrom.getTime())); // Calendar
 			fromDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			fromDate.setDateFormat("dd/MM/yy"); //$NON-NLS-1$
 			fromDate.addValueChangeListener(evt->{ //$NON-NLS-1$
@@ -289,7 +291,7 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 			dateTo.set(GregorianCalendar.MINUTE, 59);
 			dateTo.set(GregorianCalendar.SECOND, 59);
 			dateToday24.setTime(dateTo.getTime());
-			toDate = new DateField("",dateToLocalDate(dateTo.getTime())); // Calendar
+			toDate = new DateField(null,dateToLocalDate(dateTo.getTime())); // Calendar
 			toDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			toDate.setDateFormat("dd/MM/yy"); //$NON-NLS-1$
 			toDate.addValueChangeListener(evt->{ //$NON-NLS-1$

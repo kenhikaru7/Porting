@@ -157,7 +157,7 @@ public class SelectPatient extends ModalWindow {
 		// }
 	}
 
-	private void initComponents() {
+	private void initComponents(){
 		UI.getCurrent().addWindow(this);
 		VerticalLayout windowContent = new VerticalLayout();
 		showAsModal();
@@ -169,14 +169,15 @@ public class SelectPatient extends ModalWindow {
 		// pack();
 	}
 
-	private VerticalLayout getPatientDataLayout() {
+	private VerticalLayout getPatientDataLayout(){
 		if (patientDataLayout == null) {
 			patientDataLayout = ps.getPatientCompleteSummary();
+			patientDataLayout.setMargin(false);
 		}
 		return patientDataLayout;
 	}
 
-	private TextField getSearchPatientTextField() {
+	private TextField getSearchPatientTextField(){
 		if (searchPatientTextField == null) {
 			searchPatientTextField = new TextField();//20col
 			searchPatientTextField.setMaxLength(100);
@@ -212,7 +213,7 @@ public class SelectPatient extends ModalWindow {
 		return searchPatientTextField;
 	}
 
-	private void filterPatient() {
+	private void filterPatient(){
 		
 		String s = searchPatientTextField.getValue();
 		s.trim();
@@ -249,7 +250,7 @@ public class SelectPatient extends ModalWindow {
 		searchPatientTextField.focus();
 	}
 	
-	private Label getSearchLabel() {
+	private Label getSearchLabel(){
 		if (searchLabel == null) {
 			searchLabel = new Label();
 			searchLabel.setValue(MessageBundle.getMessage("angal.patient.searchpatient"));
@@ -257,7 +258,7 @@ public class SelectPatient extends ModalWindow {
 		return searchLabel;
 	}
 
-	private Button getSelectButton() {
+	private Button getSelectButton(){
 		if (buttonSelect == null) {
 			buttonSelect = new Button();
 			////buttonSelect.setClickShortcut(KeyEvent.VK_S);
@@ -275,7 +276,7 @@ public class SelectPatient extends ModalWindow {
 		return buttonSelect;
 	}
 
-	private Button getCancelButton() {
+	private Button getCancelButton(){
 		if (cancelButton == null) {
 			cancelButton = new Button();
 			////cancelButton.setClickShortcut(KeyEvent.VK_C);
@@ -290,7 +291,7 @@ public class SelectPatient extends ModalWindow {
 		return cancelButton;
 	}
 
-	private Grid getPatientGrid() {
+	private Grid getPatientGrid(){
 		if (patientGrid == null) {
 			patientGrid = new Grid();
 			patientGrid.setItems(patSearch);
@@ -312,7 +313,7 @@ public class SelectPatient extends ModalWindow {
 				// }
 			});
 			// ListSelectionModel listSelectionModel = patientGrid.getSelectionModel();
-			// listSelectionModel.addListSelectionListener(new ListSelectionListener() {
+			// listSelectionModel.addListSelectionListener(new ListSelectionListener(){
 
 			// 	public void valueChanged(ListSelectionEvent e) {
 			// 		if (!e.getValueIsAdjusting()) {
@@ -325,7 +326,7 @@ public class SelectPatient extends ModalWindow {
 			// 	}
 			// });
 			
-			// patientGrid.addMouseListener(new MouseListener() {
+			// patientGrid.addMouseListener(new MouseListener(){
 				
 			// 	public void mouseReleased(MouseEvent e) {}
 				
@@ -346,7 +347,7 @@ public class SelectPatient extends ModalWindow {
 		return patientGrid;
 	}
 
-	private void updatePatientSummary() {
+	private void updatePatientSummary(){
 		centerLayout.removeComponent(patientDataLayout);
 		ps = new PatientSummary(patient);
 		patientDataLayout = ps.getPatientCompleteSummary();
@@ -357,7 +358,7 @@ public class SelectPatient extends ModalWindow {
 		// centerLayout.repaint();
 	}
 	
-	private HorizontalLayout getCenterLayout() {
+	private HorizontalLayout getCenterLayout(){
 		if (centerLayout == null) {
 			centerLayout = new HorizontalLayout();
 			centerLayout.addComponent(getPatientGrid());
@@ -378,7 +379,7 @@ public class SelectPatient extends ModalWindow {
 		return centerLayout;
 	}
 
-	private HorizontalLayout getTopLayout() {
+	private HorizontalLayout getTopLayout(){
 		if (topLayout == null) {
 			topLayout = new HorizontalLayout();
 			topLayout.addComponent(getSearchLabel());
@@ -388,7 +389,7 @@ public class SelectPatient extends ModalWindow {
 		return topLayout;
 	}
 
-	private Button getSearchButton() {
+	private Button getSearchButton(){
 		if (searchButton == null) {
 			searchButton = new Button();	
 			searchButton.setIcon(new FileResource(new File(resPath+"/WEB-INF/icons/zoom_r_button.png")));
@@ -401,7 +402,7 @@ public class SelectPatient extends ModalWindow {
 		return searchButton;
 	}
 
-	private HorizontalLayout getButtonsLayout() {
+	private HorizontalLayout getButtonsLayout(){
 		if (buttonsLayout == null) {
 			buttonsLayout = new HorizontalLayout();
 			buttonsLayout.addComponent(getSelectButton());

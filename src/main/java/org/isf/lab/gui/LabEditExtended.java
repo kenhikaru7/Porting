@@ -175,8 +175,9 @@ public class LabEditExtended extends ModalWindow {
 
 
 	private VerticalLayout getWindowContent() {
-		if (windowContent == null) {
+		if (windowContent == null){
 			windowContent = new VerticalLayout();
+			windowContent.setMargin(false);
 			// data panel
 			windowContent.addComponent(getDataLayout());
 			windowContent.addComponent(getDataPatient());
@@ -200,6 +201,7 @@ public class LabEditExtended extends ModalWindow {
 		if (dataLayout == null) {
 			//initialize data panel
 			dataLayout = new VerticalLayout();
+			dataLayout.setMargin(false);
 			// //exam date
 			examDateLabel = new Label(MessageBundle.getMessage("angal.common.date"));
 			examDateField = getExamDateField();
@@ -338,7 +340,7 @@ public class LabEditExtended extends ModalWindow {
 		if (dateIn != null) {
 			myDate = dateIn.getTime();
 		}
-		return (new DateField("",myDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
+		return (new DateField(null,myDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
 	}
 	
 	private CheckBox getInPatientCheckBox() {

@@ -23,6 +23,8 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.slf4j.MDC;
 
+import org.isf.utils.jobjects.ModalWindow;
+
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
@@ -367,9 +369,27 @@ public class MainMenu implements SubMenu.CommandListener{
 
 					button[k - 1].addClickListener(parentFrame::actionPerformed);
 					button[k - 1].setIconAlternateText(u.getCode());
+					String[] excepts = {"File", "General Data", "Pharmacy", "Patient Vaccines", "Statistics", "Printing", "HELP"};
+					for(String except : excepts)
+						if(except.equals(u.getButtonLabel()))
+							button[k - 1].setEnabled(false);
 					this.listComponent.add(button[k-1]);
 					k++;
 				}
+
+			Button test = new Button("test");
+			test.addClickListener(e->{
+				ModalWindow testWindow = new ModalWindow();
+				testWindow.showAsModal();
+				UI.getCurrent().addWindow(testWindow);
+				VerticalLayout testLayout = new VerticalLayout();
+				testLayout.setHeight("100%");
+				testWindow.setContent(testLayout);
+				Panel testTextField = new Panel();
+				testTextField.setHeight("100%");
+				testLayout.addComponent(testTextField);
+			});
+			this.listComponent.add(test);
 
 			setButtonsSize(button);
 		}

@@ -23,10 +23,10 @@ import java.util.List;
 import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.admission.model.Admission;
 import org.isf.admission.model.AdmittedPatient;
-// import examination.gui.PatientExaminationEdit;
-// import examination.model.GenderPatientExamination;
-// import examination.model.PatientExamination;
-// import examination.service.ExaminationOperations;
+import org.isf.examination.gui.PatientExaminationEdit;
+import org.isf.examination.model.GenderPatientExamination;
+import org.isf.examination.model.PatientExamination;
+import org.isf.examination.service.ExaminationOperations;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.gui.MainMenu;
@@ -109,7 +109,7 @@ public class AdmittedPatientBrowser extends ModalWindow implements
 	// private JComboBox patientClassBox = new JComboBox(patientClassItems);
 	private TextField searchString = null;
 	private Button jSearchButton = null;
-	private Button jButtonExamination;
+	private Button examinationButton;
 	private String lastKey = "";
 	// private ArrayList<Ward> wardList = null;qqd
 	private Label rowCounter = null;
@@ -323,6 +323,7 @@ public class AdmittedPatientBrowser extends ModalWindow implements
 
 	private void getDataAndControlPanel() {
 		HorizontalLayout topSubContent = new HorizontalLayout();
+		topSubContent.setWidth("100%");
 		this.windowContent.addComponent(topSubContent);
 		getControlPanel(topSubContent);
 		getScrollPane(topSubContent);//data panel
@@ -336,6 +337,7 @@ public class AdmittedPatientBrowser extends ModalWindow implements
 		Panel panel = new Panel();
 		panel.setHeight("100%");
 		layout.addComponent(panel);
+		layout.setExpandRatio(panel,1);
 		VerticalLayout subLayout = new VerticalLayout();
 		panel.setContent(subLayout);
 
@@ -368,8 +370,11 @@ public class AdmittedPatientBrowser extends ModalWindow implements
 
 	private void getScrollPane(HorizontalLayout layout){
 		Panel panel = new Panel();
+		panel.setWidth("100%");
 		layout.addComponent(panel);
+		layout.setExpandRatio(panel,4);
 		grid = new Grid<Patient>();//qqq
+		grid.setWidth("100%");
 		data = new AdmittedPatientBrowserModel(null);
 		patients = data.getPatientList();
 		grid.setItems(patients);
@@ -379,6 +384,7 @@ public class AdmittedPatientBrowser extends ModalWindow implements
 		grid.addColumn(Patient::getSex).setCaption("Sex");
 		grid.addColumn(Patient::getCity).setCaption("City");
 		grid.addColumn(Patient::getAddress).setCaption("Address");
+		grid.addColumn(Patient::getTelephone).setCaption("Telephone");
 		grid.addColumn(Patient::getNote).setCaption("Note");
 		
 		// for (int i=0;i<pColums.length; i++){
@@ -405,9 +411,9 @@ public class AdmittedPatientBrowser extends ModalWindow implements
 		this.windowContent.addComponent(botSubContent);
 		if (MainMenu.checkUserGrants("btnadmnew")) botSubContent.addComponent(getButtonNew());
 		if (MainMenu.checkUserGrants("btnadmedit")) botSubContent.addComponent(getButtonEdit());
-		if (MainMenu.checkUserGrants("btnadmdel")) botSubContent.addComponent(getButtonDel());
+		if (MainMenu.checkUserGrants("btnadmdel")) botSubContent.addComponent(getDeleteButton());
 		// if (MainMenu.checkUserGrants("btnadmadm")) botSubContent.addComponent(getButtonAdmission());
-		// if (MainMenu.checkUserGrants("btnadmexamination")) botSubContent.addComponent(getJButtonExamination());
+		if (MainMenu.checkUserGrants("btnadmexamination")) botSubContent.addComponent(getExaminationButton());
 		// if (GeneralData.OPDEXTENDED && MainMenu.checkUserGrants("btnadmopd")) botSubContent.addComponent(getButtonOpd());
 		// if (MainMenu.checkUserGrants("btnadmbill")) botSubContent.addComponent(getButtonBill());
 		// if (MainMenu.checkUserGrants("data")) botSubContent.addComponent(getButtonData());
@@ -417,43 +423,40 @@ public class AdmittedPatientBrowser extends ModalWindow implements
 		// botSubContent.addComponent(getButtonClose());
 	}
 	
-	// private JButton getJButtonExamination() {
-	// 	if (jButtonExamination == null) {
-	// 		jButtonExamination = new JButton(MessageBundle.getMessage("angal.opd.examination"));
-	// 		jButtonExamination.setMnemonic(KeyEvent.VK_E);
-	// 		jButtonExamination.addActionListener(new ActionListener() {
+	private Button getExaminationButton() {
+		if (examinationButton == null) {
+			examinationButton = new Button(MessageBundle.getMessage("angal.opd.examination"));
+			// examinationButton.setMnemonic(KeyEvent.VK_E);
+			examinationButton.addClickListener(e->{
+				if (grid.getSelectedItems().isEmpty()) {
+					MessageBox.createInfo().withCaption(MessageBundle.getMessage("angal.admission.editpatient"))
+					.withMessage(MessageBundle.getMessage("angal.common.pleaseselectarow"))
+					.withOkButton().open();
+					return;
+				}
+				Patient pat = ((Patient)grid.getSelectedItems().toArray()[0]);
 				
-	// 			public void actionPerformed(ActionEvent e) {
-	// 				if (grid.getSelectedRow() < 0) {
-	// 					JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.common.pleaseselectarow"),
-	// 							MessageBundle.getMessage("angal.admission.editpatient"), JOptionPane.PLAIN_MESSAGE);
-	// 					return;
-	// 				}
-	// 				patient = (AdmittedPatient) grid.getValueAt(grid.getSelectedRow(), -1);
-	// 				Patient pat = patient.getPatient();
-					
-	// 				PatientExamination patex;
-	// 				ExaminationOperations examOperations = new ExaminationOperations();
-					
-	// 				PatientExamination lastPatex = examOperations.getLastByPatID(pat.getCode());
-	// 				if (lastPatex != null) {
-	// 					patex = examOperations.getFromLastPatientExamination(lastPatex);
-	// 				} else {
-	// 					patex = examOperations.getDefaultPatientExamination(pat);
-	// 				}
-					
-	// 				GenderPatientExamination gpatex = new GenderPatientExamination(patex, pat.getSex() == 'M');
-					
-	// 				PatientExaminationEdit dialog = new PatientExaminationEdit(AdmittedPatientBrowser.this, gpatex);
-	// 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-	// 				dialog.pack();
-	// 				dialog.setLocationRelativeTo(null);
-	// 				dialog.setVisible(true);
-	// 			}
-	// 		});
-	// 	}
-	// 	return jButtonExamination;
-	// }
+				PatientExamination patex;
+				ExaminationOperations examOperations = new ExaminationOperations();
+				
+				PatientExamination lastPatex = examOperations.getLastByPatID(pat.getCode());
+				if (lastPatex != null) {
+					patex = examOperations.getFromLastPatientExamination(lastPatex);
+				} else {
+					patex = examOperations.getDefaultPatientExamination(pat);
+				}
+				
+				GenderPatientExamination gpatex = new GenderPatientExamination(patex, pat.getSex() == 'M');
+				
+				PatientExaminationEdit dialog = new PatientExaminationEdit(gpatex);
+				// dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				// dialog.pack();
+				// dialog.setLocationRelativeTo(null);
+				// dialog.setVisible(true);
+			});
+		}
+		return examinationButton;
+	}
 	private Button getButtonNew() {
 		Button buttonNew = new Button(MessageBundle.getMessage("angal.admission.newpatient"));
 		////buttonNew.setClickShortcut(KeyEvent.VK_N);
@@ -497,7 +500,7 @@ public class AdmittedPatientBrowser extends ModalWindow implements
 		return buttonEdit;
 	}
 
-	private Button getButtonDel() {
+	private Button getDeleteButton() {
 		Button buttonDel = new Button(MessageBundle.getMessage("angal.admission.deletepatient"));
 		////buttonDel.setClickShortcut(KeyEvent.VK_T);
 		buttonDel.addClickListener(e-> {

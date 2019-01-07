@@ -29,7 +29,7 @@ public class ModalWindow extends Window {
 	 * method to enable/disable a owner JFrame launching this ModalJFrame
 	 * @param owner - the JFrame owner
 	 */
-	public void showAsModal() {
+	public void showAsModal(){
 		setWindowMode(WindowMode.MAXIMIZED);
 		setIcon(resource);
 		setModal(true);

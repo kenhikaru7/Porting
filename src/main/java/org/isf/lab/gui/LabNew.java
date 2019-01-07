@@ -98,7 +98,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		labListeners.add(l);
 	}
 	
-	private void fireLabInserted() {
+	private void fireLabInserted(){
 		for(LabListener labListener : labListeners)
 			labListener.labInserted();
 	}
@@ -190,7 +190,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 	ArrayList<ArrayList<String>> examResults = new ArrayList<ArrayList<String>>();
 	ArrayList<Laboratory> examItems = new ArrayList<Laboratory>();
 	
-	public LabNew() {
+	public LabNew(){
 		// super(owner, true);
 		initComponents();
 		// setLocationRelativeTo(null);
@@ -199,22 +199,26 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		//setVisible(true);
 	}
 
-	private void initComponents() {
+	private void initComponents(){
 		showAsModal();
 		UI.getCurrent().addWindow(this);
 		VerticalLayout windowContent = new VerticalLayout();
 		setContent(windowContent);
-		windowContent.addComponent(getTopLayout());
+
 		HorizontalLayout centralLayout = new HorizontalLayout();
-		windowContent.addComponent(centralLayout);
+		centralLayout.setWidthUndefined();
+		centralLayout.setHeight("300px");
 		centralLayout.addComponent(getExamsGrid());
 		centralLayout.addComponent(getRightLayout());
+
+		windowContent.addComponent(getTopLayout());
+		windowContent.addComponent(centralLayout);
 		windowContent.addComponent(getNotePanel());
 		windowContent.addComponent(getBottomLayout());
 		// pack();
 	}
 
-	private TextArea getNoteTextArea() {
+	private TextArea getNoteTextArea(){
 		if (noteTextArea == null) {
 			noteTextArea = new TextArea();//3 row 50 columns
 			noteTextArea.setValue("");
@@ -224,7 +228,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		return noteTextArea;
 	}
 
-	private Button getCancelButton() {
+	private Button getCancelButton(){
 		if (cancelButton == null) {
 			cancelButton = new Button();
 			cancelButton.setCaption(MessageBundle.getMessage("angal.common.cancel"));
@@ -236,7 +240,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		return cancelButton;
 	}
 
-	private Button getOkButton() {
+	private Button getOkButton(){
 		if (okButton == null) {
 			okButton = new Button();
 			okButton.setCaption(MessageBundle.getMessage("angal.common.ok"));
@@ -306,14 +310,14 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		return okButton;
 	}
 	
-	private String getIsAdmitted() {
+	private String getIsAdmitted(){
 		AdmissionBrowserManager man = new AdmissionBrowserManager();
 		Admission adm = new Admission();
 		adm = man.getCurrentAdmission(patientSelected);
 		return (adm==null?"R":"I");					
 	}
 
-	private HorizontalLayout getButtonsLayout() {
+	private HorizontalLayout getButtonsLayout(){
 		if (buttonsLayout == null) {
 			buttonsLayout = new HorizontalLayout();
 			buttonsLayout.addComponent(getOkButton());
@@ -322,7 +326,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		return buttonsLayout;
 	}
 
-	private Panel getNotePanel() {
+	private Panel getNotePanel(){
 		if (notePanel == null) {
 			notePanel = new Panel(MessageBundle.getMessage("angal.labnew.note"));
 			notePanel.setContent(getNoteTextArea());
@@ -330,9 +334,10 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		return notePanel;
 	}
 
-	private Panel getResultsPanel() {
+	private Panel getResultsPanel(){
 		if (resultsPanel == null) {
 			resultsPanel = new Panel(MessageBundle.getMessage("angal.labnew.result"));
+			resultsPanel.setHeight("100%");
 			// resultsPanel.setPreferredSize(new Dimension(EastWidth, ResultHeight));
 		} else {
 			// resultsPanel.getContent().removeFromParent();
@@ -403,9 +408,10 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		}
 	}
 
-	private ComboBox getMaterialComboBox() {
+	private ComboBox getMaterialComboBox(){
 		if (materialComboBox == null) {
 			materialComboBox = new ComboBox();
+			materialComboBox.setWidth("100%");
 			materialComboBox.setItems(matList);
 			// materialComboBox.setPreferredSize(new Dimension(EastWidth, ComponentHeight));
 			// materialComboBox.setMaximumSize(new Dimension(EastWidth, ComponentHeight));
@@ -414,15 +420,16 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		return materialComboBox;
 	}
 
-	private Panel getMaterialPanel() {
+	private Panel getMaterialPanel(){
 		if (materialPanel == null) {
 			materialPanel = new Panel(MessageBundle.getMessage("angal.labnew.material"));
+			materialPanel.setHeightUndefined();
 			materialPanel.setContent(getMaterialComboBox());
 		}
 		return materialPanel;
 	}
 	
-	private JPanel getJOpdIpdPanel() {
+	private JPanel getJOpdIpdPanel(){
 		if (jOpdIpdPanel == null) {
 			jOpdIpdPanel = new JPanel();
 			
@@ -441,7 +448,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		return jOpdIpdPanel;
 	}
 
-	private Button getTrashPatientButton() {
+	private Button getTrashPatientButton(){
 		if (trashPatientButton == null) {
 			trashPatientButton = new Button();
 			////trashPatientButton.setClickShortcut(KeyEvent.VK_R);
@@ -461,7 +468,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		return trashPatientButton;
 	}
 
-	private Button getPickPatientButton() {
+	private Button getPickPatientButton(){
 		if (pickPatientButton == null) {
 			pickPatientButton = new Button();
 			pickPatientButton.setCaption(MessageBundle.getMessage("angal.labnew.pickpatient"));  //$NON-NLS-1$
@@ -478,7 +485,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		return pickPatientButton;
 	}
 
-	private TextField getPatientTextField() {
+	private TextField getPatientTextField(){
 		if (patientTextField == null) {
 			patientTextField = new TextField();
 			patientTextField.setValue(""); //$NON-NLS-1$
@@ -488,7 +495,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		return patientTextField;
 	}
 
-	private Label getPatientLabel() {
+	private Label getPatientLabel(){
 		if (patientLabel == null) {
 			patientLabel = new Label();
 			patientLabel.setValue("Patient");
@@ -497,7 +504,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		return patientLabel;
 	}
 
-	private HorizontalLayout getPatientLayout() {
+	private HorizontalLayout getPatientLayout(){
 		if (patientLayout == null) {
 			patientLayout = new HorizontalLayout();
 			patientLayout.addComponent(getPatientLabel());
@@ -509,17 +516,18 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		return patientLayout;
 	}
 
-	private FormLayout getDateLayout() {
+	private FormLayout getDateLayout(){
 		if (dateLayout == null) {
 			dateLayout = new FormLayout();
+			dateLayout.setMargin(false);
 			dateLayout.addComponent(getDate());
 		}
 		return dateLayout;
 	}
 
-	private DateTimeField getDate() {
+	private DateTimeField getDate(){
 		if (date == null) {
-			date = new DateTimeField("",LocalDateTime.ofInstant(RememberDates.getLastLabExamDateGregorian().getTime().toInstant(), ZoneId.systemDefault())); //To remind last used
+			date = new DateTimeField(null,LocalDateTime.ofInstant(RememberDates.getLastLabExamDateGregorian().getTime().toInstant(), ZoneId.systemDefault())); //To remind last used
 			date.setCaption("Date");
 			date.setLocale(new Locale(GeneralData.LANGUAGE));
 			date.setDateFormat("dd/MM/yy (HH:mm:ss)"); //$NON-NLS-1$
@@ -527,7 +535,7 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		return date;
 	}
 	
-	private HorizontalLayout getBottomLayout() {
+	private HorizontalLayout getBottomLayout(){
 		if (bottomLayout == null) {
 			bottomLayout = new HorizontalLayout();
 			// bottomLayout.setLayout(new BoxLayout(bottomLayout, BoxLayout.Y_AXIS));
@@ -536,28 +544,34 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		return bottomLayout;
 	}
 
-	private VerticalLayout getRightLayout() {
+	private VerticalLayout getRightLayout(){
 		if (rightLayout == null) {
 			rightLayout = new VerticalLayout();
+			rightLayout.setHeight("100%");
+			rightLayout.setWidthUndefined();
+			rightLayout.setMargin(false);
 			rightLayout.addComponent(getExamsButtonLayout());
 			rightLayout.addComponent(getMaterialPanel());
 			rightLayout.addComponent(getResultsPanel());
+			rightLayout.setExpandRatio(resultsPanel,1);
 		}
 		return rightLayout;
 	}
 
-	private VerticalLayout getTopLayout() {
+	private VerticalLayout getTopLayout(){
 		if (topLayout == null) {
 			topLayout = new VerticalLayout();
+			topLayout.setMargin(false);
 			topLayout.addComponent(getDateLayout());
 			topLayout.addComponent(getPatientLayout());
 		}
 		return topLayout;
 	}
 
-	private Grid getExamsGrid() {
+	private Grid getExamsGrid(){
 		if (examsGrid == null) {
 			examsGrid = new Grid();
+			examsGrid.setHeight("100%");
 			// examsGrid.setModel(new ExamTableModel());
 			examsGrid.setItems(examItems);
 			examsGrid.addColumn(Laboratory::getDescription).setCaption("Exam");
@@ -618,16 +632,19 @@ public class LabNew extends ModalWindow implements SelectionListener {
 		return examsGrid;
 	}
 	
-	public HorizontalLayout getExamsButtonLayout() {
+	public HorizontalLayout getExamsButtonLayout(){
 		if(examButtonsLayout == null) {
 			examButtonsLayout = new HorizontalLayout();
+			examButtonsLayout.setHeightUndefined();
+			examButtonsLayout.setMargin(false);
+			examButtonsLayout.addStyleName("noverticalpaddingmargin");
 			examButtonsLayout.addComponent(getAddExamButton());
 			examButtonsLayout.addComponent(getRemoveExamButton());
 		}
 		return examButtonsLayout;
 	}
 	
-	public Button getAddExamButton() {
+	public Button getAddExamButton(){
 		if (addExamButton == null) {
 			addExamButton = new Button();
 			addExamButton.setCaption(MessageBundle.getMessage("angal.labnew.exam")); //$NON-NLS-1$

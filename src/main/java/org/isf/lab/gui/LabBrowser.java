@@ -156,7 +156,7 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	private VerticalLayout getWindowContent() {
 		if (windowContent == null) {
 			windowContent = new VerticalLayout();
-			VerticalLayout topLayout = new VerticalLayout();
+			HorizontalLayout topLayout = new HorizontalLayout();
 			windowContent.addComponent(topLayout);
 			topLayout.addComponent(getSelectionLayout());
 			topLayout.addComponent(getGrid());
@@ -342,6 +342,7 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	private VerticalLayout getSelectionLayout() {
 		if (selectionLayout == null) {
 			selectionLayout = new VerticalLayout();
+			selectionLayout.setMargin(false);
 			// selectionLayout.setPreferredSize(new Dimension(200, pfrmHeight));
 			selectionLayout.addComponent(new Label(MessageBundle.getMessage("angal.lab.selectanexam")));
 			selectionLayout.addComponent(getexamsCombo());
@@ -502,7 +503,7 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	 */
 	private DateField getDateFrom() {
 		if (dateFrom == null) {
-			dateFrom = new DateField("",LocalDate.now().minusDays(7));
+			dateFrom = new DateField(null,LocalDate.now().minusDays(7));
 			dateFrom.setDateFormat("dd/MM/yyyy");
 		}
 		return dateFrom;
@@ -516,7 +517,7 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	 */
 	private DateField getDateTo() {
 		if (dateTo == null) {
-			dateTo = new DateField("",LocalDate.now());
+			dateTo = new DateField(null,LocalDate.now());
 			dateTo.setDateFormat("dd/MM/yyyy");
 		}
 		return dateTo;

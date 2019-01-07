@@ -15049,3 +15049,39 @@ div.v-layout.v-horizontal.v-widget {
 	width: 19px;
 	overflow: hidden;
 }
+
+.mytheme .bg {
+	background-color: #ff0000;
+}
+
+.mytheme .qbg {
+	background-color: #0C0C0C;
+}
+
+.mytheme .notopmargin {
+	margin-top: 0px;
+}
+
+.mytheme .nobotmargin {
+	margin-bottom: 0px;
+}
+
+.mytheme .notoppadding {
+	padding-top: 0px;
+}
+
+.mytheme .nobotpadding {
+	padding-bottom: 0px;
+}
+
+.mytheme .noverticalpadding {
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+.mytheme .noverticalpaddingmargin {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+}

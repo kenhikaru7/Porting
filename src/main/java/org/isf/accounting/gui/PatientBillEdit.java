@@ -237,7 +237,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 
 	private Logging logger = new Logging();
 	
-	public PatientBillEdit() {
+	public PatientBillEdit(){
 		PatientBillEdit newBill = new PatientBillEdit(new Bill(), true);
 		newBill.setVisible(true);
 	}
@@ -275,24 +275,31 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		}
 	}
 	
-	private void initComponents() {
+	private void initComponents(){
 		showAsModal();
 		UI.getCurrent().addWindow(this);
 		VerticalLayout windowContent = new VerticalLayout();
 		setContent(windowContent);
 		HorizontalLayout centerLayout = new HorizontalLayout();
+		centerLayout.setMargin(false);
 		VerticalLayout leftCenterLayout = new VerticalLayout();
+		leftCenterLayout.setMargin(false);
 		leftCenterLayout.addComponent(getTotalGrid());
 		leftCenterLayout.addComponent(getBillGrid());
 		centerLayout.addComponent(leftCenterLayout);
 		centerLayout.addComponent(getBillButtons());
+
+
 		HorizontalLayout bottomLayout = new HorizontalLayout();
+		bottomLayout.setMargin(false);
 		VerticalLayout leftBottomLayout = new VerticalLayout();
+		leftBottomLayout.setMargin(false);
 		leftBottomLayout.addComponent(getBigTotalGrid());
 		leftBottomLayout.addComponent(getPaymentGrid());
 		leftBottomLayout.addComponent(getBalanceGrid());
 		bottomLayout.addComponent(leftBottomLayout);
 		bottomLayout.addComponent(getPaymentAndActionButtonLayout());
+
 		windowContent.addComponent(getTopLayout());
 		windowContent.addComponent(centerLayout);
 		windowContent.addComponent(bottomLayout);
@@ -305,7 +312,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 	}
 
 	//check if PriceList and Patient still exist
-	private void checkBill() {
+	private void checkBill(){
 		
 		foundList = false;
 		if (thisBill.isList()) {
@@ -363,7 +370,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		}
 	}
 	
-	private HorizontalLayout getPatientLayout() {
+	private HorizontalLayout getPatientLayout(){
 		if (patientLayout == null) {
 			patientLayout = new HorizontalLayout();
 			patientLayout.addComponent(getPatientLabel());
@@ -374,7 +381,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return patientLayout;
 	}
 
-	private Label getPatientLabel() {
+	private Label getPatientLabel(){
 		if (patientLabel == null) {
 			patientLabel = new Label();
 			patientLabel.setValue(MessageBundle.getMessage("angal.newbill.patient")); //$NON-NLS-1$
@@ -384,7 +391,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 	}
 
 	
-	private TextField getPatientTextField() {
+	private TextField getPatientTextField(){
 		if (patientTextField == null) {
 			patientTextField = new TextField();
 			patientTextField.setValue(""); //$NON-NLS-1$
@@ -397,7 +404,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return patientTextField;
 	}
 	
-	private Label getPriceListLabel() {
+	private Label getPriceListLabel(){
 		if (priceListLabel == null) {
 			priceListLabel = new Label();
 			priceListLabel.setValue(MessageBundle.getMessage("angal.newbill.list")); //$NON-NLS-1$
@@ -405,7 +412,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return priceListLabel;
 	}
 	
-	private ComboBox getPriceListComboBox() {
+	private ComboBox getPriceListComboBox(){
 		if (priceListComboBox == null) {
 			priceListComboBox = new ComboBox();
 			priceListComboBox.setEmptySelectionAllowed(false);
@@ -432,7 +439,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return priceListComboBox;
 	}
 	private LocalDateTime nowLocalDate;
-	private DateTimeField getDateCalendar() {//detik na 00
+	private DateTimeField getDateCalendar(){//detik na 00
 		if (dateCalendar == null) {
 			
 			if (insert) {
@@ -440,10 +447,10 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 				billDate.set(Calendar.YEAR, RememberDates.getLastBillDateGregorian().get(Calendar.YEAR));
 				billDate.set(Calendar.MONTH, RememberDates.getLastBillDateGregorian().get(Calendar.MONTH));
 				billDate.set(Calendar.DAY_OF_MONTH, RememberDates.getLastBillDateGregorian().get(Calendar.DAY_OF_MONTH));
-				dateCalendar = new DateTimeField("",billDate.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+				dateCalendar = new DateTimeField(null,billDate.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
 			} else { 
 				//get BillDate
-				dateCalendar = new DateTimeField("",thisBill.getDate().getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+				dateCalendar = new DateTimeField(null,thisBill.getDate().getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
 				billDate.setTime(Date.from(dateCalendar.getValue().atZone(ZoneId.systemDefault()).toInstant()));
 			}
 			nowLocalDate = dateCalendar.getValue();
@@ -478,7 +485,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return dateCalendar;
 	}
 	
-	private Label getDateLabel() {
+	private Label getDateLabel(){
 		if (dateLabel == null) {
 			dateLabel = new Label();
 			dateLabel.setValue(MessageBundle.getMessage("angal.common.date")); //$NON-NLS-1$
@@ -487,7 +494,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return dateLabel;
 	}
 
-	private HorizontalLayout getDateLayout() {
+	private HorizontalLayout getDateLayout(){
 		if (dateLayout == null) {
 			dateLayout = new HorizontalLayout();
 			dateLayout.addComponent(getDateLabel());
@@ -498,7 +505,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return dateLayout;
 	}
 
-	private Button getTrashPatientButton() {
+	private Button getTrashPatientButton(){
 		if (trashPatientButton == null) {
 			trashPatientButton = new Button();
 			////trashPatientButton.setClickShortcut(KeyEvent.VK_R);
@@ -525,7 +532,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return trashPatientButton;
 	}
 
-	private Button getPickPatientButton() {
+	private Button getPickPatientButton(){
 		if (pickPatientButton == null) {
 			pickPatientButton = new Button();
 			pickPatientButton.setCaption(MessageBundle.getMessage("angal.newbill.pickpatient")); //$NON-NLS-1$
@@ -549,9 +556,10 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		this.patientSelected = patientSelected;
 	}
 
-	private VerticalLayout getTopLayout() {
+	private VerticalLayout getTopLayout(){
 		if (topLayout == null) {
 			topLayout = new VerticalLayout();
+			topLayout.setMargin(false);
 			topLayout.addComponent(getDateLayout());
 			topLayout.addComponent(getPatientLayout());
 		}
@@ -584,9 +592,10 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 			updateBalance();
 	}
 
-	private Grid getBillGrid() {
+	private Grid getBillGrid(){
 		if (billGrid == null) {
 			billGrid = new Grid();
+			billGrid.setHeight("300px");
 			updateBill();
 			billGrid.setItems(billItems);
 			billGrid.addColumn(BillItems::getItemDescription).setCaption("Item");
@@ -604,7 +613,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 	
 	TotalHeader bigTotalData;
 
-	private Grid getBigTotalGrid() {
+	private Grid getBigTotalGrid(){
 		if (bigTotalGrid == null) {
 			bigTotalGrid = new Grid();
 			bigTotalData = new TotalHeader("<html><b>"+"TO PAY"+"</b></html>", currencyCod, bigTotal);
@@ -652,7 +661,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 
 	TotalHeader totalGridData;
 
-	private Grid getTotalGrid() {
+	private Grid getTotalGrid(){
 		if (totalGrid == null) {
 			totalGridData = new TotalHeader("<html><b>"+MessageBundle.getMessage("angal.newbill.totalm")+"</b></html>",
 						currencyCod,
@@ -675,9 +684,10 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return totalGrid;
 	}
 
-	private Grid getPaymentGrid() {
+	private Grid getPaymentGrid(){
 		if (paymentGrid == null) {
 			paymentGrid = new Grid();
+			paymentGrid.setHeight("300px");
 			updateBalance();
 			paymentGrid.setItems(payItems);
 			paymentGrid.setHeaderVisible(false);
@@ -691,7 +701,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 
 	private TotalHeader balanceData;
 
-	private Grid getBalanceGrid() {
+	private Grid getBalanceGrid(){
 		if (balanceGrid == null) {
 			balanceGrid = new Grid();
 			balanceData = new TotalHeader("<html><b>"+MessageBundle.getMessage("angal.newbill.balancem")+"</b></html>", currencyCod, balance);
@@ -712,18 +722,20 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return balanceGrid;
 	}
 	
-	private VerticalLayout getPaymentAndActionButtonLayout() {
+	private VerticalLayout getPaymentAndActionButtonLayout(){
 		if (paymentAndActionButtonLayout == null) {
 			paymentAndActionButtonLayout = new VerticalLayout();
+			paymentAndActionButtonLayout.setMargin(false);
 			paymentAndActionButtonLayout.addComponent(getPaymentButtonsLayout());
 			paymentAndActionButtonLayout.addComponent(getActionButtonsLayout());
 		}
 		return paymentAndActionButtonLayout;
 	}
 	
-	private VerticalLayout getBillButtons() {
+	private VerticalLayout getBillButtons(){
 		if (billButtons == null) {
 			billButtons = new VerticalLayout();
+			billButtons.setMargin(false);
 			billButtons.addComponent(getAddMedicalButton());
 			billButtons.addComponent(getAddOperationButton());
 			billButtons.addComponent(getAddExamButton());
@@ -738,9 +750,10 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return billButtons;
 	}
 
-	private VerticalLayout getPaymentButtonsLayout() {
+	private VerticalLayout getPaymentButtonsLayout(){
 		if (paymentButtonsLayout == null) {
 			paymentButtonsLayout = new VerticalLayout();
+			paymentButtonsLayout.setMargin(false);
 			paymentButtonsLayout.addComponent(getAddPaymentButton());
 			paymentButtonsLayout.addComponent(getAddRefundButton());
 			if (GeneralData.RECEIPTPRINTER) paymentButtonsLayout.addComponent(getPrintPaymentButton());
@@ -753,9 +766,10 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return paymentButtonsLayout;
 	}
 	
-	private VerticalLayout getActionButtonsLayout() {
+	private VerticalLayout getActionButtonsLayout(){
 		if (actionButtonsLayout == null) {
 			actionButtonsLayout = new VerticalLayout();
+			actionButtonsLayout.setMargin(false);
 			actionButtonsLayout.addComponent(getBalanceButton());
 			actionButtonsLayout.addComponent(getSaveButton());
 			actionButtonsLayout.addComponent(getPaidButton());
@@ -766,7 +780,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 	return actionButtonsLayout;
 	}
 
-	private Button getBalanceButton() {
+	private Button getBalanceButton(){
 		if (balanceButton == null) {
 			balanceButton = new Button();
 			balanceButton.setCaption(MessageBundle.getMessage("angal.newbill.givechange") + "..."); //$NON-NLS-1$
@@ -805,7 +819,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return balanceButton;
 	}
 
-	private Button getSaveButton() {
+	private Button getSaveButton(){
 		if (saveButton == null) {
 			saveButton = new Button();
 			saveButton.setCaption(MessageBundle.getMessage("angal.common.save")); //$NON-NLS-1$
@@ -918,7 +932,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return saveButton;
 	}
 	
-	private Button getPrintPaymentButton() {
+	private Button getPrintPaymentButton(){
 		if (printPaymentButton == null) {
 			printPaymentButton = new Button();
 			printPaymentButton.setCaption(MessageBundle.getMessage("angal.newbill.paymentreceipt")); //$NON-NLS-1$
@@ -938,7 +952,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 	
 	GregorianCalendar datePay = new GregorianCalendar();
 	GregorianCalendar lastPay = new GregorianCalendar();
-	private Button getPaidButton() {
+	private Button getPaidButton(){
 		if (paidButton == null) {
 			paidButton = new Button();
 			paidButton.setCaption(MessageBundle.getMessage("angal.newbill.paid")); //$NON-NLS-1$
@@ -964,7 +978,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 				if (balance.compareTo(new BigDecimal(0)) > 0) {
 					if (billDate.before(today)) { //if Bill is in the past the user will be asked for PAID date
 						icon = new Image(null,new FileResource(new File(resPath +"/WEB-INF/icons/calendar_dialog.png")));
-						DateTimeField datePayChooser = new DateTimeField("",LocalDateTime.now());
+						DateTimeField datePayChooser = new DateTimeField(null,LocalDateTime.now());
 						datePayChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 						datePayChooser.setDateFormat("dd/MM/yy - HH:mm:ss");
 						MessageBox.create().withIcon(icon).withCaption(MessageBundle.getMessage("angal.newbill.dateofpayment"))
@@ -1006,7 +1020,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return paidButton;
 	}
 	
-	private Button getCloseButton() {
+	private Button getCloseButton(){
 		if (closeButton == null) {
 			closeButton = new Button();
 			closeButton.setCaption(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
@@ -1030,7 +1044,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 	}
 
 	BigDecimal amount = new BigDecimal(0);
-	private Button getAddRefundButton() {
+	private Button getAddRefundButton(){
 		if (addRefundButton == null) {
 			addRefundButton = new Button();
 			addRefundButton.setCaption(MessageBundle.getMessage("angal.newbill.refund")); //$NON-NLS-1$
@@ -1058,7 +1072,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 						if (billDate.before(today)) { //if is a bill in the past the user will be asked for date of payment
 							// logger.info("masuk ka before today"+billDate.getTime());
 							// logger.info(""+today.getTime());
-							DateTimeField datePayChooser = new DateTimeField("",LocalDateTime.now());
+							DateTimeField datePayChooser = new DateTimeField(null,LocalDateTime.now());
 							datePayChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 							datePayChooser.setDateFormat("dd/MM/yy - HH:mm:ss"); //$NON-NLS-1$
 							
@@ -1088,7 +1102,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return addRefundButton;
 	}
 	
-	private Button getAddPaymentButton() {
+	private Button getAddPaymentButton(){
 		if (addPaymentButton == null) {
 			addPaymentButton = new Button();
 			addPaymentButton.setCaption(MessageBundle.getMessage("angal.newbill.payment")); //$NON-NLS-1$
@@ -1114,7 +1128,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 							return;
 						}
 						if (billDate.before(today)) { //if is a bill in the past the user will be asked for date of payment
-							DateTimeField datePayChooser = new DateTimeField("",LocalDateTime.now());
+							DateTimeField datePayChooser = new DateTimeField(null,LocalDateTime.now());
 							datePayChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 							datePayChooser.setDateFormat("dd/MM/yy - HH:mm:ss"); //$NON-NLS-1$
 							
@@ -1144,7 +1158,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return addPaymentButton;
 	}
 
-	private Button getRemovePaymentButton() {
+	private Button getRemovePaymentButton(){
 		if (removePaymentButton == null) {
 			removePaymentButton = new Button();
 			removePaymentButton.setCaption(MessageBundle.getMessage("angal.newbill.removepayment")); //$NON-NLS-1$
@@ -1166,7 +1180,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 	boolean isPrice = true;
 	int qty = 1;
 	Image icon;
-	private Button getAddOtherButton() {
+	private Button getAddOtherButton(){
 		if (addOtherButton == null) {
 			addOtherButton = new Button();
 			addOtherButton.setCaption(MessageBundle.getMessage("angal.newbill.other")); //$NON-NLS-1$
@@ -1243,7 +1257,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return addOtherButton;
 	}
 
-	private Button getAddExamButton() {
+	private Button getAddExamButton(){
 		if (addExamButton == null) {
 			addExamButton = new Button();
 			addExamButton.setCaption(MessageBundle.getMessage("angal.newbill.exam")); //$NON-NLS-1$
@@ -1271,7 +1285,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return addExamButton;
 	}
 
-	private Button getAddOperationButton() {
+	private Button getAddOperationButton(){
 		if (addOperationButton == null) {
 			addOperationButton = new Button();
 			addOperationButton.setCaption(MessageBundle.getMessage("angal.newbill.operation")); //$NON-NLS-1$
@@ -1295,7 +1309,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return addOperationButton;
 	}
 
-	private Button getAddMedicalButton() {
+	private Button getAddMedicalButton(){
 		if (addMedicalButton == null) {
 			addMedicalButton = new Button();
 			addMedicalButton.setCaption(MessageBundle.getMessage("angal.newbill.medical")); //$NON-NLS-1$
@@ -1341,7 +1355,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return addMedicalButton;
 	}
 	
-	private Button getAddCustomButton() {
+	private Button getAddCustomButton(){
 		if (customButton == null) {
 			customButton = new Button();
 			customButton.setCaption(MessageBundle.getMessage("angal.newbill.custom")); //$NON-NLS-1$
@@ -1387,7 +1401,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return customButton;
 	}
 	
-	private Button getRemoveItemButton() {
+	private Button getRemoveItemButton(){
 		if (removeItemButton == null) {
 			removeItemButton = new Button();
 			removeItemButton.setCaption(MessageBundle.getMessage("angal.newbill.removeitem")); //$NON-NLS-1$
@@ -1406,7 +1420,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		return removeItemButton;
 	}
 	
-	private void updateTotal() { //only positive items make the bill's total
+	private void updateTotal(){ //only positive items make the bill's total
 		total = new BigDecimal(0);
 		for (BillItems item : billItems) {
 			double amount = item.getItemAmount();
@@ -1417,7 +1431,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		}
 	}
 	
-	private void updateBigTotal() { //the big total (to pay) is made by all items
+	private void updateBigTotal(){ //the big total (to pay) is made by all items
 		bigTotal = new BigDecimal(0);
 		for (BillItems item : billItems) {
 			BigDecimal itemAmount = new BigDecimal(Double.toString(item.getItemAmount()));
@@ -1425,7 +1439,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		}
 	}
 	
-	private void updateBalance() { //the balance is what remaining after payments
+	private void updateBalance(){ //the balance is what remaining after payments
 		balance = new BigDecimal(0);
 		BigDecimal payments = new BigDecimal(0);
 		for (BillPayments pay : payItems) {
@@ -1454,7 +1468,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 		}
 	}
 	
-	private void updateUI() {
+	private void updateUI(){
 		// LocalDateTime.ofInstant(in.toInstant(), ZoneId.systemDefault());
 		dateCalendar.setValue(thisBill.getDate().getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
 		patientTextField.setValue(patientSelected.getName());
@@ -1470,7 +1484,7 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 	/**
 	 * 
 	 */
-	private void updateTotals() {
+	private void updateTotals(){
 		updateTotal();
 		updateBigTotal();
 		updateBalance();

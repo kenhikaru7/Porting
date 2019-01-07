@@ -34,5 +34,40 @@
 @mixin mytheme {
   @include valo;
 
+  .bg{
+  	background-color:#ff0000;
+  }
+
+  .qbg{
+  	background-color:#0C0C0C;
+  }
+
+  .notopmargin{
+  	margin-top: 0px;
+  }
+
+  .nobotmargin{
+  	margin-bottom: 0px;
+  }
+
+  .notoppadding{
+  	padding-top: 0px;
+  }
+
+  .nobotpadding{
+  	padding-bottom: 0px;
+  }
+
+  .noverticalpadding{
+  	padding-top: 0px;
+  	padding-bottom: 0px;
+  }
+
+  .noverticalpaddingmargin{
+  	padding-top: 0px;
+  	padding-bottom: 0px;
+  	margin-top: 0px;
+  	margin-bottom: 0px;
+  }
   // Insert your own theme rules here
 }

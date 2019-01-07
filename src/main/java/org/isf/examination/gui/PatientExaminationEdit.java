@@ -168,6 +168,7 @@ public class PatientExaminationEdit extends ModalWindow {
 	}
 	
 	private void initComponents() {
+		showAsModal();
 		logger = new Logging();
 		ExaminationParameters.getExaminationParameters();
 		UI.getCurrent().addWindow(this);
@@ -176,9 +177,11 @@ public class PatientExaminationEdit extends ModalWindow {
 		HorizontalLayout northLayout = new HorizontalLayout();
 		HorizontalLayout southLayout = new HorizontalLayout();
 		windowContent.addComponents(northLayout, southLayout);
+		northLayout.setWidth("100%");
 		northLayout.addComponents(getGenderLayout());
 		northLayout.addComponent(getExaminationLayout());
 		northLayout.addComponent(getSummaryPanel());
+		northLayout.setExpandRatio(getExaminationLayout(),1);
 		southLayout.addComponent(getButtonLayout());
 		updateSummary();
 		updateBMI();
@@ -275,16 +278,16 @@ public class PatientExaminationEdit extends ModalWindow {
 		disableSaturation();
 	}
 
-	private VerticalLayout getExaminationLayout() {
-		if (examinationLayout == null) {
+	private VerticalLayout getExaminationLayout(){
+		if (examinationLayout == null){
 			examinationLayout = new VerticalLayout();
-			
+			examinationLayout.setWidth("100%");
+			examinationLayout.addStyleName("noverticalpadding");
 			HorizontalLayout dateLayout = new HorizontalLayout();
 			examinationLayout.addComponent(dateLayout);
 			Label dateLabel = new Label(MessageBundle.getMessage("angal.common.date")); //$NON-NLS-1$
 			dateLayout.addComponent(dateLabel);
 			dateLayout.addComponent(getDateField());
-			
 			HorizontalLayout heightLayout = new HorizontalLayout();
 			examinationLayout.addComponent(heightLayout);
 			heightLabelAbb = new Label(MessageBundle.getMessage("angal.examination.heightabbr")); //$NON-NLS-1$
@@ -420,11 +423,11 @@ public class PatientExaminationEdit extends ModalWindow {
 
 	private DateField getDateField() {
 		if (dateField == null) {
-			// opdDateFieldCal = new DateField("",currentDateFormat.parse(d).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+			// opdDateFieldCal = new DateField(null,currentDateFormat.parse(d).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 			// opdDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			// opdDateFieldCal.setDateFormat("dd/MM/yy");
-			// dateField = new DateField("",currentDateFormat.parse(d).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-			dateField = new DateField("",LocalDate.now());
+			// dateField = new DateField(null,currentDateFormat.parse(d).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+			dateField = new DateField(null,LocalDate.now());
 			dateField.setLocale(new Locale(GeneralData.LANGUAGE));
 			dateField.setDateFormat("dd/MM/yy"); //$NON-NLS-1$
 			dateField.addValueChangeListener(evt->{
@@ -438,7 +441,8 @@ public class PatientExaminationEdit extends ModalWindow {
 	private TextArea getNoteTextArea() {
 		if (noteTextArea == null) {
 			noteTextArea = new TextArea();//row 6 column 20
-			noteTextArea.setMaxLength(300);
+			noteTextArea.setWidth("100%");
+			// noteTextArea.setMaxLength(300);
 			// noteTextArea.setMargin(new Insets(0, 5, 0, 0));
 			noteTextArea.addValueChangeListener(e->{
 				// super.focusLost(e);
@@ -733,6 +737,7 @@ public class PatientExaminationEdit extends ModalWindow {
 	private Panel getSummaryPanel() {
 		if (summaryPanel == null) {
 			summaryPanel = new Panel();
+			summaryPanel.setWidthUndefined();
 			summaryPanel.setContent(getSummaryLabel());
 		}
 		return summaryPanel;

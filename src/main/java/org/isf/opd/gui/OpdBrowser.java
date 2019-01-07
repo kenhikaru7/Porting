@@ -121,8 +121,8 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 	private Label label5 = null;
 	private TextField jAgeToTextField = null;
 	private Panel jAgePanel = null;
-	private ComboBox jDiseaseTypeBox;
-	private ComboBox jDiseaseBox;
+	private ComboBox diseaseTypeBox;
+	private ComboBox diseaseBox;
 	private Panel sexPanel=null;
 	private Panel newPatientPanel=null;
 	private RadioButtonGroup sexGroup=null;
@@ -157,6 +157,7 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 		if(grid == null){
 			model = new OpdBrowsingModel();
 			grid = new Grid();
+			grid.setWidth("100%");
 			grid.setItems(opdList);
 			grid.addColumn(Opd::getSVisitDate).setCaption("DATE");
 			grid.addColumn(Opd::getpatientCode).setCaption("ID");
@@ -266,8 +267,10 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 		if(jContainLayout == null){
 			jContainLayout = new VerticalLayout();
 			HorizontalLayout top = new HorizontalLayout();
-			top.addComponent(getJSelectionLayout());
+			top.setWidth("100%");
+			top.addComponent(getSelectionLayout());
 			top.addComponent(getGrid());
+			top.setExpandRatio(getGrid(),1);
 			jContainLayout.addComponent(top);
 			jContainLayout.addComponent(getjButtonLayout());
 		}
@@ -407,13 +410,15 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 	 * 	
 	 * @return javax.swing.Panel	
 	 */
-	private VerticalLayout getJSelectionLayout(){
+	private VerticalLayout getSelectionLayout(){
 		if(jSelectionLayout == null){
 			label3 = new Label();
 			label3.setValue(MessageBundle.getMessage("angal.opd.selectsex"));
 			label = new Label();
 			label.setValue(MessageBundle.getMessage("angal.opd.selectadisease"));
 			jSelectionLayout = new VerticalLayout();
+			jSelectionLayout.setWidthUndefined();
+			jSelectionLayout.addStyleName("noverticalpadding");
 			jSelectionLayout.addComponent(label);
 			jSelectionLayout.addComponent(getDiseaseTypeBox());
 			jSelectionLayout.addComponent(getDiseaseBox());
@@ -437,6 +442,8 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 	private Label getRowCounter(){
 		if(rowCounter == null){
 			rowCounter = new Label();
+			rowCounter.addStyleName("nobotpadding");
+			rowCounter.addStyleName("nobotmargin");
 			// rowCounter.setAlignmentX(Box.CENTER_ALIGNMENT);
 		}
 		return rowCounter;
@@ -447,7 +454,7 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 			dateFromLayout = new HorizontalLayout();
 			dateFromLayout.addComponent(new Label(MessageBundle.getMessage("angal.opd.datefrom")));
 			dayFrom = new TextField();
-			dayFrom.setMaxLength(2);
+			dayFrom.setWidth("3em");
 			dayFrom.addBlurListener(e -> {
 				if(dayFrom.getValue().length() != 0){
 					if(dayFrom.getValue().length() == 1){
@@ -459,7 +466,7 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 				}
 			});
 			monthFrom = new TextField();
-			monthFrom.setMaxLength(2);
+			monthFrom.setWidth("3em");
 			monthFrom.addBlurListener(e -> {
 				if(monthFrom.getValue().length() != 0){
 					if(monthFrom.getValue().length() == 1){
@@ -471,7 +478,7 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 				}
 			});
 			yearFrom = new TextField();
-			monthFrom.setMaxLength(4);
+			yearFrom.setWidth("4em");
 			yearFrom.addFocusListener(e -> {
 				if(yearFrom.getValue().length() == 4){
 					if(!isValidYear(yearFrom.getValue()))
@@ -527,7 +534,7 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 			dateToLayout = new HorizontalLayout();
 			dateToLayout.addComponent(new Label(MessageBundle.getMessage("angal.opd.dateto")));
 			dayTo = new TextField();
-			dayTo.setMaxLength(2);
+			dayTo.setWidth("3em");
 			dayTo.addBlurListener(e -> {
 				if(dayTo.getValue().length() != 0){
 					if(dayTo.getValue().length() == 1){
@@ -539,7 +546,7 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 				}
 			});
 			monthTo = new TextField();
-			monthTo.setMaxLength(2);
+			monthTo.setWidth("3em");
 			monthTo.addBlurListener(e -> {
 				if(monthTo.getValue().length() != 0){
 					if(monthTo.getValue().length() == 1){
@@ -551,7 +558,7 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 				}
 			});
 			yearTo = new TextField();
-			yearTo.setMaxLength(4);
+			yearTo.setWidth("4em");
 			yearTo.addBlurListener(e -> {
 				if(yearTo.getValue().length() == 4){
 					if(!isValidYear(yearTo.getValue()))
@@ -632,23 +639,23 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 	 * @return javax.swing.ComboBox	
 	 */
 	public ComboBox getDiseaseTypeBox(){
-		if(jDiseaseTypeBox == null){
-			jDiseaseTypeBox = new ComboBox();
-			
+		if(diseaseTypeBox == null){
+			diseaseTypeBox = new ComboBox();
+			diseaseTypeBox.setWidth("100%");
 			DiseaseTypeBrowserManager manager = new DiseaseTypeBrowserManager();
 			ArrayList<DiseaseType> types = new ArrayList<DiseaseType>();
 			types.add(allType);
 			types.addAll(manager.getDiseaseType());
-			jDiseaseTypeBox.setItems(types);
-			jDiseaseTypeBox.setValue(allType);
-			jDiseaseTypeBox.setEmptySelectionAllowed(false);
-			jDiseaseTypeBox.addValueChangeListener(e-> {
-				jDiseaseBox.setItems();
+			diseaseTypeBox.setItems(types);
+			diseaseTypeBox.setValue(allType);
+			diseaseTypeBox.setEmptySelectionAllowed(false);
+			diseaseTypeBox.addValueChangeListener(e-> {
+				diseaseBox.setItems();
 				getDiseaseBox();
 			});					
 		}
 		
-		return jDiseaseTypeBox;
+		return diseaseTypeBox;
 	}
 	
 	/**
@@ -657,22 +664,23 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 	 * @return javax.swing.ComboBox	
 	 */
 	public ComboBox getDiseaseBox(){
-		if(jDiseaseBox == null){
-			jDiseaseBox = new ComboBox();
-			jDiseaseBox.setEmptySelectionAllowed(false);
+		if(diseaseBox == null){
+			diseaseBox = new ComboBox();
+			diseaseBox.setWidth("100%");
+			diseaseBox.setEmptySelectionAllowed(false);
 		};
 		DiseaseBrowserManager manager = new DiseaseBrowserManager();
 		ArrayList<Disease> diseases = new ArrayList<Disease>();
 		Disease allDisease = new Disease(MessageBundle.getMessage("angal.opd.alldisease"), MessageBundle.getMessage("angal.opd.alldisease"), allType, 0);
 		diseases.add(allDisease);
-		if(((DiseaseType)jDiseaseTypeBox.getSelectedItem().get()).getDescription().equals(MessageBundle.getMessage("angal.opd.alltype"))){
+		if(((DiseaseType)diseaseTypeBox.getSelectedItem().get()).getDescription().equals(MessageBundle.getMessage("angal.opd.alltype"))){
 			diseases.addAll(manager.getDiseaseOpd());
 		}else{
-			diseases.addAll(manager.getDiseaseOpd(((DiseaseType)jDiseaseTypeBox.getSelectedItem().get()).getCode()));
+			diseases.addAll(manager.getDiseaseOpd(((DiseaseType)diseaseTypeBox.getSelectedItem().get()).getCode()));
 		};
-		jDiseaseBox.setItems(diseases);
-		jDiseaseBox.setValue(allDisease);
-		return jDiseaseBox;
+		diseaseBox.setItems(diseases);
+		diseaseBox.setValue(allDisease);
+		return diseaseBox;
 	}
 	
 	/**
@@ -720,7 +728,7 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 	private TextField getJAgeFromTextField(){
 		if(jAgeFromTextField == null){
 			jAgeFromTextField = new TextField();
-			jAgeFromTextField.setMaxLength(3);
+			jAgeFromTextField.setWidth("3em");
 			jAgeFromTextField.setValue("0");
 			ageFrom=0;
 			jAgeFromTextField.addBlurListener(e -> {
@@ -763,7 +771,7 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 	private TextField getJAgeToTextField(){
 		if(jAgeToTextField == null){
 			jAgeToTextField = new TextField();
-			jAgeToTextField.setMaxLength(3);
+			jAgeToTextField.setWidth("3em");
 			jAgeToTextField.setValue("0");
 			ageTo=0;
 			jAgeToTextField.addBlurListener(e -> {
@@ -781,20 +789,6 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 			});
 		}
 		return jAgeToTextField;
-	}
-
-	/**
-	 * This method initializes jAgePanel	
-	 * 	
-	 * @return javax.swing.Panel	
-	 */
-	private Panel getJAgePanel(){
-		if(jAgePanel == null){
-			jAgePanel = new Panel();
-			// jAgePanel.add(getJAgeFromLayout(), null);
-			// jAgePanel.add(getJAgeToLayout(), null);
-		}
-		return jAgePanel;
 	}
 	
 	class OpdBrowsingModel {
@@ -924,8 +918,8 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 			filterButton.setCaption(MessageBundle.getMessage("angal.opd.search"));
             ////filterButton.setClickShortcut(KeyEvent.VK_S);
 			filterButton.addClickListener(e -> {
-					String disease=((Disease)jDiseaseBox.getSelectedItem().get()).getCode();
-					String diseasetype=((DiseaseType)jDiseaseTypeBox.getSelectedItem().get()).getCode();
+					String disease=((Disease)diseaseBox.getSelectedItem().get()).getCode();
+					String diseasetype=((DiseaseType)diseaseTypeBox.getSelectedItem().get()).getCode();
 					char sex;
 					if(sexGroup.getValue()==MessageBundle.getMessage("angal.opd.all")) sex='A';
 					else if(sexGroup.getValue()==MessageBundle.getMessage("angal.opd.male")) sex='M';

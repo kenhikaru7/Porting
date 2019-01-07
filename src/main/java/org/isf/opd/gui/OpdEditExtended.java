@@ -195,7 +195,7 @@ public class OpdEditExtended extends ModalWindow implements PatientInsertExtende
 	private VerticalLayout jMainLayout = null;
 	private HorizontalLayout jNorthLayout;
 	private VerticalLayout leftCentralLayout;
-	private VerticalLayout dataLayout = null;
+	private FormLayout dataLayout = null;
 	private HorizontalLayout buttonLayout = null;
 	private Label jLabelDate = null;
 	private Label jLabelDiseaseType1 = null;
@@ -469,7 +469,11 @@ public class OpdEditExtended extends ModalWindow implements PatientInsertExtende
 	private VerticalLayout getLeftCentralLayout(){
 		if(leftCentralLayout == null){
 			leftCentralLayout = new VerticalLayout();
+			leftCentralLayout.addStyleName("noverticalpadding");
+			leftCentralLayout.setMargin(false);
 			leftCentralLayout.addComponent(getDataLayout());
+			leftCentralLayout.addComponent(getLastOpdVisit());
+			leftCentralLayout.addComponent(getLastOpdNote());
 			leftCentralLayout.addComponent(getPatientPanel());
 		}
 		return leftCentralLayout;
@@ -525,8 +529,11 @@ public class OpdEditExtended extends ModalWindow implements PatientInsertExtende
 			jMainLayout = new VerticalLayout();
 			jMainLayout.addComponent(getNorthLayout());
 			HorizontalLayout centralLayout = new HorizontalLayout();
+			centralLayout.setWidth("100%");
 			centralLayout.addComponent(getLeftCentralLayout());
 			centralLayout.addComponent(getJNotePanel());
+			centralLayout.setExpandRatio(getLeftCentralLayout(),3);
+			centralLayout.setExpandRatio(getJNotePanel(),1);
 			jMainLayout.addComponent(centralLayout);
 			jMainLayout.addComponent(getButtonLayout());//qqq
 		}
@@ -538,59 +545,69 @@ public class OpdEditExtended extends ModalWindow implements PatientInsertExtende
 	 * 
 	 * @return javax.swing.JPanel
 	 */
-	private VerticalLayout getDataLayout(){
+	private HorizontalLayout getLastOpdVisit(){
+		HorizontalLayout hl = new HorizontalLayout();
+		hl.setMargin(false);
+		jLabelLastOpdVisit = new Label(" ");
+		// jLabelLastOpdVisit.setHorizontalAlignment(SwingConstants.RIGHT);
+		// jLabelLastOpdVisit.setForeground(Color.RED);
+		hl.addComponent(jLabelLastOpdVisit);
+
+		jFieldLastOpdVisit = new Label(" ");
+		// jFieldLastOpdVisit.setFocusable(false);
+		hl.addComponent(jFieldLastOpdVisit);
+		return hl;
+	}
+
+	private HorizontalLayout getLastOpdNote(){
+		HorizontalLayout hl = new HorizontalLayout();
+		hl.setMargin(false);
+		jLabelLastOpdNote = new Label(" ");
+		// jLabelLastOpdNote.setHorizontalAlignment(SwingConstants.RIGHT);
+		// jLabelLastOpdNote.setForeground(Color.RED);
+		hl.addComponent(jLabelLastOpdNote);
+
+		jFieldLastOpdNote = new Label(" ");
+		// jFieldLastOpdNote.setPreferredSize(new Dimension(500, 30));
+		// jFieldLastOpdNote.setFocusable(false);
+		hl.addComponent(jFieldLastOpdNote);
+		return hl;
+	}
+
+	private FormLayout getDataLayout(){
 		if(dataLayout == null){
-			dataLayout = new VerticalLayout();
-			jLabelDate = new Label(MessageBundle.getMessage("angal.opd.attendancedate"));
-			dataLayout.addComponent(jLabelDate);
+			dataLayout = new FormLayout();
+			dataLayout.addStyleName("noverticalpadding");
 			HorizontalLayout dateNOPD = new HorizontalLayout();
+			dateNOPD.setMargin(false);
+			dateNOPD.setCaption(MessageBundle.getMessage("angal.opd.attendancedate"));
 			dateNOPD.addComponent(getopdDateFieldCal());
 			dateNOPD.addComponent(getOpdNumberLayout());
 			dataLayout.addComponent(dateNOPD);
 
-			jSearchLabel = new Label(MessageBundle.getMessage("angal.opd.search"));
 			HorizontalLayout searchPatientLayout = new HorizontalLayout();
-			searchPatientLayout.addComponent(jSearchLabel);
+			searchPatientLayout.setCaption(MessageBundle.getMessage("angal.opd.search"));
 			searchPatientLayout.addComponent(getJTextPatientSrc());
 			searchPatientLayout.addComponent(getJSearchButton());
 			searchPatientLayout.addComponent(getSearchBox());
 			searchPatientLayout.addComponent(getJPatientEditButton());
 			dataLayout.addComponent(searchPatientLayout);
 
-			jLabelDiseaseType1 = new Label(MessageBundle.getMessage("angal.opd.diseasetype"));
-			dataLayout.addComponent(jLabelDiseaseType1);
 			dataLayout.addComponent(getDiseaseTypeBox());
+			getDiseaseTypeBox().setCaption(MessageBundle.getMessage("angal.opd.diseasetype"));
+			getDiseaseTypeBox().setWidth("100%");
 
-			jLabelDisease1 = new Label(MessageBundle.getMessage("angal.opd.diagnosis"));
-			dataLayout.addComponent(jLabelDisease1);
 			dataLayout.addComponent(getDiseaseBox());
+			getDiseaseBox().setCaption(MessageBundle.getMessage("angal.opd.diagnosis"));
+			getDiseaseBox().setWidth("100%");
 
-			jLabelDis2 = new Label(MessageBundle.getMessage("angal.opd.diagnosisnfulllist"));
-			dataLayout.addComponent(jLabelDis2);
 			dataLayout.addComponent(getDiseaseBox2());
+			getDiseaseBox2().setCaption(MessageBundle.getMessage("angal.opd.diagnosisnfulllist"));
+			getDiseaseBox2().setWidth("100%");
 
-			jLabelDis3 = new Label(MessageBundle.getMessage("angal.opd.diagnosisnfulllist3"));
-			dataLayout.addComponent(jLabelDis3);
 			dataLayout.addComponent(getDiseaseBox3());
-
-			jLabelLastOpdVisit = new Label(" ");
-			// jLabelLastOpdVisit.setHorizontalAlignment(SwingConstants.RIGHT);
-			// jLabelLastOpdVisit.setForeground(Color.RED);
-			dataLayout.addComponent(jLabelLastOpdVisit);
-
-			jFieldLastOpdVisit = new Label(" ");
-			// jFieldLastOpdVisit.setFocusable(false);
-			dataLayout.addComponent(jFieldLastOpdVisit);
-
-			jLabelLastOpdNote = new Label(" ");
-			// jLabelLastOpdNote.setHorizontalAlignment(SwingConstants.RIGHT);
-			// jLabelLastOpdNote.setForeground(Color.RED);
-			dataLayout.addComponent(jLabelLastOpdNote);
-
-			jFieldLastOpdNote = new Label(" ");
-			// jFieldLastOpdNote.setPreferredSize(new Dimension(500, 30));
-			// jFieldLastOpdNote.setFocusable(false);
-			dataLayout.addComponent(jFieldLastOpdNote);
+			getDiseaseBox3().setCaption(MessageBundle.getMessage("angal.opd.diagnosisnfulllist3"));
+			getDiseaseBox3().setWidth("100%");
 		}
 		return dataLayout;
 	}
@@ -620,7 +637,7 @@ public class OpdEditExtended extends ModalWindow implements PatientInsertExtende
 				d = currentDateFormat.format(myDate);
 			}
 			try{
-				opdDateFieldCal = new DateField("",currentDateFormat.parse(d).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+				opdDateFieldCal = new DateField(null,currentDateFormat.parse(d).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 				opdDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 				opdDateFieldCal.setDateFormat("dd/MM/yy");
 			}catch (ParseException e) {
@@ -665,6 +682,7 @@ public class OpdEditExtended extends ModalWindow implements PatientInsertExtende
 	private Panel getJNotePanel(){
 		if(jNotePanel == null){
 			jNotePanel = new Panel();
+			jNotePanel.setWidth("100%");
 			jNotePanel.setCaption(MessageBundle.getMessage("angal.opd.noteandsymptom"));
 			jNotePanel.setContent(getJTextArea());
 		}
@@ -674,6 +692,7 @@ public class OpdEditExtended extends ModalWindow implements PatientInsertExtende
 	private TextArea getJTextArea(){
 		if(jNoteTextArea == null){
 			jNoteTextArea = new TextArea();
+			jNoteTextArea.setWidth("100%");
 			jNoteTextArea.setRows(15);
 			if(!insert){
 				jNoteTextArea.setValue(opd.getNote());
@@ -1003,14 +1022,18 @@ public class OpdEditExtended extends ModalWindow implements PatientInsertExtende
 	// alex: metodo ridefinito, i settaggi avvegono tramite SetPatient()
 	private Panel getPatientPanel(){
 		if(jPatientPanel == null){
-
 			jPatientPanel = new Panel();
+			jPatientPanel.setWidth("100%");
+			jPatientPanel.addStyleName("noverticalpadding");
 			jPatientPanel.setCaption(MessageBundle.getMessage("angal.opd.patient"));
 
 			HorizontalLayout patientLayout = new HorizontalLayout();
+			patientLayout.setWidth("100%");
+			patientLayout.setMargin(false);
 			jPatientPanel.setContent(patientLayout);
 
 			FormLayout patientForm = new FormLayout();
+			patientForm.setMargin(false);
 			patientLayout.addComponent(patientForm);
 
 			jFieldFirstName = new TextField();
@@ -1068,22 +1091,10 @@ public class OpdEditExtended extends ModalWindow implements PatientInsertExtende
 		return jPatientPanel;
 	}
 
-	private JPanel getJPatientNote(){
-		if(jPatientNotePanel == null){
-			jPatientNotePanel = new JPanel(new BorderLayout());
-			// // jPatientScrollNote = new JScrollPane(getJPatientNoteArea());
-			// jPatientScrollNote.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-			// jPatientScrollNote.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-			// jPatientScrollNote.setAutoscrolls(false);
-			// jPatientScrollNote.validate();
-			jPatientNotePanel.add(jPatientScrollNote, BorderLayout.CENTER);
-		}
-		return jPatientNotePanel;
-	}
-
 	private TextArea getJPatientNoteArea(){
 		if(jPatientNote == null){
 			jPatientNote = new TextArea();
+			jPatientNote.setWidth("100%");
 			jPatientNote.setRows(15);
 			jPatientNote.setWordWrap(true);
 			if(!insert){

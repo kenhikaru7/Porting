@@ -66,7 +66,7 @@ public class PatientSummary {
 	 * 
 	 * @return
 	 */
-	public JPanel getPatientDataPanel() {
+	public JPanel getPatientDataPanel(){
 		JPanel p = new JPanel(new BorderLayout(borderTickness, borderTickness));
 
 		// p.addComponent(getPatientTitlePanel(), BorderLayout.NORTH);
@@ -88,15 +88,15 @@ public class PatientSummary {
 	 * 
 	 * @return
 	 */
-	public VerticalLayout getPatientCompleteSummary() {
+	public VerticalLayout getPatientCompleteSummary(){
 
 		VerticalLayout p = new VerticalLayout();
-
+		p.setMargin(false);
 		p.addComponent(getPatientCard());
 		
-		JPanel dataPanel = null;
-		dataPanel = new JPanel();
-		dataPanel.setLayout(new BoxLayout(dataPanel, BoxLayout.Y_AXIS));
+		// JPanel dataPanel = null;
+		// dataPanel = new JPanel();
+		// dataPanel.setLayout(new BoxLayout(dataPanel, BoxLayout.Y_AXIS));
 
 		p.addComponent(getPatientTaxCodePanel());
 		p.addComponent(getPatientAddressAndCityLayout());
@@ -112,25 +112,28 @@ public class PatientSummary {
 		return p;
 	}
 
-	private HorizontalLayout getPatientAddressAndCityLayout() {
+	private HorizontalLayout getPatientAddressAndCityLayout(){
 		HorizontalLayout addressAndCityLayout = null;
 		addressAndCityLayout = new HorizontalLayout();
+		addressAndCityLayout.setMargin(false);
 		addressAndCityLayout.addComponent(getPatientAddressPanel());
 		addressAndCityLayout.addComponent(getPatientCityPanel());
 		return addressAndCityLayout;
 	}
 
-	private HorizontalLayout getPatientBloodAndEcoLayout() {
+	private HorizontalLayout getPatientBloodAndEcoLayout(){
 		HorizontalLayout tempLayout = null;
 		tempLayout = new HorizontalLayout();
+		tempLayout.setMargin(false);
 		tempLayout.addComponent(getPatientBloodTypePanel());
 		tempLayout.addComponent(getPatientEcoStatusPanel());
 		return tempLayout;
 	}
 
-	private HorizontalLayout getPatientKinAndTelephoneLayout() {
+	private HorizontalLayout getPatientKinAndTelephoneLayout(){
 		HorizontalLayout tempLayout = null;
 		tempLayout = new HorizontalLayout();
+		tempLayout.setMargin(false);
 		tempLayout.addComponent(getPatientKinPanel());
 		tempLayout.addComponent(getPatientTelephonePanel());
 		return tempLayout;
@@ -138,7 +141,7 @@ public class PatientSummary {
 
 	final int insetSize = 5;
 
-	private JPanel getPatientTitlePanel() {
+	private JPanel getPatientTitlePanel(){
 		JLabel l = new JLabel(MessageBundle.getMessage("angal.admission.patientsummary") + " (" + MessageBundle.getMessage("angal.common.code") + ": " + patient.getCode() + ")");
 		l.setBackground(Color.CYAN);
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.CENTER, insetSize, insetSize));
@@ -158,13 +161,16 @@ public class PatientSummary {
 		return photo.getScaledInstance(scaledW, scaledH, Image.SCALE_SMOOTH);
 	}
 	
-	private HorizontalLayout getPatientCard() {
+	private HorizontalLayout getPatientCard(){
 		HorizontalLayout cardLayout = new HorizontalLayout();
+		cardLayout.setMargin(false);
 		// cardLayout.setLayout(new BoxLayout(cardLayout, BoxLayout.X_AXIS));
 		// cardLayout.setBackground(Color.WHITE);
 		// cardLayout.setBorder(BorderFactory.createEmptyBorder(insetSize, insetSize, insetSize, insetSize));
 		
 		VerticalLayout patientData = new VerticalLayout();
+		patientData.setMargin(false);
+		patientData.addStyleName("noverticalpaddingmargin");
 		// patientData.setLayout(new BoxLayout(patientData, BoxLayout.Y_AXIS));
 		// patientData.setBackground(Color.WHITE);
 		// patientData.setBorder(BorderFactory.createEmptyBorder(insetSize, insetSize, insetSize, insetSize));
@@ -214,14 +220,14 @@ public class PatientSummary {
 		return string;
 	}
 	
-	private JPanel getPatientNamePanel() {
+	private JPanel getPatientNamePanel(){
 		JLabel l = new JLabel(patient.getSecondName() + " " + patient.getFirstName());
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		// lP.setContent(l);
 		return lP;
 	}
 
-	private Panel getPatientTaxCodePanel() {
+	private Panel getPatientTaxCodePanel(){
 		Label l = new Label(patient.getTaxCode() + " ");
 		// Panel lP = new Panel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		Panel lP = new Panel(MessageBundle.getMessage("angal.admission.taxcode"));
@@ -229,7 +235,7 @@ public class PatientSummary {
 		return lP;
 	}
 
-	private Panel getPatientKinPanel() {
+	private Panel getPatientKinPanel(){
 		Label l = null;
 		if (patient.getNextKin() == null || patient.getNextKin().equalsIgnoreCase("")) {
 			l = new Label(" ");
@@ -241,7 +247,7 @@ public class PatientSummary {
 		return lP;
 	}
 
-	private Panel getPatientTelephonePanel() {
+	private Panel getPatientTelephonePanel(){
 		Label l = null;
 		if (patient.getTelephone() == null || patient.getTelephone().equalsIgnoreCase("")) {
 			//l = new JLabel(MessageBundle.getMessage("angal.admission.unknown"));
@@ -254,7 +260,7 @@ public class PatientSummary {
 		return lP;
 	}
 	
-	private Panel getPatientAddressPanel() {
+	private Panel getPatientAddressPanel(){
 		Label l = null;
 		if (patient.getAddress() == null || patient.getAddress().equalsIgnoreCase("")) {
 			l = new Label(" ");
@@ -266,7 +272,7 @@ public class PatientSummary {
 		return lP;
 	}
 
-	private Panel getPatientCityPanel() {
+	private Panel getPatientCityPanel(){
 		Label l = null;
 		if (patient.getCity() == null || patient.getCity().equalsIgnoreCase("")) {
 			l = new Label(" ");
@@ -279,7 +285,7 @@ public class PatientSummary {
 	}
 
 	// Panel for Blood Type
-	private Panel getPatientBloodTypePanel() {
+	private Panel getPatientBloodTypePanel(){
 		Label l = null;
 		String c = new String(patient.getBloodType());
 		if (c == null || c.equalsIgnoreCase("Unknown")) {
@@ -293,7 +299,7 @@ public class PatientSummary {
 		return lP;
 	}
 
-	private Panel getPatientEcoStatusPanel() {
+	private Panel getPatientEcoStatusPanel(){
 		Label l = null;
 		char c = patient.getHasInsurance();
 		if (c == 'Y') {
@@ -309,21 +315,21 @@ public class PatientSummary {
 		return lP;
 	}
 
-	private JPanel getPatientAgePanel() {
+	private JPanel getPatientAgePanel(){
 		JLabel l = new JLabel("" + patient.getAge());
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		// lP.setContent(l);
 		return lP;
 	}
 
-	private JPanel getPatientSexPanel() {
+	private JPanel getPatientSexPanel(){
 		JLabel l = new JLabel((patient.getSex() == 'F' ? MessageBundle.getMessage("angal.admission.female") : MessageBundle.getMessage("angal.admission.male")));
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		// lP.setContent(l);
 		return lP;
 	}
 
-	private Panel getPatientParentNewsPanel() {
+	private Panel getPatientParentNewsPanel(){
 		StringBuffer labelBfr = new StringBuffer("<html>");
 		if (patient.getMother() == 'A')
 			labelBfr.append(MessageBundle.getMessage("angal.admission.motherisalive"));
@@ -352,7 +358,7 @@ public class PatientSummary {
 	}
 
 	// alex: modified with scroolbar
-	private Panel getPatientNotePanel() {
+	private Panel getPatientNotePanel(){
 		TextArea textArea = new TextArea();//3, 40
 		try{
 			textArea.setValue(patient.getNote());
