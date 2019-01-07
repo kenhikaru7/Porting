@@ -640,11 +640,13 @@ public class PatientInsertExtended extends ModalWindow{
 			} else {
 				bbdate = bbdate.minusYears(years);
 			}
+			ageChecked();
 		} else{
 			if (cBirthDate == null) ageFalse();
 			else {
 				bbdate = new DateTime(cBirthDate);
 				calcAge(bbdate);
+				ageChecked();
 			}
 		}
 	}
