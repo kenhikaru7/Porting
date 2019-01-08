@@ -377,19 +377,19 @@ public class MainMenu implements SubMenu.CommandListener{
 					k++;
 				}
 
-			Button test = new Button("test");
-			test.addClickListener(e->{
-				ModalWindow testWindow = new ModalWindow();
-				testWindow.showAsModal();
-				UI.getCurrent().addWindow(testWindow);
-				VerticalLayout testLayout = new VerticalLayout();
-				testLayout.setHeight("100%");
-				testWindow.setContent(testLayout);
-				Panel testTextField = new Panel();
-				testTextField.setHeight("100%");
-				testLayout.addComponent(testTextField);
-			});
-			this.listComponent.add(test);
+			// Button test = new Button("test");
+			// test.addClickListener(e->{
+			// 	ModalWindow testWindow = new ModalWindow();
+			// 	testWindow.showAsModal();
+			// 	UI.getCurrent().addWindow(testWindow);
+			// 	VerticalLayout testLayout = new VerticalLayout();
+			// 	testLayout.setHeight("100%");
+			// 	testWindow.setContent(testLayout);
+			// 	Panel testTextField = new Panel();
+			// 	testTextField.setHeight("100%");
+			// 	testLayout.addComponent(testTextField);
+			// });
+			// this.listComponent.add(test);
 
 			setButtonsSize(button);
 		}

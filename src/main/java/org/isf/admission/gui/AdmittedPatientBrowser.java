@@ -413,7 +413,7 @@ public class AdmittedPatientBrowser extends ModalWindow implements
 		if (MainMenu.checkUserGrants("btnadmedit")) botSubContent.addComponent(getButtonEdit());
 		if (MainMenu.checkUserGrants("btnadmdel")) botSubContent.addComponent(getDeleteButton());
 		// if (MainMenu.checkUserGrants("btnadmadm")) botSubContent.addComponent(getButtonAdmission());
-		if (MainMenu.checkUserGrants("btnadmexamination")) botSubContent.addComponent(getExaminationButton());
+		// if (MainMenu.checkUserGrants("btnadmexamination")) botSubContent.addComponent(getExaminationButton());
 		// if (GeneralData.OPDEXTENDED && MainMenu.checkUserGrants("btnadmopd")) botSubContent.addComponent(getButtonOpd());
 		// if (MainMenu.checkUserGrants("btnadmbill")) botSubContent.addComponent(getButtonBill());
 		// if (MainMenu.checkUserGrants("data")) botSubContent.addComponent(getButtonData());
