@@ -375,7 +375,7 @@ public class PatientInsertExtended extends ModalWindow{
 	private void getButtonLayout(){
 		if (ButtonLayout == null){
 			ButtonLayout = new HorizontalLayout();
-			ButtonLayout.addComponent(getOkButton());
+			ButtonLayout.addComponent(getJOkButton());
 			ButtonLayout.addComponent(getJCancelButton());
 		}
 		windowContent.addComponent(ButtonLayout);
@@ -460,11 +460,13 @@ public class PatientInsertExtended extends ModalWindow{
 	}
 
 	boolean ok;
-	private Button getOkButton(){
+
+	private Button getJOkButton(){
 		if (jOkButton == null){
 			jOkButton = new Button();
 			jOkButton.setCaption(MessageBundle.getMessage("angal.common.ok"));
-			////jOkButton.setClickShortcut(KeyEvent.VK_A + ('O' - 'A'));
+			jOkButton.setClickShortcut(KeyEvent.VK_A + ('O' - 'A'));
+			
 			jOkButton.addClickListener(e -> {
 				String firstName = jFirstNameTextField.getValue().trim();
 				String secondName = jSecondNameTextField.getValue().trim();
