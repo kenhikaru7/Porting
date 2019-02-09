@@ -74,13 +74,13 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public void labInserted() {
+	public void labInserted(){
 		LabManager manager = new LabManager();
 		pLabs = manager.getLaboratory();
 		examGrid.setItems(pLabs);
 	}
 	
-	public void labUpdated() {
+	public void labUpdated(){
 		filterButton.click();
 	}
 	
@@ -120,7 +120,7 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	/**
 	 * This is the default constructor
 	 */
-	public LabBrowser() {
+	public LabBrowser(){
 		myFrame = new JFrame();//dlt ths
 		manager = new LabManager();
 		initialize();
@@ -133,7 +133,7 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	 * 
 	 * @return void
 	 */
-	private void initialize() {
+	private void initialize(){
 		UI.getCurrent().addWindow(this);
 		// Toolkit kit = Toolkit.getDefaultToolkit();
 		// Dimension screensize = kit.getScreenSize();
@@ -153,8 +153,8 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	 * 
 	 * @return windowContentl (JPanel)
 	 */
-	private VerticalLayout getWindowContent() {
-		if (windowContent == null) {
+	private VerticalLayout getWindowContent(){
+		if (windowContent == null){
 			windowContent = new VerticalLayout();
 			HorizontalLayout topLayout = new HorizontalLayout();
 			windowContent.addComponent(topLayout);
@@ -172,8 +172,8 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	 * 
 	 * @return buttonLayout (JPanel)
 	 */
-	private HorizontalLayout getButtonLayout() {
-		if (buttonLayout == null) {
+	private HorizontalLayout getButtonLayout(){
+		if (buttonLayout == null){
 			buttonLayout = new HorizontalLayout();
 			if (MainMenu.checkUserGrants("btnlaboratorynew")) buttonLayout.addComponent(getNewButton());
 			if (MainMenu.checkUserGrants("btnlaboratoryedit")) buttonLayout.addComponent(getButtonEdit());
@@ -184,13 +184,13 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 		return buttonLayout;
 	}
 
-	private JButton getPrintTableButton() {
-		if (printTableButton == null) {
+	private JButton getPrintTableButton(){
+		if (printTableButton == null){
 			printTableButton = new JButton(MessageBundle.getMessage("angal.lab.printtable"));
 			printTableButton.setMnemonic(KeyEvent.VK_P);
-			printTableButton.addActionListener(new ActionListener() {
+			printTableButton.addActionListener(new ActionListener(){
 
-				public void actionPerformed(ActionEvent arg0) {
+				public void actionPerformed(ActionEvent arg0){
 					LabRowManager rowManager = new LabRowManager();
 					ArrayList<LaboratoryRow> rows = null;
 					typeSelected = ((Exam) examsCombo.getSelectedItem().get())
@@ -198,16 +198,16 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 					if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.lab.all")))
 						typeSelected = null;
 					ArrayList<LaboratoryForPrint> labs = manager.getLaboratoryForPrint(typeSelected, GregorianCalendar.from(dateFrom.getValue().atStartOfDay(ZoneId.systemDefault())), GregorianCalendar.from(dateTo.getValue().atStartOfDay(ZoneId.systemDefault())));
-					for (int i = 0; i < labs.size(); i++) {
+					for (int i = 0; i < labs.size(); i++){
 						if (labs.get(i).getResult().equalsIgnoreCase(
-								MessageBundle.getMessage("angal.lab.multipleresults"))) {
+								MessageBundle.getMessage("angal.lab.multipleresults"))){
 							rows = rowManager.getLabRow(labs.get(i).getCode());
 							
-							if (rows == null || rows.size() == 0) {
+							if (rows == null || rows.size() == 0){
 								labs.get(i).setResult(MessageBundle.getMessage("angal.lab.allnegative"));
 							} else {
 								labs.get(i).setResult(MessageBundle.getMessage("angal.lab.positive")+" : "+rows.get(0).getDescription());
-								for (int j=1;j<rows.size();j++) {
+								for (int j=1;j<rows.size();j++){
 									labs.get(i).setResult(
 											labs.get(i).getResult() + ","
 													+ rows.get(j).getDescription());
@@ -223,8 +223,8 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 		return printTableButton;
 	}
 
-	private Button getButtonEdit() {
-		if (buttonEdit == null) {
+	private Button getButtonEdit(){
+		if (buttonEdit == null){
 			buttonEdit = new Button(MessageBundle.getMessage("angal.common.edit"));
 			////buttonEdit.setClickShortcut(KeyEvent.VK_E);
 			buttonEdit.addClickListener(e->{
@@ -234,7 +234,7 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 					return;
 				} 
 				laboratory = (Laboratory)examGrid.getSelectedItems().toArray()[0];
-				if (GeneralData.LABEXTENDED) {
+				if (GeneralData.LABEXTENDED){
 					LabEditExtended editrecord = new LabEditExtended(laboratory, false);
 					editrecord.addLabEditExtendedListener(this);
 					editrecord.setVisible(true);
@@ -253,16 +253,16 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	 * 
 	 * @return newButton (JButton)
 	 */
-	private Button getNewButton() {
-		if (newButton == null) {
+	private Button getNewButton(){
+		if (newButton == null){
 			newButton = new Button(MessageBundle.getMessage("angal.common.new"));
 			////newButton.setClickShortcut(KeyEvent.VK_N);
 			newButton.addClickListener(e->{
 				laboratory = new Laboratory(0, new Exam("", "",
 						new ExamType("", ""), 0, "", 0),
 						new GregorianCalendar(), "P", 0, "", 0, "");
-				if (GeneralData.LABEXTENDED) {
-					if (GeneralData.LABMULTIPLEINSERT) {
+				if (GeneralData.LABEXTENDED){
+					if (GeneralData.LABMULTIPLEINSERT){
 						LabNew editrecord = new LabNew();
 						editrecord.addLabListener(this);
 						// editrecord.setVisible(true);
@@ -286,12 +286,12 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	 * 
 	 * @return deleteButton (JButton)
 	 */
-	private Button getdeleteButton() {
-		if (deleteButton == null) {
+	private Button getdeleteButton(){
+		if (deleteButton == null){
 			deleteButton = new Button(MessageBundle.getMessage("angal.common.delete"));
 			////deleteButton.setClickShortcut(KeyEvent.VK_D);
 			deleteButton.addClickListener(event->{
-				if (examGrid.getSelectedItems().isEmpty()) {
+				if (examGrid.getSelectedItems().isEmpty()){
 					MessageBox.create().withCaption(MessageBundle.getMessage("angal.hospital"))
 					.withMessage(MessageBundle.getMessage("angal.common.pleaseselectarow")).open();
 					return;
@@ -306,7 +306,7 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 							"\n "+ MessageBundle.getMessage("angal.lab.result")+" =" + lab.getResult() + 
 							"\n ?")
 					.withYesButton(()->{
-						if (manager.deleteLaboratory(lab)) {
+						if (manager.deleteLaboratory(lab)){
 							pLabs.remove((Laboratory) examGrid.getSelectedItems().toArray()[0]);
 							model.fireTableDataChanged();
 							examGrid.setItems(pLabs);
@@ -323,8 +323,8 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	 * 
 	 * @return closeButton (JButton)
 	 */
-	private Button getCloseButton() {
-		if (closeButton == null) {
+	private Button getCloseButton(){
+		if (closeButton == null){
 			closeButton = new Button(MessageBundle.getMessage("angal.common.close"));
 			////closeButton.setClickShortcut(KeyEvent.VK_C);
 			closeButton.addClickListener(e->{
@@ -339,8 +339,8 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	 * 
 	 * @return selectionLayout (JPanel)
 	 */
-	private VerticalLayout getSelectionLayout() {
-		if (selectionLayout == null) {
+	private VerticalLayout getSelectionLayout(){
+		if (selectionLayout == null){
 			selectionLayout = new VerticalLayout();
 			selectionLayout.setMargin(false);
 			// selectionLayout.setPreferredSize(new Dimension(200, pfrmHeight));
@@ -350,7 +350,6 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 			selectionLayout.addComponent(getDateFrom());
 			selectionLayout.addComponent(new Label(MessageBundle.getMessage("angal.common.datem") +":"+MessageBundle.getMessage("angal.lab.to") +"     "));
 			selectionLayout.addComponent(getDateTo());
-			selectionLayout.addComponent(getFilterButton());
 		}
 		return selectionLayout;
 	}
@@ -361,8 +360,8 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	 * 
 	 * @return examGrid (Grid)
 	 */
-	private Grid getGrid() {
-		if (examGrid == null) {
+	private Grid getGrid(){
+		if (examGrid == null){
 			examGrid = new Grid();
 			// model = new LabBrowsingModel();
 			LabManager manager = new LabManager();
@@ -373,7 +372,7 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 			examGrid.addColumn(Laboratory::getExam).setCaption("Exam");
 			examGrid.addColumn(Laboratory::getResult).setCaption("Result");
 			// int columnLengh = pColumwidth.length;
-			// if (!GeneralData.LABEXTENDED) {
+			// if (!GeneralData.LABEXTENDED){
 			// 	columnLengh--;
 			// }
 			// for (int i=0;i<columnLengh; i++){
@@ -390,29 +389,29 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 		private static final long serialVersionUID = 1L;
 		private LabManager manager = new LabManager();
 
-		public LabBrowsingModel(String exam, GregorianCalendar dateFrom, GregorianCalendar dateTo) {
+		public LabBrowsingModel(String exam, GregorianCalendar dateFrom, GregorianCalendar dateTo){
 			pLabs = manager.getLaboratory(exam, dateFrom, dateTo);
 		}
 
-		public LabBrowsingModel() {
+		public LabBrowsingModel(){
 			LabManager manager = new LabManager();
 			pLabs = manager.getLaboratory();
 		}
 
-		public int getRowCount() {
+		public int getRowCount(){
 			if (pLabs == null)
 				return 0;
 			return pLabs.size();
 		}
 
-		public String getColumnName(int c) {
+		public String getColumnName(int c){
 			return pColums[getNumber(c)];
 		}
 
-		public int getColumnCount() {
+		public int getColumnCount(){
 			int c = 0;
-			for (int i = 0; i < columnsVisible.length; i++) {
-				if (columnsVisible[i]) {
+			for (int i = 0; i < columnsVisible.length; i++){
+				if (columnsVisible[i]){
 					c++;
 				}
 			}
@@ -423,19 +422,19 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	     * This method converts a column number in the table
 	     * to the right number of the datas.
 	     */
-	    protected int getNumber(int col) {
+	    protected int getNumber(int col){
 	    	// right number to return
 	        int n = col;    
 	        int i = 0;
 	        do {
-	            if (!columnsVisible[i]) {
+	            if (!columnsVisible[i]){
 	            	n++;
 	            }
 	            i++;
 	        } while (i < n);
 	        // If we are on an invisible column, 
 	        // we have to go one step further
-	        while (!columnsVisible[n]) {
+	        while (!columnsVisible[n]){
 	        	n++;
 	        }
 	        return n;
@@ -446,24 +445,24 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 		 * 
 		 * @see org.isf.lab.service.IoOperations
 		 */
-		public Object getValueAt(int r, int c) {
-			if (c == -1) {
+		public Object getValueAt(int r, int c){
+			if (c == -1){
 				return pLabs.get(pLabs.size() - r - 1);
-			} else if (getNumber(c) == 0) {
+			} else if (getNumber(c) == 0){
 				return //getConvertedString(pLabs.get(pLabs.size() - r - 1).getDate());
 					   dateFormat.format(pLabs.get(pLabs.size() - r - 1).getExamDate().getTime());
-			} else if (getNumber(c) == 1) {
+			} else if (getNumber(c) == 1){
 				return pLabs.get(pLabs.size() - r - 1).getPatName(); //Alex: added
-			} else if (getNumber(c) == 2) {
+			} else if (getNumber(c) == 2){
 				return pLabs.get(pLabs.size() - r - 1).getExam();
-			} else if (getNumber(c) == 3) {
+			} else if (getNumber(c) == 3){
 				return pLabs.get(pLabs.size() - r - 1).getResult();
 			}
 			return null;
 		}
 
 		@Override
-		public boolean isCellEditable(int arg0, int arg1) {
+		public boolean isCellEditable(int arg0, int arg1){
 			// return super.isCellEditable(arg0, arg1);
 			return false;
 		}
@@ -475,9 +474,9 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	 * 
 	 * @return examsCombo (JComboBox)
 	 */
-	private ComboBox getexamsCombo() {
+	private ComboBox getexamsCombo(){
 		ExamBrowsingManager managerExams = new ExamBrowsingManager();
-		if (examsCombo == null) {
+		if (examsCombo == null){
 			examsCombo = new ComboBox();
 			// examsCombo.setPreferredSize(new Dimension(200, 30));
 			ArrayList<Exam> type = managerExams.getExams();
@@ -485,12 +484,13 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 			type.add(0,allExam);
 			examsCombo.setEmptySelectionAllowed(false);
 			examsCombo.setItems(type);
+			examsCombo.setValue(allExam);
 			examsCombo.addValueChangeListener(e->{
 				typeSelected = ((Exam) examsCombo.getSelectedItem().get()).toString();
 				if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.lab.all")))
 					typeSelected = null;
+				search();
 			});
-			examsCombo.setValue(allExam);
 		}
 		return examsCombo;
 	}
@@ -501,10 +501,13 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	 * 
 	 * @return dateFrom (JPanel)
 	 */
-	private DateField getDateFrom() {
-		if (dateFrom == null) {
+	private DateField getDateFrom(){
+		if (dateFrom == null){
 			dateFrom = new DateField(null,LocalDate.now().minusDays(7));
 			dateFrom.setDateFormat("dd/MM/yyyy");
+			dateFrom.addValueChangeListener(e->{
+				search();
+			});
 		}
 		return dateFrom;
 	}
@@ -515,10 +518,13 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	 * 
 	 * @return dateTo (JPanel)
 	 */
-	private DateField getDateTo() {
-		if (dateTo == null) {
+	private DateField getDateTo(){
+		if (dateTo == null){
 			dateTo = new DateField(null,LocalDate.now());
 			dateTo.setDateFormat("dd/MM/yyyy");
+			dateTo.addValueChangeListener(e->{
+				search();
+			});
 		}
 		return dateTo;
 	}
@@ -529,20 +535,13 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	 * 
 	 * @return filterButton (JButton)
 	 */
-	private Button getFilterButton(){
-		if (filterButton == null) {
-			filterButton = new Button(MessageBundle.getMessage("angal.lab.search"));
-			////filterButton.setClickShortcut(KeyEvent.VK_S);
-			filterButton.addClickListener(e->{
-				typeSelected = ((Exam) examsCombo.getSelectedItem().get()).toString();
-				if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.lab.all")))
-					typeSelected = null;
-				model = new LabBrowsingModel(typeSelected, GregorianCalendar.from(dateFrom.getValue().atStartOfDay(ZoneId.systemDefault())), GregorianCalendar.from(dateTo.getValue().atStartOfDay(ZoneId.systemDefault())));
-				// model.fireTableDataChanged();
-				examGrid.setItems(pLabs);
-			});
-		}
-		return filterButton;
+
+	private void search(){
+		typeSelected = ((Exam) examsCombo.getSelectedItem().get()).toString();
+		if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.lab.all")))
+			typeSelected = null;
+		model = new LabBrowsingModel(typeSelected, GregorianCalendar.from(dateFrom.getValue().atStartOfDay(ZoneId.systemDefault())), GregorianCalendar.from(dateTo.getValue().atStartOfDay(ZoneId.systemDefault())));
+		examGrid.setItems(pLabs);
 	}
 
 	/**
@@ -558,7 +557,7 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	 * Sets the focus on the same record as before
 	 * 
 	 */
-	/*public void laboratoryUpdated() {
+	/*public void laboratoryUpdated(){
 		pLabs.set(pLabs.size() - selectedrow - 1, laboratory);
 		((LabBrowsingModel) examGrid.getModel()).fireTableDataChanged();
 		examGrid.updateUI();
@@ -571,7 +570,7 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	 * Sets the focus on the first record
 	 * 
 	 */
-	/*public void laboratoryInserted() {
+	/*public void laboratoryInserted(){
 		pLabs.add(pLabs.size(), laboratory);
 		((LabBrowsingModel) examGrid.getModel()).fireTableDataChanged();
 		if (examGrid.getRowCount() > 0)
@@ -584,9 +583,9 @@ public class LabBrowser extends ModalWindow implements LabListener, LabEditListe
 	 * @param time
 	 * @return String
 	 */
-	private String getConvertedString(GregorianCalendar time) {
+	private String getConvertedString(GregorianCalendar time){
 		String string = "";
-		if (time!=null) {
+		if (time!=null){
 			string=String
 					.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH));
 			string += "/" + String.valueOf(time.get(GregorianCalendar.MONTH) + 1);

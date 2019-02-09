@@ -86,7 +86,7 @@ import com.toedter.calendar.JYearChooser;
 
 public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientBillListener {
 
-	public void billInserted(Bill tempBill) {
+	public void billInserted(Bill tempBill){
 		updateDataSet(dateFrom, dateTo);
 		updateTables();
 		updateTotals();
@@ -174,7 +174,7 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 	private String user = MainMenu.getUser();
 	private ArrayList<String> users = billManager.getUsers();
 	
-	public BillBrowser() {
+	public BillBrowser(){
 		updateDataSet();
 		initComponents();
 		// setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -183,7 +183,7 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		// setVisible(true);
 	}
 	
-	private void initComponents() {
+	private void initComponents(){
 		UI.getCurrent().addWindow(this);
 		VerticalLayout windowContent = new VerticalLayout();
 		setContent(windowContent);
@@ -194,7 +194,7 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		// setMinimumSize(new Dimension(900,600));
 		// addWindowListener(new WindowAdapter(){
 			
-		// 	public void windowClosing(WindowEvent e) {
+		// 	public void windowClosing(WindowEvent e){
 		// 		//to free memory
 		// 		billPeriod.clear();
 		// 		mapBill.clear();
@@ -205,8 +205,8 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		// pack();
 	}
 
-	private HorizontalLayout getSouthLayout() {
-		if (southLayout == null) {
+	private HorizontalLayout getSouthLayout(){
+		if (southLayout == null){
 			southLayout = new HorizontalLayout();
 			southLayout.setMargin(false);
 			southLayout.addComponent(getTotalsLayout());
@@ -216,8 +216,8 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 	}
 	Label balanceTodayLabel;
 	Label balancePeriodLabel;
-	private VerticalLayout getTotalsLayout() {
-		if (totalsLayout == null) {
+	private VerticalLayout getTotalsLayout(){
+		if (totalsLayout == null){
 			totalsLayout = new VerticalLayout();
 			totalsLayout.setMargin(false);
 			balanceTodayLabel = new Label();
@@ -249,8 +249,8 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		return totalsLayout;
 	}
 
-	private Label getToLabel() {
-		if (toLabel == null) {
+	private Label getToLabel(){
+		if (toLabel == null){
 			toLabel = new Label();
 			toLabel.setValue(MessageBundle.getMessage("angal.billbrowser.to")); //$NON-NLS-1$
 		}
@@ -263,7 +263,7 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 	}
 	private DateField getFromDate(){
-		if (fromDate == null) {
+		if (fromDate == null){
 			dateFrom.set(GregorianCalendar.HOUR_OF_DAY, 0);
 			dateFrom.set(GregorianCalendar.MINUTE, 0);
 			dateFrom.set(GregorianCalendar.SECOND, 0);
@@ -285,8 +285,8 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		return fromDate;
 	}
 
-	private DateField getToDate() {
-		if (toDate == null) {
+	private DateField getToDate(){
+		if (toDate == null){
 			dateTo.set(GregorianCalendar.HOUR_OF_DAY, 23);
 			dateTo.set(GregorianCalendar.MINUTE, 59);
 			dateTo.set(GregorianCalendar.SECOND, 59);
@@ -308,21 +308,21 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		return toDate;
 	}
 	
-	private Label getFromLabel() {
-		if (fromLabel == null) {
+	private Label getFromLabel(){
+		if (fromLabel == null){
 			fromLabel = new Label();
 			fromLabel.setValue(MessageBundle.getMessage("angal.billbrowser.from")); //$NON-NLS-1$
 		}
 		return fromLabel;
 	}
 	
-	private JButton getJButtonReport() {
-		if (jButtonReport == null) {
+	private JButton getJButtonReport(){
+		if (jButtonReport == null){
 			jButtonReport = new JButton();
 			jButtonReport.setMnemonic(KeyEvent.VK_R);
 			jButtonReport.setText(MessageBundle.getMessage("angal.billbrowser.report")); //$NON-NLS-1$
-			jButtonReport.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
+			jButtonReport.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
 					ArrayList<String> options = new ArrayList<String>();
 					options.add(MessageBundle.getMessage("angal.billbrowser.todayclosure"));
 					options.add(MessageBundle.getMessage("angal.billbrowser.today"));
@@ -346,12 +346,12 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 					
 					// int i = 0;
 					
-					// if (options.indexOf(option) == i) {
+					// if (options.indexOf(option) == i){
 							
 					// 		from = formatDateTimeReport(dateToday0);
 					// 		to = formatDateTimeReport(dateToday24);
 					// 		String user;
-					// 		if (GeneralData.SINGLEUSER) {
+					// 		if (GeneralData.SINGLEUSER){
 					// 			user = "admin";
 					// 		} else {
 					// 			user = MainMenu.getUser();
@@ -360,17 +360,17 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 					// 		return;
 							
 					// 	}
-					// if (options.indexOf(option) == ++i) {
+					// if (options.indexOf(option) == ++i){
 						
 					// 	from = formatDateTimeReport(dateToday0);
 					// 	to = formatDateTimeReport(dateToday24);
 					// }
-					// if (options.indexOf(option) == ++i) {
+					// if (options.indexOf(option) == ++i){
 						
 					// 	from = formatDateTimeReport(dateFrom);
 					// 	to = formatDateTimeReport(dateTo);
 					// }
-					// if (options.indexOf(option) == ++i) {
+					// if (options.indexOf(option) == ++i){
 						
 					// 	month = monthsComboBox.getMonth();
 					// 	GregorianCalendar thisMonthFrom = dateFrom;
@@ -382,7 +382,7 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 					// 	from = formatDateTimeReport(thisMonthFrom);
 					// 	to = formatDateTimeReport(thisMonthTo);
 					// }
-					// if (options.indexOf(option) == ++i) {
+					// if (options.indexOf(option) == ++i){
 						
 					// 	icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 						
@@ -397,7 +397,7 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 				 //        // 		JOptionPane.PLAIN_MESSAGE,
 				 //        // 		icon);
 
-				 //        // if (r == JOptionPane.OK_OPTION) {
+				 //        // if (r == JOptionPane.OK_OPTION){
 				 //        // 	month = monthChooser.getMonth();
 				 //        // } else {
 				 //        //     return;
@@ -428,10 +428,10 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 					
 					// if (option == null) return;
 					
-					// if (options.indexOf(option) == 0) {
+					// if (options.indexOf(option) == 0){
 					// 	new GenericReportFromDateToDate(from, to, GeneralData.BILLSREPORTMONTH, MessageBundle.getMessage("angal.billbrowser.shortreportonlybaddebts"), false);
 					// }
-					// if (options.indexOf(option) == 1) {
+					// if (options.indexOf(option) == 1){
 					// 	new GenericReportFromDateToDate(from, to, GeneralData.BILLSREPORT, MessageBundle.getMessage("angal.billbrowser.fullreportallbills"), false);
 					// }
 				}
@@ -440,8 +440,8 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		return jButtonReport;
 	}
 	
-	private Button getCloseButton() {
-		if (closeButton == null) {
+	private Button getCloseButton(){
+		if (closeButton == null){
 			closeButton = new Button();
 			closeButton.setCaption(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
 			////closeButton.setClickShortcut(KeyEvent.VK_C);
@@ -458,16 +458,16 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 	private Object getSelectedRow(Grid grid){
 		return grid.getSelectedItems().toArray()[0];
 	}
-	private Button getEditButton() {
-		if (editButton == null) {
+	private Button getEditButton(){
+		if (editButton == null){
 			editButton = new Button();
 			editButton.setCaption(MessageBundle.getMessage("angal.billbrowser.editbill")); //$NON-NLS-1$
 			////editButton.setClickShortcut(KeyEvent.VK_E);
 			editButton.addClickListener(e->{
 				try {
-					if (billsTabs.getTabPosition(billsTabs.getTab(billsTabs.getSelectedTab()))==0) {
+					if (billsTabs.getTabPosition(billsTabs.getTab(billsTabs.getSelectedTab()))==0){
 						Bill editBill = (Bill)getSelectedRow(billsGrid);
-						if (user.equals("admin") || editBill.getStatus().equals("O")) { //$NON-NLS-1$
+						if (user.equals("admin") || editBill.getStatus().equals("O")){ //$NON-NLS-1$
 							PatientBillEdit pbe = new PatientBillEdit(editBill, false);
 							pbe.addPatientBillListener(this);
 							pbe.setVisible(true);
@@ -475,17 +475,17 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 							// new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL);
 						}
 					}
-					if (billsTabs.getTabPosition(billsTabs.getTab(billsTabs.getSelectedTab()))==1) {
+					if (billsTabs.getTabPosition(billsTabs.getTab(billsTabs.getSelectedTab()))==1){
 						Bill editBill = (Bill)getSelectedRow(pendingGrid);
 						PatientBillEdit pbe = new PatientBillEdit(editBill, false);
 						pbe.addPatientBillListener(this);
 						pbe.setVisible(true);
 					}
-					if (billsTabs.getTabPosition(billsTabs.getTab(billsTabs.getSelectedTab()))==2) {
+					if (billsTabs.getTabPosition(billsTabs.getTab(billsTabs.getSelectedTab()))==2){
 						Bill editBill = (Bill)getSelectedRow(closedGrid);
 						// new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL);
 					}
-				} catch (Exception ex) {
+				} catch (Exception ex){
 					MessageBox.create().withCaption(MessageBundle.getMessage("angal.billbrowser.title"))
 					.withMessage(MessageBundle.getMessage("angal.billbrowser.pleaseselectabillfirst")).open();
 				}
@@ -494,21 +494,21 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		return editButton;
 	}
 	
-	private JButton getJButtonPrintReceipt() {
-		if (jButtonPrintReceipt == null) {
+	private JButton getJButtonPrintReceipt(){
+		if (jButtonPrintReceipt == null){
 			jButtonPrintReceipt = new JButton();
 			jButtonPrintReceipt.setText(MessageBundle.getMessage("angal.billbrowser.receipt")); //$NON-NLS-1$
 			jButtonPrintReceipt.setMnemonic(KeyEvent.VK_R);
 			jButtonPrintReceipt.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e) {
+				public void actionPerformed(ActionEvent e){
 					try {
-						// if (jScrollPaneBills.isShowing()) {
+						// if (jScrollPaneBills.isShowing()){
 							// int rowSelected = billsGrid.getSelectedRow();
 							// Bill editBill = (Bill)billsGrid.getValueAt(rowSelected, -1);
-							// if (editBill.getStatus().equals("C")) { //$NON-NLS-1$
+							// if (editBill.getStatus().equals("C")){ //$NON-NLS-1$
 							// 	// new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL, false, true);
 							// } else {
-								// if (editBill.getStatus().equals("D")) {
+								// if (editBill.getStatus().equals("D")){
 								// 	JOptionPane.showMessageDialog(BillBrowser.this,
 								// 			MessageBundle.getMessage("angal.billbrowser.billdeleted"),  //$NON-NLS-1$
 								// 			MessageBundle.getMessage("angal.hospital"),  //$NON-NLS-1$
@@ -522,19 +522,19 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 								// return;
 							// }
 						// }
-						// if (jScrollPanePending.isShowing()) {
+						// if (jScrollPanePending.isShowing()){
 						// 	int rowSelected = pendingGrid.getSelectedRow();
 						// 	Bill editBill = (Bill)pendingGrid.getValueAt(rowSelected, -1);
 						// 	PatientBillEdit pbe = new PatientBillEdit(editBill, false);
 						// 	pbe.addPatientBillListener(BillBrowser.this);
 						// 	pbe.setVisible(true);
 						// }
-						// if (jScrollPaneClosed.isShowing()) {
+						// if (jScrollPaneClosed.isShowing()){
 						// 	int rowSelected = closedGrid.getSelectedRow();
 						// 	Bill editBill = (Bill)closedGrid.getValueAt(rowSelected, -1);
 						// 	// new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL);
 						// }
-					} catch (Exception ex) {
+					} catch (Exception ex){
 						JOptionPane.showMessageDialog(null,
 								MessageBundle.getMessage("angal.billbrowser.pleaseselectabillfirst"), //$NON-NLS-1$
 								MessageBundle.getMessage("angal.billbrowser.title"), //$NON-NLS-1$
@@ -546,8 +546,8 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		return jButtonPrintReceipt;
 	}
 
-	private Button getNewButton() {
-		if (newButton == null) {
+	private Button getNewButton(){
+		if (newButton == null){
 			newButton = new Button();
 			newButton.setCaption(MessageBundle.getMessage("angal.billbrowser.newbill")); //$NON-NLS-1$
 			////newButton.setClickShortcut(KeyEvent.VK_N);
@@ -561,15 +561,15 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 	}
 	
 	Bill deleteBill = null;
-	private Button getDeleteButton() {
-		if (deleteButton == null) {
+	private Button getDeleteButton(){
+		if (deleteButton == null){
 			deleteButton = new Button();
 			deleteButton.setCaption(MessageBundle.getMessage("angal.billbrowser.deletebill")); //$NON-NLS-1$
 			////deleteButton.setClickShortcut(KeyEvent.VK_D);
 			deleteButton.addClickListener(e->{
 				try {
 					int ok = JOptionPane.NO_OPTION;
-					if (billsTabs.getTabPosition(billsTabs.getTab(billsTabs.getSelectedTab()))==0) {
+					if (billsTabs.getTabPosition(billsTabs.getTab(billsTabs.getSelectedTab()))==0){
 						deleteBill = (Bill)getSelectedRow(billsGrid);
 						MessageBox.create().withCaption(MessageBundle.getMessage("angal.common.delete"))
 						.withMessage(MessageBundle.getMessage("angal.billbrowser.doyoureallywanttodeletetheselectedbill"))
@@ -578,8 +578,8 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 							billInserted(null);
 						}).withNoButton().open();
 					}
-					// if (jScrollPanePending != null && jScrollPanePending.isShowing()) {
-					if (billsTabs.getTabPosition(billsTabs.getTab(billsTabs.getSelectedTab()))==1) {
+					// if (jScrollPanePending != null && jScrollPanePending.isShowing()){
+					if (billsTabs.getTabPosition(billsTabs.getTab(billsTabs.getSelectedTab()))==1){
 						deleteBill = (Bill)getSelectedRow(pendingGrid);
 						MessageBox.create().withCaption(MessageBundle.getMessage("angal.common.delete"))
 						.withMessage(MessageBundle.getMessage("angal.billbrowser.doyoureallywanttodeletetheselectedbill"))
@@ -588,7 +588,7 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 							billInserted(null);
 						}).withNoButton().open();
 					}
-					if (billsTabs.getTabPosition(billsTabs.getTab(billsTabs.getSelectedTab()))==2) {
+					if (billsTabs.getTabPosition(billsTabs.getTab(billsTabs.getSelectedTab()))==2){
 						deleteBill = (Bill)getSelectedRow(closedGrid);
 						MessageBox.create().withCaption(MessageBundle.getMessage("angal.common.delete"))
 						.withMessage(MessageBundle.getMessage("angal.billbrowser.doyoureallywanttodeletetheselectedbill"))
@@ -597,7 +597,7 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 							billInserted(null);
 						}).withNoButton().open();
 					}
-				} catch (Exception ex) {
+				} catch (Exception ex){
 					MessageBox.create().withCaption(MessageBundle.getMessage("angal.hospital"))
 					.withMessage(MessageBundle.getMessage("angal.billbrowser.pleaseselectabillfirst")).open();
 				}
@@ -606,8 +606,8 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		return deleteButton;
 	}
 
-	private HorizontalLayout getButtonsLayout() {
-		if (buttonsLayout == null) {
+	private HorizontalLayout getButtonsLayout(){
+		if (buttonsLayout == null){
 			buttonsLayout = new HorizontalLayout();
 			if (MainMenu.checkUserGrants("btnbillnew")) buttonsLayout.addComponent(getNewButton());
 			if (MainMenu.checkUserGrants("btnbilledit")) buttonsLayout.addComponent(getEditButton());
@@ -619,8 +619,8 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		return buttonsLayout;
 	}
 
-	private HorizontalLayout getRangeLayout() {
-		if (rangeLayout == null) {
+	private HorizontalLayout getRangeLayout(){
+		if (rangeLayout == null){
 			rangeLayout = new HorizontalLayout();
 			// if (!GeneralData.SINGLEUSER && user.equals("admin")) 
 			// 	rangeLayout.addComponent(getJComboUsers());
@@ -636,14 +636,14 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		return rangeLayout;
 	}
 
-	private JComboBox getJComboUsers() {
-		if (jComboUsers == null) {
+	private JComboBox getJComboUsers(){
+		if (jComboUsers == null){
 			jComboUsers = new JComboBox();
 			for (String user : users) 
 				jComboUsers.addItem(user);
 			
-			jComboUsers.addActionListener(new ActionListener() {				
-				public void actionPerformed(ActionEvent arg0) {
+			jComboUsers.addActionListener(new ActionListener(){				
+				public void actionPerformed(ActionEvent arg0){
 					user = (String) jComboUsers.getSelectedItem();
 					jTableUser.setValueAt("<html><b>"+user+"</b></html>", 0, 0);
 					updateTotals();
@@ -653,8 +653,8 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		return jComboUsers;
 	}
 	
-	private Button getTodayButton() {
-		if (todayButton == null) {
+	private Button getTodayButton(){
+		if (todayButton == null){
 			todayButton = new Button();
 			todayButton.setCaption(MessageBundle.getMessage("angal.billbrowser.today")); //$NON-NLS-1$
 			////todayButton.setClickShortcut(KeyEvent.VK_T);
@@ -672,8 +672,8 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		return todayButton;
 	}
 
-	private ComboBox getMonthsComboBox() {
-		if (monthsComboBox == null) {
+	private ComboBox getMonthsComboBox(){
+		if (monthsComboBox == null){
 			monthsComboBox = new ComboBox();
 			monthsComboBox.setEmptySelectionAllowed(false);
 			monthsComboBox.setItems(Month.values());
@@ -692,8 +692,8 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		return monthsComboBox;
 	}
 
-	private TextField getYearsTextField() {//changed behavior
-		if (yearsTextField == null) {
+	private TextField getYearsTextField(){//changed behavior
+		if (yearsTextField == null){
 			yearsTextField = new TextField();
 			yearsTextField.setValue(""+LocalDate.now().getYear());
 			yearsTextField.addValueChangeListener(evt->{ //$NON-NLS-1$
@@ -711,8 +711,8 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		return yearsTextField;
 	}
 
-	private Grid getBillsGrid() {
-		if (billsGrid == null) {
+	private Grid getBillsGrid(){
+		if (billsGrid == null){
 			billsGrid = new Grid();
 			billsGrid.setWidth("100%");
 			// billsGrid.setModel(new BillTableModel("ALL")); //$NON-NLS-1$
@@ -729,9 +729,9 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 			// for (int i=0;i<columsWidth.length; i++){
 			// 	billsGrid.getColumnModel().getColumn(i).setMinWidth(columsWidth[i]);
 			// 	if (!columsResizable[i]) billsGrid.getColumnModel().getColumn(i).setMaxWidth(maxWidth[i]);
-			// 	if (alignCenter[i]) {
+			// 	if (alignCenter[i]){
 			// 		billsGrid.getColumnModel().getColumn(i).setCellRenderer(new StringCenterTableCellRenderer());
-			// 		if (boldCenter[i]) {
+			// 		if (boldCenter[i]){
 			// 			billsGrid.getColumnModel().getColumn(i).setCellRenderer(new CenterBoldTableCellRenderer());
 			// 		}
 			// 	}
@@ -743,8 +743,8 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		}
 		return billsGrid;
 	}
-	private Grid getPendingGrid() {
-		if (pendingGrid == null) {
+	private Grid getPendingGrid(){
+		if (pendingGrid == null){
 			pendingGrid = new Grid();
 			pendingGrid.setWidth("100%");
 			// pendingGrid.setModel(new BillTableModel("ALL")); //$NON-NLS-1$
@@ -761,9 +761,9 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 			// for (int i=0;i<columsWidth.length; i++){
 			// 	pendingGrid.getColumnModel().getColumn(i).setMinWidth(columsWidth[i]);
 			// 	if (!columsResizable[i]) pendingGrid.getColumnModel().getColumn(i).setMaxWidth(maxWidth[i]);
-			// 	if (alignCenter[i]) {
+			// 	if (alignCenter[i]){
 			// 		pendingGrid.getColumnModel().getColumn(i).setCellRenderer(new StringCenterTableCellRenderer());
-			// 		if (boldCenter[i]) {
+			// 		if (boldCenter[i]){
 			// 			pendingGrid.getColumnModel().getColumn(i).setCellRenderer(new CenterBoldTableCellRenderer());
 			// 		}
 			// 	}
@@ -775,8 +775,8 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		}
 		return pendingGrid;
 	}
-	private Grid getClosedGrid() {
-		if (closedGrid == null) {
+	private Grid getClosedGrid(){
+		if (closedGrid == null){
 			closedGrid = new Grid();
 			closedGrid.setWidth("100%");
 			// closedGrid.setModel(new BillTableModel("ALL")); //$NON-NLS-1$
@@ -793,9 +793,9 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 			// for (int i=0;i<columsWidth.length; i++){
 			// 	closedGrid.getColumnModel().getColumn(i).setMinWidth(columsWidth[i]);
 			// 	if (!columsResizable[i]) closedGrid.getColumnModel().getColumn(i).setMaxWidth(maxWidth[i]);
-			// 	if (alignCenter[i]) {
+			// 	if (alignCenter[i]){
 			// 		closedGrid.getColumnModel().getColumn(i).setCellRenderer(new StringCenterTableCellRenderer());
-			// 		if (boldCenter[i]) {
+			// 		if (boldCenter[i]){
 			// 			closedGrid.getColumnModel().getColumn(i).setCellRenderer(new CenterBoldTableCellRenderer());
 			// 		}
 			// 	}
@@ -808,8 +808,8 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		return closedGrid;
 	}
 
-	private TabSheet getBillsTabs() {
-		if (billsTabs == null) {
+	private TabSheet getBillsTabs(){
+		if (billsTabs == null){
 			billsTabs = new TabSheet();
 			billsTabs.addTab(getBillsGrid(),MessageBundle.getMessage("angal.billbrowser.bills"));
 			billsTabs.addTab(getPendingGrid(),MessageBundle.getMessage("angal.billbrowser.pending"));
@@ -818,8 +818,8 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		return billsTabs;
 	}
 
-	private JTable getJTableToday() {
-		if (jTableToday == null) {
+	private JTable getJTableToday(){
+		if (jTableToday == null){
 			jTableToday = new JTable();
 			jTableToday.setModel(
 					new DefaultTableModel(new Object[][] {
@@ -831,15 +831,15 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 								currencyCod,
 								balanceToday}
 							}, 	
-							new String[] {"", "", "", "", "", ""}) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							new String[] {"", "", "", "", "", ""}){ //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				private static final long serialVersionUID = 1L;
 				Class<?>[] types = new Class<?>[] { JLabel.class, JLabel.class, Double.class, JLabel.class, JLabel.class, Double.class};
 	
-				public Class<?> getColumnClass(int columnIndex) {
+				public Class<?> getColumnClass(int columnIndex){
 					return types[columnIndex];
 				}
 
-				public boolean isCellEditable(int row, int column) {
+				public boolean isCellEditable(int row, int column){
 					return false;
 				}
 			});
@@ -852,8 +852,8 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		return jTableToday;
 	}
 	
-	private JTable getJTablePeriod() {
-		if (jTablePeriod == null) {
+	private JTable getJTablePeriod(){
+		if (jTablePeriod == null){
 			jTablePeriod = new JTable();
 			jTablePeriod.setModel(new DefaultTableModel(
 					new Object[][] {
@@ -865,15 +865,15 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 								currencyCod,
 								balancePeriod}
 							}, 
-							new String[] {"","","","","",""}) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							new String[] {"","","","","",""}){ //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				private static final long serialVersionUID = 1L;
 				Class<?>[] types = new Class<?>[] { JLabel.class, JLabel.class, Double.class, JLabel.class, JLabel.class, Double.class};
 	
-				public Class<?> getColumnClass(int columnIndex) {
+				public Class<?> getColumnClass(int columnIndex){
 					return types[columnIndex];
 				}
 
-				public boolean isCellEditable(int row, int column) {
+				public boolean isCellEditable(int row, int column){
 					return false;
 				}
 			});
@@ -886,18 +886,18 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		return jTablePeriod;
 	}
 	
-	private JTable getJTableUser() {
-		if (jTableUser == null) {
+	private JTable getJTableUser(){
+		if (jTableUser == null){
 			jTableUser = new JTable();
-			jTableUser.setModel(new DefaultTableModel(new Object[][] {{"<html><b>"+user+"</b></html>", userToday, "<html><b>"+MessageBundle.getMessage("angal.billbrowser.period")+"</b></html>", userPeriod}}, new String[] {"","","",""}) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			jTableUser.setModel(new DefaultTableModel(new Object[][] {{"<html><b>"+user+"</b></html>", userToday, "<html><b>"+MessageBundle.getMessage("angal.billbrowser.period")+"</b></html>", userPeriod}}, new String[] {"","","",""}){ //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				private static final long serialVersionUID = 1L;
 				Class<?>[] types = new Class<?>[] { JLabel.class, Double.class, JLabel.class, Double.class};
 	
-				public Class<?> getColumnClass(int columnIndex) {
+				public Class<?> getColumnClass(int columnIndex){
 					return types[columnIndex];
 				}
 
-				public boolean isCellEditable(int row, int column) {
+				public boolean isCellEditable(int row, int column){
 					return false;
 				}
 			});
@@ -908,7 +908,7 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		return jTableUser;
 	}
 	
-	private void updateTables() {
+	private void updateTables(){
 		loadData("ALL");
 		billsGrid.setItems(billsArray);
 		loadData("O");
@@ -917,14 +917,14 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		closedGrid.setItems(closedArray);
 	}
 	
-	private void updateDataSet() {
+	private void updateDataSet(){
 //		System.out.println(formatDateTime(new DateTime().minusMonths(5).toDateMidnight().toGregorianCalendar()));
 //		System.out.println(formatDateTime(new DateTime().toDateMidnight().plusDays(1).toGregorianCalendar()));
 		updateDataSet(new DateTime().toDateMidnight().toGregorianCalendar(), new DateTime().toDateMidnight().plusDays(1).toGregorianCalendar());
 		
 	}
 	
-	private void updateDataSet(GregorianCalendar dateFrom, GregorianCalendar dateTo) {
+	private void updateDataSet(GregorianCalendar dateFrom, GregorianCalendar dateTo){
 		/*
 		 * Bills in the period
 		 */
@@ -940,10 +940,10 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		billFromPayments = billManager.getBills(paymentsPeriod);
 	}
 	
-	private void updateTotals() {
+	private void updateTotals(){
 		ArrayList<Bill> billToday;
 		ArrayList<BillPayments> paymentsToday;
-		if (MainMenu.getUser().equals("admin")) {
+		if (MainMenu.getUser().equals("admin")){
 			billToday = billManager.getBills(dateToday0, dateToday24);
 			paymentsToday = billManager.getPayments(dateToday0, dateToday24);
 		} else {
@@ -961,8 +961,8 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		ArrayList<Integer> notDeletedBills = new ArrayList<Integer>();
 				
 		//Bills in range contribute for Not Paid (balance)
-		for (Bill bill : billPeriod) {
-			if (!bill.getStatus().equals("D")) {
+		for (Bill bill : billPeriod){
+			if (!bill.getStatus().equals("D")){
 				notDeletedBills.add(bill.getId());
 				BigDecimal balance = new BigDecimal(Double.toString(bill.getBalance()));
 				balancePeriod = balancePeriod.add(balance);
@@ -970,8 +970,8 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		}
 		
 		//Payments in range contribute for Paid Period (total)
-		for (BillPayments payment : paymentsPeriod) {
-			if (notDeletedBills.contains(payment.getBillID())) {
+		for (BillPayments payment : paymentsPeriod){
+			if (notDeletedBills.contains(payment.getBillID())){
 				BigDecimal payAmount = new BigDecimal(Double.toString(payment.getAmount()));
 				String payUser = payment.getUser();
 				
@@ -983,16 +983,16 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		}
 		
 		//Bills in today contribute for Not Paid Today (balance)
-		for (Bill bill : billToday) {
-			if (!bill.getStatus().equals("D")) {
+		for (Bill bill : billToday){
+			if (!bill.getStatus().equals("D")){
 				BigDecimal balance = new BigDecimal(Double.toString(bill.getBalance()));
 				balanceToday = balanceToday.add(balance);
 			}
 		}
 		
 		//Payments in today contribute for Paid Today (total)
-		for (BillPayments payment : paymentsToday) {
-			if (notDeletedBills.contains(payment.getBillID())) {
+		for (BillPayments payment : paymentsToday){
+			if (notDeletedBills.contains(payment.getBillID())){
 				BigDecimal payAmount = new BigDecimal(Double.toString(payment.getAmount()));
 				String payUser = payment.getUser();
 				totalToday = totalToday.add(payAmount);
@@ -1016,7 +1016,7 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		// jTableToday.setValueAt(balanceToday, 0, 5);
 		// jTablePeriod.setValueAt(totalPeriod, 0, 2);
 		// jTablePeriod.setValueAt(balancePeriod, 0, 5);
-		// if (jTableUser != null) {
+		// if (jTableUser != null){
 		// 	jTableUser.setValueAt(userToday, 0, 1);
 		// 	jTableUser.setValueAt(userPeriod, 0, 3);
 		// }
@@ -1027,19 +1027,19 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 	private ArrayList<Bill> closedArray = new ArrayList<Bill>();
 	private ArrayList<Bill> billAll = new ArrayList<Bill>();
 
-	private void loadData(String status) {
+	private void loadData(String status){
 		
 		mapBill.clear();
 		
 		mapping(status);
 	}
 
-	private void mapping(String status) {
+	private void mapping(String status){
 			
 		/*
 		 * Mappings Bills in the period 
 		 */
-		for (Bill bill : billPeriod) {
+		for (Bill bill : billPeriod){
 			//mapBill.clear();
 			mapBill.put(bill.getId(), bill);
 		}
@@ -1048,13 +1048,13 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		 * Merging the two bills lists
 		 */
 		
-		if (status.equals("O")) {
+		if (status.equals("O")){
 			pendingArray.clear();
 			pendingArray = billManager.getPendingBills(0);
-		} else if (status.equals("ALL")) {
+		} else if (status.equals("ALL")){
 			billAll.clear();
 			billAll.addAll(billPeriod);
-			for (Bill bill : billFromPayments) {
+			for (Bill bill : billFromPayments){
 				if (mapBill.get(bill.getId()) == null)
 					billAll.add(bill);
 			}
@@ -1062,8 +1062,8 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 			billsArray = null;
 			Collections.sort(billAll);
 			billsArray = billAll;
-		} else if (status.equals("C")) {
-			for (Bill bill : billPeriod) {
+		} else if (status.equals("C")){
+			for (Bill bill : billPeriod){
 				// closedArray.clear();
 				if (bill.getStatus().equals(status))
 					closedArray.add(bill);
@@ -1087,11 +1087,11 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		 */
 		private ArrayList<Bill> billAll = new ArrayList<Bill>();
 		
-		public BillTableModel(String status) {
+		public BillTableModel(String status){
 			loadData(status);
 		}
 		
-		private void loadData(String status) {
+		private void loadData(String status){
 			
 			tableArray.clear();
 			mapBill.clear();
@@ -1099,12 +1099,12 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 			mapping(status);
 		}
 		
-		private void mapping(String status) {
+		private void mapping(String status){
 			
 			/*
 			 * Mappings Bills in the period 
 			 */
-			for (Bill bill : billPeriod) {
+			for (Bill bill : billPeriod){
 				//mapBill.clear();
 				mapBill.put(bill.getId(), bill);
 			}
@@ -1113,21 +1113,21 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 			 * Merging the two bills lists
 			 */
 			billAll.addAll(billPeriod);
-			for (Bill bill : billFromPayments) {
+			for (Bill bill : billFromPayments){
 				if (mapBill.get(bill.getId()) == null)
 					billAll.add(bill);
 			}
 			
-			if (status.equals("O")) {
+			if (status.equals("O")){
 				tableArray = billManager.getPendingBills(0);
 				
-			} else if (status.equals("ALL")) {
+			} else if (status.equals("ALL")){
 				
 				Collections.sort(billAll);
 				tableArray = billAll;
 
-			} else if (status.equals("C")) {
-				for (Bill bill : billPeriod) {
+			} else if (status.equals("C")){
+				for (Bill bill : billPeriod){
 					
 					if (bill.getStatus().equals(status)) 
 						tableArray.add(bill);
@@ -1137,19 +1137,19 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 			Collections.sort(tableArray, Collections.reverseOrder());
 		}
 		
-		public Class<?> getColumnClass(int columnIndex) {
+		public Class<?> getColumnClass(int columnIndex){
 			return columsClasses[columnIndex];
 		}
 
-		public int getColumnCount() {
+		public int getColumnCount(){
 			return columsNames.length;
 		}
 
-		public String getColumnName(int columnIndex) {
+		public String getColumnName(int columnIndex){
 			return columsNames[columnIndex];
 		}
 
-		public int getRowCount() {
+		public int getRowCount(){
 			if (tableArray == null)
 				return 0;
 			return tableArray.size();
@@ -1157,62 +1157,62 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		
 		//["Date", "Patient", "Balance", "Update", "Status", "Amount"};
 
-		public Object getValueAt(int r, int c) {
+		public Object getValueAt(int r, int c){
 			int index = -1;
 			Bill thisBill = tableArray.get(r);
-			if (c == index) {
+			if (c == index){
 				return thisBill;
 			}
-			if (c == ++index) {
+			if (c == ++index){
 				return thisBill.getId();
 			}
-			if (c == ++index) {
+			if (c == ++index){
 				return formatDateTime(thisBill.getDate());
 			}
-			if (c == ++index) {
+			if (c == ++index){
 				int patID = thisBill.getPatID();
 				return patID == 0 ? "" : String.valueOf(patID);
 			}
-			if (c == ++index) {
+			if (c == ++index){
 				return thisBill.getPatName();
 			}
-			if (c == ++index) {
+			if (c == ++index){
 				return thisBill.getAmount();
 			}
-			if (c == ++index) {
+			if (c == ++index){
 				return formatDateTime(thisBill.getUpdate());
 			}
-			if (c == ++index) {
+			if (c == ++index){
 				return thisBill.getStatus();
 			}
-			if (c == ++index) {
+			if (c == ++index){
 				return thisBill.getBalance();
 			}
 			return null;
 		}
 
-		public boolean isCellEditable(int rowIndex, int columnIndex) {
+		public boolean isCellEditable(int rowIndex, int columnIndex){
 			return false;
 		}
 
 	}
 	
-	public String formatDate(GregorianCalendar time) {
+	public String formatDate(GregorianCalendar time){
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");  //$NON-NLS-1$
 		return format.format(time.getTime());
 	}
 	
-	public String formatDateTime(GregorianCalendar time) {
+	public String formatDateTime(GregorianCalendar time){
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");  //$NON-NLS-1$
 		return format.format(time.getTime());
 	}
 	
-	public String formatDateTimeReport(GregorianCalendar time) {
+	public String formatDateTimeReport(GregorianCalendar time){
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  //$NON-NLS-1$
 		return format.format(time.getTime());
 	}
 	
-	public boolean isSameDay(GregorianCalendar aDate, GregorianCalendar today) {
+	public boolean isSameDay(GregorianCalendar aDate, GregorianCalendar today){
 		return (aDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)) &&
 			   (aDate.get(Calendar.MONTH) == today.get(Calendar.MONTH)) &&
 			   (aDate.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH));
@@ -1226,14 +1226,14 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
-				boolean hasFocus, int row, int column) {  
+				boolean hasFocus, int row, int column){  
 		   
 			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 			cell.setForeground(Color.BLACK);
-			if (((String)table.getValueAt(row, 6)).equals("C")) { //$NON-NLS-1$
+			if (((String)table.getValueAt(row, 6)).equals("C")){ //$NON-NLS-1$
 				cell.setForeground(Color.GRAY);
 			}
-			if (((String)table.getValueAt(row, 6)).equals("D")) { //$NON-NLS-1$
+			if (((String)table.getValueAt(row, 6)).equals("D")){ //$NON-NLS-1$
 				cell.setForeground(Color.RED);
 			}
 			return cell;
@@ -1248,15 +1248,15 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
-				boolean hasFocus, int row, int column) {  
+				boolean hasFocus, int row, int column){  
 		   
 			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 			cell.setForeground(Color.BLACK);
 			setHorizontalAlignment(CENTER);
-			if (((String)table.getValueAt(row, 6)).equals("C")) { //$NON-NLS-1$
+			if (((String)table.getValueAt(row, 6)).equals("C")){ //$NON-NLS-1$
 				cell.setForeground(Color.GRAY);
 			}
-			if (((String)table.getValueAt(row, 6)).equals("D")) { //$NON-NLS-1$
+			if (((String)table.getValueAt(row, 6)).equals("D")){ //$NON-NLS-1$
 				cell.setForeground(Color.RED);
 			}
 			return cell;
@@ -1271,16 +1271,16 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
-				boolean hasFocus, int row, int column) {  
+				boolean hasFocus, int row, int column){  
 		   
 			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 			cell.setForeground(Color.BLACK);
 			cell.setFont(new Font(null, Font.BOLD, 12));
 			setHorizontalAlignment(CENTER);
-			if (((String)table.getValueAt(row, 6)).equals("C")) { //$NON-NLS-1$
+			if (((String)table.getValueAt(row, 6)).equals("C")){ //$NON-NLS-1$
 				cell.setForeground(Color.GRAY);
 			}
-			if (((String)table.getValueAt(row, 6)).equals("D")) { //$NON-NLS-1$
+			if (((String)table.getValueAt(row, 6)).equals("D")){ //$NON-NLS-1$
 				cell.setForeground(Color.RED);
 			}
 			return cell;
@@ -1295,15 +1295,15 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
-				boolean hasFocus, int row, int column) {  
+				boolean hasFocus, int row, int column){  
 		   
 			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 			cell.setForeground(Color.BLACK);
 			setHorizontalAlignment(RIGHT);
-			if (((String)table.getValueAt(row, 6)).equals("C")) { //$NON-NLS-1$
+			if (((String)table.getValueAt(row, 6)).equals("C")){ //$NON-NLS-1$
 				cell.setForeground(Color.GRAY);
 			}
-			if (((String)table.getValueAt(row, 6)).equals("D")) { //$NON-NLS-1$
+			if (((String)table.getValueAt(row, 6)).equals("D")){ //$NON-NLS-1$
 				cell.setForeground(Color.RED);
 			}
 			return cell;
@@ -1318,16 +1318,16 @@ public class BillBrowser extends ModalWindow implements PatientBillEdit.PatientB
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
-				boolean hasFocus, int row, int column) {  
+				boolean hasFocus, int row, int column){  
 		   
 			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 			cell.setForeground(Color.BLACK);
 			setHorizontalAlignment(CENTER);
 			cell.setFont(new Font(null, Font.BOLD, 12));
-			if (((String)table.getValueAt(row, 6)).equals("C")) { //$NON-NLS-1$
+			if (((String)table.getValueAt(row, 6)).equals("C")){ //$NON-NLS-1$
 				cell.setForeground(Color.GRAY);
 			}
-			if (((String)table.getValueAt(row, 6)).equals("D")) { //$NON-NLS-1$
+			if (((String)table.getValueAt(row, 6)).equals("D")){ //$NON-NLS-1$
 				cell.setForeground(Color.RED);
 			}
 			return cell;

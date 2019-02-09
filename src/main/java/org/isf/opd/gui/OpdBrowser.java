@@ -33,6 +33,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -54,9 +55,10 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Button;
@@ -105,12 +107,8 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 	private Label label = null;
 	private HorizontalLayout dateFromLayout = null;
 	private HorizontalLayout dateToLayout = null;
-	private TextField dayFrom = null;
-	private TextField monthFrom = null;
-	private TextField yearFrom = null;
-	private TextField dayTo = null;
-	private TextField monthTo = null;
-	private TextField yearTo = null;
+	private DateField dateFrom = null;
+	private DateField dateTo = null;
 	private Panel jSelectionDiseasePanel = null;  //  @jve:decl-index=0:visual-constraint="232,358"
 	private Label label2 = null;
 	private Label label3 = null;
@@ -143,7 +141,6 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 	private boolean[] columnsBold = { false, true, false, false, false, false, false, false };
 	private int selectedrow;
 	private OpdBrowserManager manager = new OpdBrowserManager();
-	private Button filterButton = null;
 	private String rowCounterText = MessageBundle.getMessage("angal.opd.count") + ": ";
 	private Label rowCounter = null;
 	private JRadioButton radioNew;
@@ -422,8 +419,8 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 			jSelectionLayout.addComponent(label);
 			jSelectionLayout.addComponent(getDiseaseTypeBox());
 			jSelectionLayout.addComponent(getDiseaseBox());
-			jSelectionLayout.addComponent(getDateFromLayout());
-			jSelectionLayout.addComponent(getDateToLayout());
+			jSelectionLayout.addComponent(getDateFrom());
+			jSelectionLayout.addComponent(getDateTo());
 			jSelectionLayout.addComponent(getJAgeFromLayout());
 			jSelectionLayout.addComponent(getJAgeToLayout());
 			jSelectionLayout.addComponent(label3);
@@ -431,8 +428,7 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 			label4 = new Label();
 			label4.setValue(MessageBundle.getMessage("angal.opd.patient"));
 			jSelectionLayout.addComponent(label4);
-			jSelectionLayout.addComponent(getNewPatientRadioButton());			
-			jSelectionLayout.addComponent(getFilterButton());
+			jSelectionLayout.addComponent(getNewPatientRadioButton());
 			jSelectionLayout.addComponent(getRowCounter());
 		}
 		return jSelectionLayout;
@@ -449,55 +445,20 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 		return rowCounter;
 	}
 
-	private HorizontalLayout getDateFromLayout(){
-		if(dateFromLayout == null){
-			dateFromLayout = new HorizontalLayout();
-			dateFromLayout.addComponent(new Label(MessageBundle.getMessage("angal.opd.datefrom")));
-			dayFrom = new TextField();
-			dayFrom.setWidth("3em");
-			dayFrom.addBlurListener(e -> {
-				if(dayFrom.getValue().length() != 0){
-					if(dayFrom.getValue().length() == 1){
-						String typed = dayFrom.getValue();
-						dayFrom.setValue("0" + typed);
-					}
-					if(!isValidDay(dayFrom.getValue()))
-						dayFrom.setValue("1");
+	private DateField getDateFrom(){
+		if(dateFrom == null){
+			dateFrom = new DateField(MessageBundle.getMessage("angal.opd.datefrom"),LocalDate.now().minusWeeks(1));
+			dateFrom.setDateFormat("dd/MM/yy");
+			dateFrom.addValueChangeListener(e->{
+				logger.info("BEGINNIGN");
+				if(!validateDate()){
+					dateFrom.setValue(e.getOldValue());
+					logger.info(""+e.getOldValue());
 				}
+				logger.info("ENDINGGG");
 			});
-			monthFrom = new TextField();
-			monthFrom.setWidth("3em");
-			monthFrom.addBlurListener(e -> {
-				if(monthFrom.getValue().length() != 0){
-					if(monthFrom.getValue().length() == 1){
-						String typed = monthFrom.getValue();
-						monthFrom.setValue("0" + typed);
-					}
-					if(!isValidMonth(monthFrom.getValue()))
-						monthFrom.setValue("1");
-				}
-			});
-			yearFrom = new TextField();
-			yearFrom.setWidth("4em");
-			yearFrom.addFocusListener(e -> {
-				if(yearFrom.getValue().length() == 4){
-					if(!isValidYear(yearFrom.getValue()))
-						yearFrom.setValue("2006");
-				} else
-					yearFrom.setValue("2006");
-			});
-			dateFromLayout.addComponent(dayFrom);
-			dateFromLayout.addComponent(monthFrom);
-			dateFromLayout.addComponent(yearFrom);
-			GregorianCalendar now = new GregorianCalendar();
-			if(!GeneralData.ENHANCEDSEARCH) now.add(GregorianCalendar.WEEK_OF_YEAR, -1);
-			dayFrom.setValue(String.valueOf(now
-					.get(GregorianCalendar.DAY_OF_MONTH)));
-			monthFrom.setValue(String
-					.valueOf(now.get(GregorianCalendar.MONTH) + 1));
-			yearFrom.setValue(String.valueOf(now.get(GregorianCalendar.YEAR)));
 		}
-		return dateFromLayout;
+		return dateFrom;
 	}
 	
 	public class DocumentoLimitato extends DefaultStyledDocument {
@@ -529,55 +490,17 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 	}
 	
 	
-	private HorizontalLayout getDateToLayout(){
-		if(dateToLayout == null){
-			dateToLayout = new HorizontalLayout();
-			dateToLayout.addComponent(new Label(MessageBundle.getMessage("angal.opd.dateto")));
-			dayTo = new TextField();
-			dayTo.setWidth("3em");
-			dayTo.addBlurListener(e -> {
-				if(dayTo.getValue().length() != 0){
-					if(dayTo.getValue().length() == 1){
-						String typed = dayTo.getValue();
-						dayTo.setValue("0" + typed);
-					}
-					if(!isValidDay(dayTo.getValue()))
-						dayTo.setValue("1");
+	private DateField getDateTo(){
+		if(dateTo == null){
+			dateTo = new DateField(MessageBundle.getMessage("angal.opd.dateto"),LocalDate.now());
+			dateTo.setDateFormat("dd/MM/yy");
+			dateTo.addValueChangeListener(e->{
+				if(!validateDate()){
+					dateTo.setValue(e.getOldValue());
 				}
 			});
-			monthTo = new TextField();
-			monthTo.setWidth("3em");
-			monthTo.addBlurListener(e -> {
-				if(monthTo.getValue().length() != 0){
-					if(monthTo.getValue().length() == 1){
-						String typed = monthTo.getValue();
-						monthTo.setValue("0" + typed);
-					}
-					if(!isValidMonth(monthTo.getValue()))
-						monthTo.setValue("1");
-				}
-			});
-			yearTo = new TextField();
-			yearTo.setWidth("4em");
-			yearTo.addBlurListener(e -> {
-				if(yearTo.getValue().length() == 4){
-					if(!isValidYear(yearTo.getValue()))
-						yearTo.setValue("2006");
-				} else
-					yearTo.setValue("2006");
-			});
-			dateToLayout.addComponent(dayTo);
-			dateToLayout.addComponent(monthTo);
-			dateToLayout.addComponent(yearTo);
-			GregorianCalendar now = new GregorianCalendar();
-			dayTo.setValue(String.valueOf(now
-					.get(GregorianCalendar.DAY_OF_MONTH)));
-			monthTo.setValue(String
-					.valueOf(now.get(GregorianCalendar.MONTH) + 1));
-			yearTo.setValue(String.valueOf(now.get(GregorianCalendar.YEAR)));
-			
 		}
-		return dateToLayout;
+		return dateTo;
 	}
 	/**
 	 * 
@@ -618,21 +541,6 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 		return true;
 	}
 	
-	private GregorianCalendar getDateFrom(){
-		return new GregorianCalendar(Integer.valueOf(yearFrom.getValue()),
-									 Integer.valueOf(monthFrom.getValue()) - 1, 
-									 Integer.valueOf(dayFrom.getValue()));
-	}
-	
-	private GregorianCalendar getDateTo(){
-		return new GregorianCalendar(Integer.valueOf(yearTo.getValue()), 
-									 Integer.valueOf(monthTo.getValue()) - 1, 
-									 Integer.valueOf(dayTo.getValue()));
-	}
-
-	
-	
-	
 	/**
 	 * This method initializes jComboBox	
 	 * 	
@@ -652,6 +560,7 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 			diseaseTypeBox.addValueChangeListener(e-> {
 				diseaseBox.setItems();
 				getDiseaseBox();
+				updateTable();
 			});					
 		}
 		
@@ -680,6 +589,9 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 		};
 		diseaseBox.setItems(diseases);
 		diseaseBox.setValue(allDisease);
+		diseaseBox.addValueChangeListener(e->{
+			updateTable();
+		});
 		return diseaseBox;
 	}
 	
@@ -693,6 +605,9 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 			sexGroup.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
 			sexGroup.setItems(MessageBundle.getMessage("angal.opd.male"),MessageBundle.getMessage("angal.opd.female"),MessageBundle.getMessage("angal.opd.all"));
 			sexGroup.setValue(MessageBundle.getMessage("angal.opd.all"));
+			sexGroup.addValueChangeListener(e->{
+				updateTable();
+			});
 			return sexGroup;
 	}
 	
@@ -701,6 +616,9 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 			groupNewPatient.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
 			groupNewPatient.setItems(MessageBundle.getMessage("angal.common.new"),MessageBundle.getMessage("angal.opd.reattendance"),MessageBundle.getMessage("angal.opd.all"));
 			groupNewPatient.setValue(MessageBundle.getMessage("angal.opd.all"));
+			groupNewPatient.addValueChangeListener(e->{
+				updateTable();
+			});
 			return groupNewPatient;
 	}
 	
@@ -743,6 +661,10 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 					jAgeFromTextField.setValue("0");
 				}
 			});
+			jAgeFromTextField.addValueChangeListener(e->{
+				ageFrom=Integer.parseInt(e.getValue());
+				validateAge();
+			});
 		}
 		return jAgeFromTextField;
 	}
@@ -771,9 +693,9 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 	private TextField getJAgeToTextField(){
 		if(jAgeToTextField == null){
 			jAgeToTextField = new TextField();
+			jAgeToTextField.setValue("200");
 			jAgeToTextField.setWidth("3em");
-			jAgeToTextField.setValue("0");
-			ageTo=0;
+			ageTo=200;
 			jAgeToTextField.addBlurListener(e -> {
 				try {				
 					ageTo = Integer.parseInt(jAgeToTextField.getValue());
@@ -786,6 +708,10 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 				} catch (NumberFormatException ex){
 					jAgeToTextField.setValue("0");
 				}
+			});
+			jAgeToTextField.addValueChangeListener(e->{
+				ageTo=Integer.parseInt(e.getValue());
+				validateAge();
 			});
 		}
 		return jAgeToTextField;
@@ -911,48 +837,50 @@ public class OpdBrowser extends ModalWindow implements OpdEditExtended.OpdListen
 		rowCounter.setCaption(rowCounterText + opdList.size());
 	}
 	
-	
-	private Button getFilterButton(){
-		if(filterButton == null){
-			filterButton = new Button();
-			filterButton.setCaption(MessageBundle.getMessage("angal.opd.search"));
-            ////filterButton.setClickShortcut(KeyEvent.VK_S);
-			filterButton.addClickListener(e -> {
-					String disease=((Disease)diseaseBox.getSelectedItem().get()).getCode();
-					String diseasetype=((DiseaseType)diseaseTypeBox.getSelectedItem().get()).getCode();
-					char sex;
-					if(sexGroup.getValue()==MessageBundle.getMessage("angal.opd.all")) sex='A';
-					else if(sexGroup.getValue()==MessageBundle.getMessage("angal.opd.male")) sex='M';
-					else sex='F';
-					String newPatient;
-					if(groupNewPatient.getValue()==MessageBundle.getMessage("angal.opd.all")) newPatient="A";
-					else if(groupNewPatient.getValue()==MessageBundle.getMessage("angal.common.new")) newPatient="N";
-					else newPatient="R";
-					
-					GregorianCalendar dateFrom = getDateFrom();
-					GregorianCalendar dateTo = getDateTo();
-					
-					if(dateFrom.after(dateTo)){
-						MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.opd.datefrommustbebefordateto"))
-						.withOkButton().open();
-						return;
-					}
-					
-					if(ageFrom>ageTo){
-						MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.opd.agefrommustbelowerthanageto"))
-						.withOkButton().open();
-						jAgeFromTextField.setValue(ageTo.toString());
-						ageFrom=ageTo;
-						return;
-					}
-					
-					model = new OpdBrowsingModel(diseasetype,disease,getDateFrom(), getDateTo(),ageFrom,ageTo,sex,newPatient);
-					grid.setItems(opdList);
-					// model.fireTableDataChanged();
-					rowCounter.setCaption(rowCounterText + opdList.size());
-			});
+	private boolean validateDate(){
+		GregorianCalendar dateFromGC = new GregorianCalendar(dateFrom.getValue().getYear(),dateFrom.getValue().getMonthValue(),dateFrom.getValue().getDayOfMonth());
+		GregorianCalendar dateToGC = new GregorianCalendar(dateTo.getValue().getYear(),dateTo.getValue().getMonthValue(),dateTo.getValue().getDayOfMonth());
+		logger.info(""+dateFromGC);
+		logger.info(""+dateToGC);
+		if(dateFromGC.after(dateToGC)){
+			MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.opd.datefrommustbebefordateto"))
+			.withOkButton().open();
+			return false;
 		}
-		return filterButton;
+		
+		updateTable();
+		return true;
+	}
+
+	private void validateAge(){
+		if(ageFrom>ageTo){
+			MessageBox.createInfo().withCaption("Message").withMessage(MessageBundle.getMessage("angal.opd.agefrommustbelowerthanageto"))
+			.withOkButton().open();
+			ageFrom=ageTo;
+			jAgeFromTextField.setValue(ageTo.toString());
+			return;
+		}
+
+		updateTable();
+	}
+
+
+
+	private void updateTable(){
+		String disease=((Disease)diseaseBox.getSelectedItem().get()).getCode();
+		String diseasetype=((DiseaseType)diseaseTypeBox.getSelectedItem().get()).getCode();
+		char sex;
+		if(sexGroup.getValue()==MessageBundle.getMessage("angal.opd.all")) sex='A';
+		else if(sexGroup.getValue()==MessageBundle.getMessage("angal.opd.male")) sex='M';
+		else sex='F';
+		String newPatient;
+		if(groupNewPatient.getValue()==MessageBundle.getMessage("angal.opd.all")) newPatient="A";
+		else if(groupNewPatient.getValue()==MessageBundle.getMessage("angal.common.new")) newPatient="N";
+		else newPatient="R";
+		model = new OpdBrowsingModel(diseasetype,disease,new GregorianCalendar(dateFrom.getValue().getYear(),dateFrom.getValue().getMonthValue(),dateFrom.getValue().getDayOfMonth()), new GregorianCalendar(dateTo.getValue().getYear(),dateTo.getValue().getMonthValue(),dateTo.getValue().getDayOfMonth()),ageFrom,ageTo,sex,newPatient);
+		grid.setItems(opdList);
+		// model.fireTableDataChanged();
+		rowCounter.setCaption(rowCounterText + opdList.size());
 	}
 
 } 

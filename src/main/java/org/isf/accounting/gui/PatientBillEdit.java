@@ -461,7 +461,8 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 					if (keepDate && evt.getValue().toString().compareTo(
 						evt.getOldValue().toString()) != 0 && nowLocalDate.toString().compareTo(
 						evt.getOldValue().toString()) != 0) {
-						MessageBox.createQuestion().withCaption("Warning").withIcon(new Image(null,new FileResource(new File(resPath +"/WEB-INF/icons/clock_dialog.png"))))
+						MessageBox.createQuestion().withCaption("Warning")
+						.withIcon(new Image(null,new FileResource(new File(resPath +"/WEB-INF/icons/clock_dialog.png"))))
 						.withMessage(MessageBundle.getMessage("angal.newbill.doyoureallywanttochangetheoriginaldate"))
 						.withYesButton(()->{
 							keepDate = false;
@@ -1070,8 +1071,6 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 							return;
 						}
 						if (billDate.before(today)) { //if is a bill in the past the user will be asked for date of payment
-							// logger.info("masuk ka before today"+billDate.getTime());
-							// logger.info(""+today.getTime());
 							DateTimeField datePayChooser = new DateTimeField(null,LocalDateTime.now());
 							datePayChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 							datePayChooser.setDateFormat("dd/MM/yy - HH:mm:ss"); //$NON-NLS-1$
@@ -1327,7 +1326,8 @@ public class PatientBillEdit extends ModalWindow implements SelectionListener {
 				medicalList.setItems(medArray.toArray());
 				medicalList.setCaption(MessageBundle.getMessage("angal.newbill.selectamedical"));
 				Image icon = new Image(null,new FileResource(new File(resPath +"/WEB-INF/icons/medical_dialog.png")));
-				MessageBox.create().withCaption(MessageBundle.getMessage("angal.newbill.medical")).withIcon(icon).withMessage(medicalList)
+				MessageBox.create().withCaption(MessageBundle.getMessage("angal.newbill.medical")).withIcon(icon)
+				.withMessage(medicalList)
 				.withOkButton(()->{
 					if (!medicalList.isEmpty()) {
 						TextField quantity = new TextField(MessageBundle.getMessage("angal.newbill.insertquantity"),"1");

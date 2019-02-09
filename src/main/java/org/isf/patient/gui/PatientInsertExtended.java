@@ -1086,7 +1086,8 @@ public class PatientInsertExtended extends ModalWindow{
 		if (jAgeTypeButtonGroup == null){
 			jAgeTypeButtonGroup = new RadioButtonGroup<>();
 			jAgeTypeButtonGroup.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
-			jAgeTypeButtonGroup.setItems(MessageBundle.getMessage("angal.patient.modeage"), MessageBundle.getMessage("angal.patient.modebdate"), MessageBundle.getMessage("angal.patient.modedescription"));
+			jAgeTypeButtonGroup.setItems(MessageBundle.getMessage("angal.patient.modebdate"), MessageBundle.getMessage("angal.patient.modedescription"));
+			jAgeTypeButtonGroup.setValue(MessageBundle.getMessage("angal.patient.modebdate"));
 			jAgeTypeButtonGroup.addValueChangeListener(e -> {
 				if(e.getOldValue()==MessageBundle.getMessage("angal.patient.modeage")){
 					layout.removeComponent(getJAge());
@@ -1120,7 +1121,7 @@ public class PatientInsertExtended extends ModalWindow{
 					years = patient.getAge();
 				}
 			} else {
-				jAgeTypeButtonGroup.setValue(MessageBundle.getMessage("angal.patient.modeage"));
+				jAgeTypeButtonGroup.setValue(MessageBundle.getMessage("angal.patient.modebdate"));
 			}
 		}
 		return jAgeTypeButtonGroup;
